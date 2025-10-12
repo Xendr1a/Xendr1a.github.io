@@ -1,0 +1,79 @@
+/* 导航栏透明  字体颜色 */
+:root {
+  --nav-color: #87CEEB;
+  --nav-hover: #4682B4;
+}
+
+#web_bg {
+  background: linear-gradient(90deg, rgba(247, 149, 51, 0.1) 0, rgba(243, 112, 85, 0.1) 15%, rgba(239, 78, 123, 0.1) 30%, rgba(161, 102, 171, 0.1) 44%, rgba(80, 115, 184, 0.1) 58%, rgba(16, 152, 173, 0.1) 72%, rgba(7, 179, 155, 0.1) 86%, rgba(109, 186, 130, 0.1) 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+.layout_post>#post,
+#recent-posts .recent-post-item {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] #recent-posts .recent-post-item {
+  background: rgba(18, 18, 18, 0.7);
+}
+
+#nav {
+  background: transparent;
+}
+
+#nav a {
+  color: var(--nav-color);
+}
+
+#nav a:hover {
+  color: var(--nav-hover);
+}
+
+.site-subtitle {
+  color: #fff;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* === 主标题设置为淡蓝色 === */
+#site-title,
+.site-title,
+.header-title {
+    color: #87CEEB !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    font-weight: bold !important;
+}
+
+/* === 副标题设置为淡蓝色并确保显示 === */
+.site-subtitle,
+#site-subtitle {
+    color: #87CEEB !important;
+    font-size: 1.3rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+    margin-top: 10px !important;
+    min-height: 24px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* === 深色模式下的颜色设置 === */
+[data-theme="dark"] #site-title,
+[data-theme="dark"] .site-title,
+[data-theme="dark"] .header-title {
+    color: #87CEEB !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .site-subtitle,
+[data-theme="dark"] #site-subtitle {
+    color: #87CEEB !important;
+}
+
+/* === 打字机光标颜色 === */
+.typed-cursor {
+    color: #87CEEB !important;
+    font-weight: normal !important;
+}
