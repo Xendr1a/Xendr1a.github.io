@@ -1,57 +1,59 @@
-/* 导航栏透明  字体颜色 */
+/* 蓝色和粉色双拼主题 */
 :root {
-  --nav-color: #87CEEB;
-  --nav-hover: #4682B4;
+  --blue-color: #6CB4EE;      /* 蓝色 */
+  --pink-color: #FF69B4;      /* 粉色 */
+  --blue-light: rgba(108, 180, 238, 0.1);
+  --pink-light: rgba(255, 105, 180, 0.1);
+  --gradient-bg: linear-gradient(135deg, var(--blue-color), var(--pink-color));
+  --gradient-light: linear-gradient(135deg, var(--blue-light), var(--pink-light));
 }
 
+/* 背景改为蓝粉渐变 */
 #web_bg {
-  background: linear-gradient(90deg, rgba(247, 149, 51, 0.1) 0, rgba(243, 112, 85, 0.1) 15%, rgba(239, 78, 123, 0.1) 30%, rgba(161, 102, 171, 0.1) 44%, rgba(80, 115, 184, 0.1) 58%, rgba(16, 152, 173, 0.1) 72%, rgba(7, 179, 155, 0.1) 86%, rgba(109, 186, 130, 0.1) 100%);
+  background: linear-gradient(135deg, 
+    rgba(108, 180, 238, 0.15) 0%, 
+    rgba(255, 105, 180, 0.15) 100%) !important;
   background-size: cover;
   background-position: center;
 }
 
 .layout_post>#post,
 #recent-posts .recent-post-item {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 [data-theme="dark"] #recent-posts .recent-post-item {
   background: rgba(18, 18, 18, 0.7);
 }
 
+/* 导航栏保持透明，链接使用蓝色 */
 #nav {
   background: transparent;
 }
 
 #nav a {
-  color: var(--nav-color);
+  color: var(--blue-color);
 }
 
 #nav a:hover {
-  color: var(--nav-hover);
+  color: var(--pink-color); /* 悬停时变为粉色 */
 }
 
-.site-subtitle {
-  color: #fff;
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-/* === 主标题设置为淡蓝色 === */
+/* 主标题使用蓝色 */
 #site-title,
 .site-title,
 .header-title {
-    color: #87CEEB !important;
+    color: var(--blue-color) !important;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
     font-weight: bold !important;
 }
 
-/* === 副标题设置为淡蓝色并确保显示 === */
+/* 副标题使用粉色 */
 .site-subtitle,
 #site-subtitle {
-    color: #87CEEB !important;
+    color: var(--pink-color) !important;
     font-size: 1.3rem !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
     margin-top: 10px !important;
     min-height: 24px !important;
     opacity: 1 !important;
@@ -59,92 +61,81 @@
     display: block !important;
 }
 
-/* === 深色模式下的颜色设置 === */
-[data-theme="dark"] #site-title,
-[data-theme="dark"] .site-title,
-[data-theme="dark"] .header-title {
-    color: #87CEEB !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6) !important;
-}
-
-[data-theme="dark"] .site-subtitle,
-[data-theme="dark"] #site-subtitle {
-    color: #87CEEB !important;
-}
-
-/* === 打字机光标颜色 === */
+/* 打字机光标使用粉色 */
 .typed-cursor {
-    color: #87CEEB !important;
+    color: var(--pink-color) !important;
     font-weight: normal !important;
 }
 
-/* 为文章卡片添加淡蓝色系的柔和阴影 */
+/* 文章卡片 - 蓝粉渐变阴影 */
 #recent-posts .recent-post-item {
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.15) !important;
-  border: 1px solid rgba(135, 206, 235, 0.2) !important;
+  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.2) !important;
+  border: 1px solid rgba(255, 105, 180, 0.3) !important;
   border-radius: 12px !important;
   transition: all 0.3s ease !important;
 }
 
-/* 卡片悬停效果 */
+/* 卡片悬停效果 - 增强粉色元素 */
 #recent-posts .recent-post-item:hover {
-  box-shadow: 0 8px 25px rgba(135, 206, 235, 0.25) !important;
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.25) !important;
   transform: translateY(-5px) !important;
-  border-color: rgba(135, 206, 235, 0.4) !important;
+  border-color: rgba(255, 105, 180, 0.5) !important;
 }
 
-/* 阅读更多按钮 */
+/* 阅读更多按钮 - 蓝粉渐变 */
 .post-more a {
-  background: linear-gradient(135deg, #87CEEB, #6CB4EE) !important;
+  background: linear-gradient(135deg, var(--blue-color), var(--pink-color)) !important;
   color: white !important;
   border: none !important;
   border-radius: 25px !important;
   padding: 8px 20px !important;
   transition: all 0.3s ease !important;
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.3) !important;
 }
 
 .post-more a:hover {
-  background: linear-gradient(135deg, #6CB4EE, #87CEEB) !important;
+  background: linear-gradient(135deg, var(--pink-color), var(--blue-color)) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.4) !important;
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4) !important;
 }
 
-/* 分类和标签的淡蓝色特效 */
+/* 分类和标签 - 蓝色为主，悬停变粉 */
 #aside-content .card-tag-cloud a,
 #aside-content .card-categories a {
-    color: #87CEEB !important;
-    border: 1px solid rgba(135, 206, 235, 0.3) !important;
-    background: rgba(135, 206, 235, 0.1) !important;
+    color: var(--blue-color) !important;
+    border: 1px solid rgba(108, 180, 238, 0.3) !important;
+    background: rgba(108, 180, 238, 0.1) !important;
     border-radius: 15px !important;
     transition: all 0.3s ease !important;
 }
 
 #aside-content .card-tag-cloud a:hover,
 #aside-content .card-categories a:hover {
-    background: rgba(135, 206, 235, 0.2) !important;
+    color: var(--pink-color) !important;
+    background: rgba(255, 105, 180, 0.1) !important;
+    border-color: rgba(255, 105, 180, 0.3) !important;
     transform: scale(1.05) !important;
-    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2) !important;
 }
 
-/* 分页按钮淡蓝色主题 */
+/* 分页器 - 蓝粉搭配 */
 .pagination .page-number,
 .pagination .extend {
-    border: 1px solid rgba(135, 206, 235, 0.3) !important;
-    background: rgba(255, 255, 255, 0.8) !important;
-    color: #87CEEB !important;
+    border: 1px solid rgba(108, 180, 238, 0.3) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--blue-color) !important;
     border-radius: 8px !important;
     transition: all 0.3s ease !important;
 }
 
 .pagination .page-number.current,
 .pagination .page-number:hover {
-    background: linear-gradient(135deg, #87CEEB, #6CB4EE) !important;
+    background: linear-gradient(135deg, var(--blue-color), var(--pink-color)) !important;
     color: white !important;
-    border-color: #87CEEB !important;
+    border-color: var(--pink-color) !important;
 }
 
-/* 添加水波纹点击效果 */
+/* 水波纹点击效果 - 粉色 */
 #recent-posts .recent-post-item {
   position: relative;
   overflow: hidden;
@@ -157,7 +148,7 @@
   left: 50%;
   width: 0;
   height: 0;
-  background: radial-gradient(circle, rgba(135, 206, 235, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 105, 180, 0.3) 0%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
@@ -168,11 +159,11 @@
   height: 300px;
 }
 
-/* 为卡片添加渐变边框动画 */
+/* 渐变边框动画 - 蓝粉渐变 */
 #recent-posts .recent-post-item {
   position: relative;
   background: linear-gradient(white, white) padding-box,
-              linear-gradient(135deg, #87CEEB, #6CB4EE, #87CEEB) border-box !important;
+              linear-gradient(135deg, var(--blue-color), var(--pink-color)) border-box !important;
   border: 2px solid transparent !important;
 }
 
@@ -183,7 +174,7 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(135deg, #87CEEB, #6CB4EE, #87CEEB);
+  background: linear-gradient(135deg, var(--blue-color), var(--pink-color));
   border-radius: 14px;
   z-index: -1;
   opacity: 0;
@@ -194,12 +185,12 @@
   opacity: 1;
 }
 
-/* 文章信息淡蓝色调 */
+/* 文章信息 - 蓝色标签 */
 .post-meta__tags a,
 .post-meta__categories a {
-    color: #87CEEB !important;
-    background: rgba(135, 206, 235, 0.1) !important;
-    border: 1px solid rgba(135, 206, 235, 0.3) !important;
+    color: var(--blue-color) !important;
+    background: rgba(108, 180, 238, 0.1) !important;
+    border: 1px solid rgba(108, 180, 238, 0.3) !important;
     border-radius: 12px !important;
     padding: 2px 8px !important;
     transition: all 0.3s ease !important;
@@ -207,25 +198,46 @@
 
 .post-meta__tags a:hover,
 .post-meta__categories a:hover {
-    background: rgba(135, 206, 235, 0.2) !important;
+    color: var(--pink-color) !important;
+    background: rgba(255, 105, 180, 0.1) !important;
+    border-color: rgba(255, 105, 180, 0.3) !important;
     transform: translateY(-1px) !important;
 }
 
-/* 侧边栏卡片统一风格 */
+/* 侧边栏卡片 - 蓝粉风格 */
 .aside-content .card {
-  background: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(135, 206, 235, 0.2) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(108, 180, 238, 0.2) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.1) !important;
+  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.15) !important;
 }
 
 .aside-content .card-header {
-  border-bottom: 1px solid rgba(135, 206, 235, 0.3) !important;
-  color: #87CEEB !important;
+  border-bottom: 1px solid rgba(108, 180, 238, 0.3) !important;
+  color: var(--blue-color) !important;
 }
 
-/* 淡蓝色滚动进度条 */
+/* 滚动进度条 - 蓝粉渐变 */
 #progress-bar {
-  background: linear-gradient(90deg, #87CEEB, #6CB4EE) !important;
+  background: linear-gradient(90deg, var(--blue-color), var(--pink-color)) !important;
   height: 3px !important;
+}
+
+/* 深色模式适配 */
+[data-theme="dark"] #site-title,
+[data-theme="dark"] .site-title,
+[data-theme="dark"] .header-title {
+    color: var(--blue-color) !important;
+}
+
+[data-theme="dark"] .site-subtitle,
+[data-theme="dark"] #site-subtitle {
+    color: var(--pink-color) !important;
+}
+
+/* 新增：毛玻璃效果增强 */
+#recent-posts .recent-post-item,
+.aside-content .card {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
 }
