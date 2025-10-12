@@ -1,11 +1,9 @@
-/* 淡蓝色和淡粉色双拼主题 */
+/* 淡蓝色和淡粉色双拼主题 - 调整版 */
 :root {
   --blue-color: #87CEEB;      /* 淡蓝色 */
   --pink-color: #FFB6C1;      /* 淡粉色 */
   --blue-light: rgba(135, 206, 235, 0.1);
   --pink-light: rgba(255, 182, 193, 0.1);
-  --gradient-bg: linear-gradient(135deg, var(--blue-color), var(--pink-color));
-  --gradient-light: linear-gradient(135deg, var(--blue-light), var(--pink-light));
 }
 
 /* 背景改为淡蓝淡粉渐变 */
@@ -39,19 +37,19 @@
   color: var(--pink-color);
 }
 
-/* 主标题使用淡蓝色 */
+/* 主标题使用淡粉色（交换后） */
 #site-title,
 .site-title,
 .header-title {
-    color: var(--blue-color) !important;
+    color: var(--pink-color) !important;  /* 改为粉色 */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     font-weight: bold !important;
 }
 
-/* 副标题使用淡粉色 */
+/* 副标题使用淡蓝色（交换后） */
 .site-subtitle,
 #site-subtitle {
-    color: var(--pink-color) !important;
+    color: var(--blue-color) !important;  /* 改为蓝色 */
     font-size: 1.3rem !important;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     margin-top: 10px !important;
@@ -61,43 +59,46 @@
     display: block !important;
 }
 
-/* 打字机光标使用淡粉色 */
+/* 打字机光标使用淡蓝色 */
 .typed-cursor {
-    color: var(--pink-color) !important;
+    color: var(--blue-color) !important;  /* 跟随副标题颜色 */
     font-weight: normal !important;
 }
 
-/* 文章卡片 - 淡蓝淡粉渐变阴影 */
+/* 文章卡片 - 纯淡粉色样式（移除渐变） */
 #recent-posts .recent-post-item {
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.15) !important;
+  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.15) !important;
   border: 1px solid rgba(255, 182, 193, 0.3) !important;
   border-radius: 12px !important;
   transition: all 0.3s ease !important;
   backdrop-filter: blur(8px) !important;
+  /* 移除渐变边框 */
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 182, 193, 0.3) !important;
 }
 
-/* 卡片悬停效果 - 增强淡粉色元素 */
+/* 卡片悬停效果 - 淡粉色增强 */
 #recent-posts .recent-post-item:hover {
-  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2) !important;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.25) !important;
   transform: translateY(-3px) !important;
   border-color: rgba(255, 182, 193, 0.5) !important;
 }
 
-/* 阅读更多按钮 - 淡蓝淡粉渐变 */
+/* 阅读更多按钮 - 纯淡粉色 */
 .post-more a {
-  background: linear-gradient(135deg, var(--blue-color), var(--pink-color)) !important;
+  background: var(--pink-color) !important;  /* 纯粉色，无渐变 */
   color: white !important;
   border: none !important;
   border-radius: 20px !important;
   padding: 8px 20px !important;
   transition: all 0.3s ease !important;
-  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(255, 182, 193, 0.25) !important;
 }
 
 .post-more a:hover {
-  background: linear-gradient(135deg, var(--pink-color), var(--blue-color)) !important;
+  background: rgba(255, 182, 193, 0.9) !important;  /* 稍微变浅 */
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 18px rgba(255, 182, 193, 0.3) !important;
+  box-shadow: 0 6px 18px rgba(255, 182, 193, 0.35) !important;
 }
 
 /* 分类和标签 - 淡蓝色为主，悬停变淡粉色 */
@@ -119,7 +120,7 @@
     box-shadow: 0 3px 10px rgba(255, 182, 193, 0.15) !important;
 }
 
-/* 分页器 - 淡蓝淡粉搭配 */
+/* 分页器 - 使用纯色 */
 .pagination .page-number,
 .pagination .extend {
     border: 1px solid rgba(135, 206, 235, 0.3) !important;
@@ -131,7 +132,7 @@
 
 .pagination .page-number.current,
 .pagination .page-number:hover {
-    background: linear-gradient(135deg, var(--blue-color), var(--pink-color)) !important;
+    background: var(--pink-color) !important;  /* 纯粉色 */
     color: white !important;
     border-color: var(--pink-color) !important;
 }
@@ -160,30 +161,10 @@
   height: 300px;
 }
 
-/* 渐变边框动画 - 淡蓝淡粉渐变 */
+/* 移除渐变边框动画，使用纯色边框 */
 #recent-posts .recent-post-item {
   position: relative;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(135deg, var(--blue-color), var(--pink-color)) border-box !important;
-  border: 2px solid transparent !important;
-}
-
-#recent-posts .recent-post-item::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, var(--blue-color), var(--pink-color));
-  border-radius: 14px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#recent-posts .recent-post-item:hover::before {
-  opacity: 0.8;
+  /* 移除渐变边框相关代码 */
 }
 
 /* 文章信息 - 淡蓝色标签 */
@@ -205,7 +186,7 @@
     transform: translateY(-1px) !important;
 }
 
-/* 侧边栏卡片 - 淡蓝淡粉风格 */
+/* 侧边栏卡片 - 使用纯色 */
 .aside-content .card {
   background: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(135, 206, 235, 0.15) !important;
@@ -219,9 +200,9 @@
   color: var(--blue-color) !important;
 }
 
-/* 滚动进度条 - 淡蓝淡粉渐变 */
+/* 滚动进度条 - 纯淡粉色 */
 #progress-bar {
-  background: linear-gradient(90deg, var(--blue-color), var(--pink-color)) !important;
+  background: var(--pink-color) !important;  /* 纯粉色 */
   height: 3px !important;
 }
 
@@ -229,12 +210,12 @@
 [data-theme="dark"] #site-title,
 [data-theme="dark"] .site-title,
 [data-theme="dark"] .header-title {
-    color: var(--blue-color) !important;
+    color: var(--pink-color) !important;  /* 深色模式下主标题仍为粉色 */
 }
 
 [data-theme="dark"] .site-subtitle,
 [data-theme="dark"] #site-subtitle {
-    color: var(--pink-color) !important;
+    color: var(--blue-color) !important;  /* 深色模式下副标题仍为蓝色 */
 }
 
 [data-theme="dark"] .aside-content .card {
@@ -242,7 +223,7 @@
   border: 1px solid rgba(135, 206, 235, 0.2) !important;
 }
 
-/* 新增：更柔和的毛玻璃效果 */
+/* 毛玻璃效果 */
 #recent-posts .recent-post-item,
 .aside-content .card {
   backdrop-filter: blur(6px) !important;
