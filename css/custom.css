@@ -2,6 +2,7 @@
 :root {
   --blue-color: #87CEEB;      /* 淡蓝色 */
   --pink-color: #FFB6C1;      /* 淡粉色 */
+  --pink-hover: #FF91A4;      /* 稍深的粉色用于悬停 */
   --blue-light: rgba(135, 206, 235, 0.1);
   --pink-light: rgba(255, 182, 193, 0.1);
 }
@@ -37,21 +38,25 @@
   color: var(--pink-color);
 }
 
-/* 主标题使用淡粉色（交换后） */
+/* 主标题和副标题都使用淡粉色 */
+#site-title,
+.site-title,
+.header-title,
+.site-subtitle,
+#site-subtitle {
+    color: var(--pink-color) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
 #site-title,
 .site-title,
 .header-title {
-    color: var(--pink-color) !important;  /* 改为粉色 */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     font-weight: bold !important;
 }
 
-/* 副标题使用淡蓝色（交换后） */
 .site-subtitle,
 #site-subtitle {
-    color: var(--blue-color) !important;  /* 改为蓝色 */
     font-size: 1.3rem !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     margin-top: 10px !important;
     min-height: 24px !important;
     opacity: 1 !important;
@@ -59,34 +64,33 @@
     display: block !important;
 }
 
-/* 打字机光标使用淡蓝色 */
+/* 打字机光标使用淡粉色 */
 .typed-cursor {
-    color: var(--blue-color) !important;  /* 跟随副标题颜色 */
+    color: var(--pink-color) !important;
     font-weight: normal !important;
 }
 
-/* 文章卡片 - 纯淡粉色样式（移除渐变） */
+/* 文章卡片 - 纯淡粉色样式 */
 #recent-posts .recent-post-item {
   box-shadow: 0 4px 15px rgba(255, 182, 193, 0.15) !important;
   border: 1px solid rgba(255, 182, 193, 0.3) !important;
   border-radius: 12px !important;
   transition: all 0.3s ease !important;
   backdrop-filter: blur(8px) !important;
-  /* 移除渐变边框 */
   background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(255, 182, 193, 0.3) !important;
 }
 
-/* 卡片悬停效果 - 淡粉色增强 */
+/* 卡片悬停效果 - 背景变为粉色 */
 #recent-posts .recent-post-item:hover {
-  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.25) !important;
+  background: rgba(255, 182, 193, 0.2) !important; /* 粉色背景 */
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3) !important;
   transform: translateY(-3px) !important;
-  border-color: rgba(255, 182, 193, 0.5) !important;
+  border-color: rgba(255, 182, 193, 0.6) !important;
 }
 
 /* 阅读更多按钮 - 纯淡粉色 */
 .post-more a {
-  background: var(--pink-color) !important;  /* 纯粉色，无渐变 */
+  background: var(--pink-color) !important;
   color: white !important;
   border: none !important;
   border-radius: 20px !important;
@@ -96,7 +100,7 @@
 }
 
 .post-more a:hover {
-  background: rgba(255, 182, 193, 0.9) !important;  /* 稍微变浅 */
+  background: var(--pink-hover) !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 6px 18px rgba(255, 182, 193, 0.35) !important;
 }
@@ -132,7 +136,7 @@
 
 .pagination .page-number.current,
 .pagination .page-number:hover {
-    background: var(--pink-color) !important;  /* 纯粉色 */
+    background: var(--pink-color) !important;
     color: white !important;
     border-color: var(--pink-color) !important;
 }
@@ -159,12 +163,6 @@
 #recent-posts .recent-post-item:active::after {
   width: 300px;
   height: 300px;
-}
-
-/* 移除渐变边框动画，使用纯色边框 */
-#recent-posts .recent-post-item {
-  position: relative;
-  /* 移除渐变边框相关代码 */
 }
 
 /* 文章信息 - 淡蓝色标签 */
@@ -202,20 +200,17 @@
 
 /* 滚动进度条 - 纯淡粉色 */
 #progress-bar {
-  background: var(--pink-color) !important;  /* 纯粉色 */
+  background: var(--pink-color) !important;
   height: 3px !important;
 }
 
 /* 深色模式适配 */
 [data-theme="dark"] #site-title,
 [data-theme="dark"] .site-title,
-[data-theme="dark"] .header-title {
-    color: var(--pink-color) !important;  /* 深色模式下主标题仍为粉色 */
-}
-
+[data-theme="dark"] .header-title,
 [data-theme="dark"] .site-subtitle,
 [data-theme="dark"] #site-subtitle {
-    color: var(--blue-color) !important;  /* 深色模式下副标题仍为蓝色 */
+    color: var(--pink-color) !important;
 }
 
 [data-theme="dark"] .aside-content .card {
