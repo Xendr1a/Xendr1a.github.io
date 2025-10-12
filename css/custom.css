@@ -1,32 +1,32 @@
-/* 蓝色和粉色双拼主题 */
+/* 淡蓝色和淡粉色双拼主题 */
 :root {
-  --blue-color: #6CB4EE;      /* 蓝色 */
-  --pink-color: #FF69B4;      /* 粉色 */
-  --blue-light: rgba(108, 180, 238, 0.1);
-  --pink-light: rgba(255, 105, 180, 0.1);
+  --blue-color: #87CEEB;      /* 淡蓝色 */
+  --pink-color: #FFB6C1;      /* 淡粉色 */
+  --blue-light: rgba(135, 206, 235, 0.1);
+  --pink-light: rgba(255, 182, 193, 0.1);
   --gradient-bg: linear-gradient(135deg, var(--blue-color), var(--pink-color));
   --gradient-light: linear-gradient(135deg, var(--blue-light), var(--pink-light));
 }
 
-/* 背景改为蓝粉渐变 */
+/* 背景改为淡蓝淡粉渐变 */
 #web_bg {
   background: linear-gradient(135deg, 
-    rgba(108, 180, 238, 0.15) 0%, 
-    rgba(255, 105, 180, 0.15) 100%) !important;
+    rgba(135, 206, 235, 0.15) 0%, 
+    rgba(255, 182, 193, 0.15) 100%) !important;
   background-size: cover;
   background-position: center;
 }
 
 .layout_post>#post,
 #recent-posts .recent-post-item {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
 }
 
 [data-theme="dark"] #recent-posts .recent-post-item {
   background: rgba(18, 18, 18, 0.7);
 }
 
-/* 导航栏保持透明，链接使用蓝色 */
+/* 导航栏保持透明，链接使用淡蓝色 */
 #nav {
   background: transparent;
 }
@@ -36,24 +36,24 @@
 }
 
 #nav a:hover {
-  color: var(--pink-color); /* 悬停时变为粉色 */
+  color: var(--pink-color);
 }
 
-/* 主标题使用蓝色 */
+/* 主标题使用淡蓝色 */
 #site-title,
 .site-title,
 .header-title {
     color: var(--blue-color) !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     font-weight: bold !important;
 }
 
-/* 副标题使用粉色 */
+/* 副标题使用淡粉色 */
 .site-subtitle,
 #site-subtitle {
     color: var(--pink-color) !important;
     font-size: 1.3rem !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
     margin-top: 10px !important;
     min-height: 24px !important;
     opacity: 1 !important;
@@ -61,70 +61,71 @@
     display: block !important;
 }
 
-/* 打字机光标使用粉色 */
+/* 打字机光标使用淡粉色 */
 .typed-cursor {
     color: var(--pink-color) !important;
     font-weight: normal !important;
 }
 
-/* 文章卡片 - 蓝粉渐变阴影 */
+/* 文章卡片 - 淡蓝淡粉渐变阴影 */
 #recent-posts .recent-post-item {
-  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.2) !important;
-  border: 1px solid rgba(255, 105, 180, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.15) !important;
+  border: 1px solid rgba(255, 182, 193, 0.3) !important;
   border-radius: 12px !important;
   transition: all 0.3s ease !important;
+  backdrop-filter: blur(8px) !important;
 }
 
-/* 卡片悬停效果 - 增强粉色元素 */
+/* 卡片悬停效果 - 增强淡粉色元素 */
 #recent-posts .recent-post-item:hover {
-  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.25) !important;
-  transform: translateY(-5px) !important;
-  border-color: rgba(255, 105, 180, 0.5) !important;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2) !important;
+  transform: translateY(-3px) !important;
+  border-color: rgba(255, 182, 193, 0.5) !important;
 }
 
-/* 阅读更多按钮 - 蓝粉渐变 */
+/* 阅读更多按钮 - 淡蓝淡粉渐变 */
 .post-more a {
   background: linear-gradient(135deg, var(--blue-color), var(--pink-color)) !important;
   color: white !important;
   border: none !important;
-  border-radius: 25px !important;
+  border-radius: 20px !important;
   padding: 8px 20px !important;
   transition: all 0.3s ease !important;
-  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.25) !important;
 }
 
 .post-more a:hover {
   background: linear-gradient(135deg, var(--pink-color), var(--blue-color)) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4) !important;
+  box-shadow: 0 6px 18px rgba(255, 182, 193, 0.3) !important;
 }
 
-/* 分类和标签 - 蓝色为主，悬停变粉 */
+/* 分类和标签 - 淡蓝色为主，悬停变淡粉色 */
 #aside-content .card-tag-cloud a,
 #aside-content .card-categories a {
     color: var(--blue-color) !important;
-    border: 1px solid rgba(108, 180, 238, 0.3) !important;
-    background: rgba(108, 180, 238, 0.1) !important;
-    border-radius: 15px !important;
+    border: 1px solid rgba(135, 206, 235, 0.3) !important;
+    background: rgba(135, 206, 235, 0.08) !important;
+    border-radius: 12px !important;
     transition: all 0.3s ease !important;
 }
 
 #aside-content .card-tag-cloud a:hover,
 #aside-content .card-categories a:hover {
     color: var(--pink-color) !important;
-    background: rgba(255, 105, 180, 0.1) !important;
-    border-color: rgba(255, 105, 180, 0.3) !important;
-    transform: scale(1.05) !important;
-    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2) !important;
+    background: rgba(255, 182, 193, 0.08) !important;
+    border-color: rgba(255, 182, 193, 0.3) !important;
+    transform: scale(1.03) !important;
+    box-shadow: 0 3px 10px rgba(255, 182, 193, 0.15) !important;
 }
 
-/* 分页器 - 蓝粉搭配 */
+/* 分页器 - 淡蓝淡粉搭配 */
 .pagination .page-number,
 .pagination .extend {
-    border: 1px solid rgba(108, 180, 238, 0.3) !important;
+    border: 1px solid rgba(135, 206, 235, 0.3) !important;
     background: rgba(255, 255, 255, 0.9) !important;
     color: var(--blue-color) !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     transition: all 0.3s ease !important;
 }
 
@@ -135,7 +136,7 @@
     border-color: var(--pink-color) !important;
 }
 
-/* 水波纹点击效果 - 粉色 */
+/* 水波纹点击效果 - 淡粉色 */
 #recent-posts .recent-post-item {
   position: relative;
   overflow: hidden;
@@ -148,7 +149,7 @@
   left: 50%;
   width: 0;
   height: 0;
-  background: radial-gradient(circle, rgba(255, 105, 180, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.25) 0%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
@@ -159,7 +160,7 @@
   height: 300px;
 }
 
-/* 渐变边框动画 - 蓝粉渐变 */
+/* 渐变边框动画 - 淡蓝淡粉渐变 */
 #recent-posts .recent-post-item {
   position: relative;
   background: linear-gradient(white, white) padding-box,
@@ -182,16 +183,16 @@
 }
 
 #recent-posts .recent-post-item:hover::before {
-  opacity: 1;
+  opacity: 0.8;
 }
 
-/* 文章信息 - 蓝色标签 */
+/* 文章信息 - 淡蓝色标签 */
 .post-meta__tags a,
 .post-meta__categories a {
     color: var(--blue-color) !important;
-    background: rgba(108, 180, 238, 0.1) !important;
-    border: 1px solid rgba(108, 180, 238, 0.3) !important;
-    border-radius: 12px !important;
+    background: rgba(135, 206, 235, 0.08) !important;
+    border: 1px solid rgba(135, 206, 235, 0.25) !important;
+    border-radius: 10px !important;
     padding: 2px 8px !important;
     transition: all 0.3s ease !important;
 }
@@ -199,25 +200,26 @@
 .post-meta__tags a:hover,
 .post-meta__categories a:hover {
     color: var(--pink-color) !important;
-    background: rgba(255, 105, 180, 0.1) !important;
-    border-color: rgba(255, 105, 180, 0.3) !important;
+    background: rgba(255, 182, 193, 0.08) !important;
+    border-color: rgba(255, 182, 193, 0.25) !important;
     transform: translateY(-1px) !important;
 }
 
-/* 侧边栏卡片 - 蓝粉风格 */
+/* 侧边栏卡片 - 淡蓝淡粉风格 */
 .aside-content .card {
   background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(108, 180, 238, 0.2) !important;
+  border: 1px solid rgba(135, 206, 235, 0.15) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 15px rgba(108, 180, 238, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.1) !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 .aside-content .card-header {
-  border-bottom: 1px solid rgba(108, 180, 238, 0.3) !important;
+  border-bottom: 1px solid rgba(135, 206, 235, 0.2) !important;
   color: var(--blue-color) !important;
 }
 
-/* 滚动进度条 - 蓝粉渐变 */
+/* 滚动进度条 - 淡蓝淡粉渐变 */
 #progress-bar {
   background: linear-gradient(90deg, var(--blue-color), var(--pink-color)) !important;
   height: 3px !important;
@@ -235,9 +237,14 @@
     color: var(--pink-color) !important;
 }
 
-/* 新增：毛玻璃效果增强 */
+[data-theme="dark"] .aside-content .card {
+  background: rgba(30, 30, 30, 0.8) !important;
+  border: 1px solid rgba(135, 206, 235, 0.2) !important;
+}
+
+/* 新增：更柔和的毛玻璃效果 */
 #recent-posts .recent-post-item,
 .aside-content .card {
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
 }
