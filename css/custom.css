@@ -6,6 +6,7 @@
   --pink-light: rgba(255, 182, 193, 0.3);
   --blue-medium: rgba(135, 206, 235, 0.5);
   --pink-medium: rgba(255, 182, 193, 0.5);
+  --pink-hover: #FF91A4;      /* 悬停粉色 */
 }
 
 /* 背景改为淡蓝淡粉渐变 */
@@ -286,6 +287,39 @@
     var(--pink-color) 50%, 
     var(--pink-color) 100%) !important;
   height: 3px !important;
+}
+
+/* === 特定元素悬停颜色修改 === */
+
+/* 1. GitHub 关注按钮悬停效果 */
+#card-info-btn:hover {
+  color: var(--pink-color) !important;
+}
+
+#card-info-btn:hover .fab.fa-github {
+  color: var(--pink-color) !important;
+}
+
+#card-info-btn:hover span {
+  color: var(--pink-color) !important;
+}
+
+/* 2. 设置齿轮图标悬停效果 */
+.fas.fa-cog:hover {
+  color: var(--pink-color) !important;
+}
+
+/* 3. 回到顶部按钮悬停效果 */
+#go-up:hover {
+  color: var(--pink-color) !important;
+}
+
+#go-up:hover .fas.fa-arrow-up {
+  color: var(--pink-color) !important;
+}
+
+#go-up:hover .scroll-percent {
+  color: var(--pink-color) !important;
 }
 
 /* 深色模式适配 */
