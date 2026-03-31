@@ -1,37 +1,49 @@
 (function() {
-    var possibleColors = ["#87CEEB", "#FFB6C1"]; // 淡蓝 #87CEEB 和 淡粉 #FFB6C1
+    var possibleColors = ["#87CEEB", "#FFB6C1"];
     var width = window.innerWidth;
     var height = window.innerHeight;
     var cursor = { x: width / 2, y: width / 2 };
     var particles = [];
-  
+    var maxParticles = 80;
+    var lastMoveTime = 0;
+    var moveInterval = 24;
+
     function init() {
       bindEvents();
       loop();
     }
-  
+
     function bindEvents() {
-      document.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onMouseMove, { passive: true });
+      window.addEventListener('resize', onWindowResize, { passive: true });
     }
-  
-    function onWindowResize(e) {
+
+    function onWindowResize() {
       width = window.innerWidth;
       height = window.innerHeight;
     }
-  
+
     function onMouseMove(e) {
+      var now = Date.now();
+      if (now - lastMoveTime < moveInterval) return;
+      lastMoveTime = now;
+
       cursor.x = e.clientX;
       cursor.y = e.clientY;
       addParticle(cursor.x, cursor.y, possibleColors[Math.floor(Math.random() * possibleColors.length)]);
     }
-  
+
     function addParticle(x, y, color) {
+      if (particles.length >= maxParticles) {
+        var expired = particles.shift();
+        if (expired) expired.die();
+      }
+
       var particle = new Particle();
       particle.init(x, y, color);
       particles.push(particle);
     }
-  
+
     function updateParticles() {
       for (var i = 0; i < particles.length; i++) {
         particles[i].update();
@@ -43,15 +55,15 @@
         }
       }
     }
-  
+
     function loop() {
       requestAnimationFrame(loop);
       updateParticles();
     }
-  
+
     function Particle() {
-      this.character = "*"; // 随机掉落蓝心或粉心
-      this.lifeSpan = 180; // 粒子消失时间，越小越快
+      this.character = "*";
+      this.lifeSpan = 180;
       this.initialStyles = {
         "position": "fixed",
         "display": "inline-block",
@@ -60,10 +72,10 @@
         "pointerEvents": "none",
         "touch-action": "none",
         "z-index": "10000000",
-        "fontSize": "21px", // 粒子大小
+        "fontSize": "21px",
         "will-change": "transform"
       };
-  
+
       this.init = function(x, y, color) {
         this.velocity = {
           x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 2),
@@ -77,27 +89,28 @@
         this.element.style.color = color;
         document.body.appendChild(this.element);
       };
-  
+
       this.update = function() {
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         this.lifeSpan--;
         this.element.style.transform = "translate3d(" + this.position.x + "px," + this.position.y + "px, 0) scale(" + (this.lifeSpan / 120) + ")";
       };
-  
+
       this.die = function() {
-        this.element.parentNode.removeChild(this.element);
+        if (this.element && this.element.parentNode) {
+          this.element.parentNode.removeChild(this.element);
+        }
       };
     }
-  
+
     function applyProperties(target, properties) {
       for (var key in properties) {
         target.style[key] = properties[key];
       }
     }
-  
-    // 仅在电脑端运行，手机端不运行以节省性能
+
     if (!('ontouchstart' in window)) {
       init();
     }
-  })();
+})();
