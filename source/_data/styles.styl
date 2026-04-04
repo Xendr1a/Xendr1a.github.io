@@ -1,0 +1,265 @@
+body {
+  background: linear-gradient(rgba(255,248,240,0.08), rgba(255,248,240,0.08)), url('/img/site-bg.png') center center / cover fixed no-repeat;
+  color: #4d5e73;
+}
+
+a,
+.menu .menu-item a,
+.site-author-name,
+.site-state-item-count,
+.site-state-item-name,
+.post-title-link,
+.post-meta,
+.post-body,
+.brand {
+  color: #53657c;
+}
+
+a:hover,
+.menu .menu-item a:hover,
+.menu .menu-item-active a,
+.post-title-link:hover,
+.pagination .page-number.current,
+.pagination a:hover {
+  color: #dd8f61;
+}
+
+@media (max-width: 767px) {
+  body {
+    background-attachment: scroll;
+    background-position: center top;
+  }
+}
+
+.site-author-image,
+.custom-logo-image {
+  object-fit: cover;
+}
+
+@media (min-width: 992px) {
+  .header {
+    background: transparent !important;
+  }
+
+  .container .main-inner {
+    width: 1180px;
+  }
+
+  aside.sidebar,
+  aside.sidebar .sidebar-inner,
+  aside.sidebar .sidebar-panel-container,
+  aside.sidebar .sidebar-panel {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .site-brand-container {
+    background: linear-gradient(135deg, rgba(69, 99, 136, 0.82), rgba(89, 121, 163, 0.74)) !important;
+    border: 1px solid rgba(255, 225, 190, 0.18) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 10px 28px rgba(61, 89, 123, 0.16) !important;
+    margin-bottom: 12px;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  .site-meta {
+    padding: 22px 24px;
+  }
+
+  .brand {
+    padding: 0;
+    color: #fff8f0 !important;
+  }
+
+  .site-title {
+    color: #fff8f0 !important;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .site-subtitle {
+    color: rgba(255, 244, 232, 0.80) !important;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  header.header .site-nav,
+  aside.sidebar .sidebar-panel.site-overview-wrap,
+  aside.sidebar .sidebar-panel.post-toc-wrap,
+  main.main .post-block,
+  main.main .pagination,
+  main.main .comments,
+  main.main .post-navigation,
+  .back-to-top {
+    background: rgba(255, 250, 244, 0.50) !important;
+    border: 1px solid rgba(255, 221, 188, 0.42) !important;
+    box-shadow: 0 10px 30px rgba(94, 118, 150, 0.10) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 0 !important;
+  }
+
+  header.header .site-nav {
+    padding: 10px 0;
+  }
+
+  .menu .menu-item {
+    margin: 0;
+  }
+
+  .menu .menu-item a {
+    padding: 11px 24px;
+    border-bottom: 1px solid rgba(255, 225, 198, 0.34) !important;
+  }
+
+  .menu .menu-item:last-child a {
+    border-bottom: 0 !important;
+  }
+
+  .menu .menu-item a:hover,
+  .menu .menu-item-active a {
+    background: rgba(255, 237, 214, 0.18) !important;
+  }
+
+  aside.sidebar .sidebar-inner {
+    padding-top: 0;
+  }
+
+  aside.sidebar .sidebar-panel.site-overview-wrap {
+    margin-top: 12px;
+    padding: 20px 0;
+  }
+
+  aside.sidebar .sidebar-inner.sidebar-toc-active {
+    justify-content: flex-start !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  aside.sidebar .sidebar-inner.sidebar-toc-active .sidebar-nav {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  aside.sidebar .sidebar-inner.sidebar-toc-active .sidebar-panel-container {
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+    overflow: visible !important;
+    align-items: initial !important;
+  }
+
+  aside.sidebar .sidebar-inner.sidebar-toc-active .sidebar-panel.post-toc-wrap {
+    display: block !important;
+    grid-area: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    visibility: visible !important;
+    padding: 18px 16px !important;
+  }
+
+  aside.sidebar .sidebar-inner.sidebar-toc-active .sidebar-panel.site-overview-wrap {
+    display: none !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .site-author {
+    padding-top: 0;
+    background: transparent !important;
+  }
+
+  .site-author-image {
+    border: 2px solid rgba(255, 233, 209, 0.70) !important;
+    background: rgba(255, 250, 244, 0.30) !important;
+  }
+
+  .site-author-name,
+  .site-description,
+  .site-state-item-count,
+  .site-state-item-name,
+  .site-state-item a,
+  .links-of-author-item a {
+    color: #53657c !important;
+  }
+
+  .site-state-item a:hover,
+  .links-of-author-item a:hover {
+    color: #dd8f61 !important;
+  }
+
+  .main {
+    padding-top: 0;
+  }
+
+  .content-wrap {
+    padding-top: 0;
+  }
+
+  .posts-expand .post-block {
+    margin-top: 0;
+    margin-bottom: 12px;
+    padding: 34px 34px 26px;
+  }
+
+  .post-header {
+    margin-bottom: 28px;
+  }
+
+  .post-title {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .post-meta {
+    color: #7f8ea3 !important;
+  }
+
+  .post-body {
+    color: #56667b !important;
+  }
+
+  .posts-expand .post-button {
+    margin-top: 28px;
+  }
+
+  .btn {
+    border-radius: 0;
+    border: 1px solid rgba(120, 141, 171, 0.52) !important;
+    background: rgba(255, 248, 240, 0.20) !important;
+    color: #5a6c82 !important;
+    padding: 6px 22px;
+  }
+
+  .btn:hover {
+    border-color: rgba(221, 143, 97, 0.70) !important;
+    background: rgba(255, 241, 224, 0.28) !important;
+    color: #dd8f61 !important;
+  }
+
+  .pagination .page-number,
+  .pagination .extend {
+    background: transparent !important;
+    border-color: rgba(255, 221, 188, 0.42) !important;
+    color: #657892 !important;
+  }
+
+  .pagination .page-number.current {
+    background: rgba(255, 234, 212, 0.42) !important;
+    border-color: rgba(221, 143, 97, 0.38) !important;
+  }
+}

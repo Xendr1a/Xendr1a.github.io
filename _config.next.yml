@@ -1,0 +1,35 @@
+scheme: Gemini
+darkmode: false
+
+menu:
+  home: / || fa fa-home
+  about: /about/ || fa fa-user
+  tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
+  archives: /archives/ || fa fa-archive
+  友链: /links/ || fas fa-link
+
+menu_settings:
+  icons: true
+  badges: false
+
+sidebar:
+  position: left
+  display: always
+
+avatar:
+  url: /img/myhead.png
+  rounded: true
+  rotated: false
+
+codeblock:
+  theme:
+    light: stackoverflow-light
+    dark: stackoverflow-light
+  copy_button:
+    enable: true
+    style: flat
+  language: true
+
+custom_file_path:
+  style: source/_data/styles.styl
