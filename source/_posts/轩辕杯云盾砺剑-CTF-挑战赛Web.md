@@ -1,10 +1,12 @@
 ---
+description: '记录轩辕杯云盾砺剑 CTF 挑战赛 Web 方向题目的解题过程与利用细节。'
 title: “轩辕杯”云盾砺剑CTF挑战赛（Web)
 date: '2026-03-31 20:13:49'
 updated: '2026-04-04 22:23:48'
 comments: true
 toc: true
 ---
+description: '记录轩辕杯云盾砺剑 CTF 挑战赛 Web 方向题目的解题过程与利用细节。'
 
 # “轩辕杯”云盾砺剑CTF挑战赛（Web)
 
@@ -13,6 +15,8 @@ toc: true
 ## 前言
 
 这是我在这里写的第一篇wp，欢迎各位师傅的评价与建议
+
+<!-- more -->
 
 ## ezjs
 
@@ -407,3 +411,4 @@ token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.EYrwzSGzf
 ![](/source/images/4f716ce8-bea8-4a38-bb76-b08f7b3b21f5-1024x656-20260331201350-fxo5r5r.png)
 
 至此，轩辕之旅结束~~~~
+
