@@ -1,0 +1,888 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="# newstar2025（week1  ## multi-headach3  hint：什么叫机器人控制了我的头？  一眼robots协议  ![6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a](&#x2F;img&#x2F;newstar2025-week1&#x2F;6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a-20251015090210-0ymg8fz.png)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="newstar2025">
+<meta property="og:url" content="https://xendr1a.github.io/2025/10/15/newstar2025-week1/index.html">
+<meta property="og:site_name" content="Xendr1a">
+<meta property="og:description" content="# newstar2025（week1  ## multi-headach3  hint：什么叫机器人控制了我的头？  一眼robots协议  ![6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a](&#x2F;img&#x2F;newstar2025-week1&#x2F;6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a-20251015090210-0ymg8fz.png)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-15T01:00:54.000Z">
+<meta property="article:modified_time" content="2026-06-11T09:34:08.389Z">
+<meta property="article:author" content="Xendr1a">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>newstar2025 - Xendr1a</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="newstar2025"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-15 09:00" pubdate>
+          2025年10月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          73 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">newstar2025</h1>
+            
+            
+              <div class="markdown-body">
+                
+                
+# newstar2025（week1
+
+## multi-headach3
+
+hint：什么叫机器人控制了我的头？
+
+一眼robots协议
+
+![6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a](/img/newstar2025-week1/6072fc0e-c1fc-4b83-86fc-6bd4f0099c3a-20251015090210-0ymg8fz.png)
+
+事实证明也是![27f31a73-8719-4962-ac98-d1672e1161db](/img/newstar2025-week1/27f31a73-8719-4962-ac98-d1672e1161db-20251015090225-b7qnh0f.png)
+
+进入/hidden.php路由回重定向到主页，换bp抓包
+
+![40dc4c9e-07a1-475d-80bd-1920f42dcf3c](/img/newstar2025-week1/40dc4c9e-07a1-475d-80bd-1920f42dcf3c-20251015090311-85d61by.png)
+
+## strange_login
+
+hint：我当然知道1=1了！？
+
+进入是登入界面，万能密码秒了
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs curl">username:admin&#x27; or 1=1#<br>password:随便填<br></code></pre></td></tr></table></figure>
+
+## 宇宙的中心是php
+
+进入网页发现禁用了F12，那我们在更多工具那边打开开发者工具看到个路由s3kret.php
+
+![34b54820-2667-4e83-99e5-069cf2192340](/img/newstar2025-week1/34b54820-2667-4e83-99e5-069cf2192340-20251015090937-4kd0vaj.png)
+
+得到题目
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs curl">&lt;?php<br>highlight_file(__FILE__);<br>include &quot;flag.php&quot;;<br>if(isset($_POST[&#x27;newstar2025&#x27;]))&#123;<br>    $answer = $_POST[&#x27;newstar2025&#x27;];<br>    if(intval($answer)!=47&amp;&amp;intval($answer,0)==47)&#123;<br>        echo $flag;<br>    &#125;else&#123;<br>        echo &quot;你还未参透奥秘&quot;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+16进制绕过
+
+POST：`newstar2025=0x2f`
+
+## 我真得控制你了
+
+依旧更多工具那边打开开发者工具
+
+删除这个然后就可以按启动了
+
+![db21b202-efdf-4e10-bf36-5eabbee4923f](/img/newstar2025-week1/db21b202-efdf-4e10-bf36-5eabbee4923f-20251015092504-4fqohb4.png)
+
+进入一个登入页面弱密码 admin/111111
+
+然后获得
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generate_dynamic_flag</span>(<span class="hljs-params"><span class="hljs-variable">$secret</span></span>) </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">getenv</span>(<span class="hljs-string">&quot;ICQ_FLAG&quot;</span>) ?: <span class="hljs-string">&#x27;default_flag&#x27;</span>;<br>&#125;<br><br><br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;newstar&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$input</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;newstar&#x27;</span>];<br>    <br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">is_array</span>(<span class="hljs-variable">$input</span>)) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;恭喜掌握新姿势&quot;</span>);<br>    &#125;<br>    <br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/[^\d*\/~()\s]/&#x27;</span>, <span class="hljs-variable">$input</span>)) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;老套路了，行不行啊&quot;</span>);<br>    &#125;<br>    <br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/^[\d\s]+$/&#x27;</span>, <span class="hljs-variable">$input</span>)) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;请输入有效的表达式&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-variable">$test</span> = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        @<span class="hljs-keyword">eval</span>(<span class="hljs-string">&quot;\$test = <span class="hljs-subst">$input</span>;&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Error</span> <span class="hljs-variable">$e</span>) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;表达式错误&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable">$test</span> == <span class="hljs-number">2025</span>) &#123;<br>        <span class="hljs-variable">$flag</span> = <span class="hljs-title function_ invoke__">generate_dynamic_flag</span>(<span class="hljs-variable">$flag_secret</span>);<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;div class=&#x27;success&#x27;&gt;拿下flag！&lt;/div&gt;&quot;</span>;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;div class=&#x27;flag-container&#x27;&gt;&lt;div class=&#x27;flag&#x27;&gt;FLAG: <span class="hljs-subst">&#123;$flag&#125;</span>&lt;/div&gt;&lt;/div&gt;&quot;</span>;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;div class=&#x27;error&#x27;&gt;大哥哥泥把数字算错了: <span class="hljs-subst">$test</span> ≠ 2025&lt;/div&gt;&quot;</span>;<br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-meta">?&gt;</span><br><span class="hljs-meta">&lt;?php</span> &#125; <span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+可以取反绕过
+
+​`/portal.php?newstar=~(~2025)`
+
+## 别笑，你也过不了第二关
+
+一个游戏界面依旧f12观察
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><code class="hljs javascript">    <span class="hljs-keyword">const</span> game = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;game&quot;</span>);<br>    <span class="hljs-keyword">const</span> player = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;player&quot;</span>);<br>    <span class="hljs-keyword">const</span> scoreEl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;score&quot;</span>);<br>    <span class="hljs-keyword">const</span> levelEl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;level&quot;</span>);<br><br>    <span class="hljs-keyword">let</span> score = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">let</span> steps = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">let</span> maxSteps = <span class="hljs-number">10</span>; <span class="hljs-comment">// 每关掉落数量</span><br>    <span class="hljs-keyword">let</span> targetScores = [<span class="hljs-number">30</span>, <span class="hljs-number">1000000</span>]; <span class="hljs-comment">// 每关目标分数</span><br>    <span class="hljs-keyword">let</span> currentLevel = <span class="hljs-number">0</span>; <span class="hljs-comment">// 0 表示第一关</span><br>    <span class="hljs-keyword">let</span> gameEnded = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">let</span> finishSpawned = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">let</span> playerX = <span class="hljs-number">180</span>;<br>    <span class="hljs-keyword">let</span> gateInterval = <span class="hljs-literal">null</span>;<br><br>    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;keydown&quot;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;<br>      <span class="hljs-keyword">if</span> (e.<span class="hljs-property">key</span> === <span class="hljs-string">&quot;ArrowLeft&quot;</span>) <span class="hljs-title function_">movePlayer</span>(-<span class="hljs-number">100</span>);<br>      <span class="hljs-keyword">if</span> (e.<span class="hljs-property">key</span> === <span class="hljs-string">&quot;ArrowRight&quot;</span>) <span class="hljs-title function_">movePlayer</span>(<span class="hljs-number">100</span>);<br>    &#125;);<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">movePlayer</span>(<span class="hljs-params">offset</span>) &#123;<br>      <span class="hljs-keyword">let</span> newX = playerX + offset;<br>      <span class="hljs-keyword">if</span> (newX &lt; <span class="hljs-number">0</span> || newX &gt; <span class="hljs-number">340</span>) <span class="hljs-keyword">return</span>;<br>      playerX = newX;<br>      player.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = playerX + <span class="hljs-string">&quot;px&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">spawnGate</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">if</span> (steps &gt;= maxSteps || gameEnded || finishSpawned) <span class="hljs-keyword">return</span>;<br>      steps++;<br>      <span class="hljs-keyword">const</span> gate = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>      gate.<span class="hljs-property">className</span> = <span class="hljs-string">&quot;gate&quot;</span>;<br><br>      <span class="hljs-keyword">let</span> x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">60</span> : <span class="hljs-number">260</span>;<br>      gate.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = x + <span class="hljs-string">&quot;px&quot;</span>;<br><br>      <span class="hljs-keyword">let</span> isAdd = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &lt; <span class="hljs-number">0.5</span>;<br>      <span class="hljs-keyword">if</span> (isAdd) &#123;<br>        gate.<span class="hljs-property">dataset</span>.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;<br>        gate.<span class="hljs-property">style</span>.<span class="hljs-property">backgroundImage</span> = <span class="hljs-string">&quot;url(&#x27;2.jpg&#x27;)&quot;</span>;<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        gate.<span class="hljs-property">dataset</span>.<span class="hljs-property">value</span> = -<span class="hljs-number">10</span>;<br>        gate.<span class="hljs-property">style</span>.<span class="hljs-property">backgroundImage</span> = <span class="hljs-string">&quot;url(&#x27;1.jpg&#x27;)&quot;</span>;<br>      &#125;<br><br>      game.<span class="hljs-title function_">appendChild</span>(gate);<br><br>      <span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>;<br>      <span class="hljs-keyword">const</span> fall = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        y += <span class="hljs-number">5</span>;<br>        gate.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = y + <span class="hljs-string">&quot;px&quot;</span>;<br><br>        <span class="hljs-keyword">const</span> playerRect = player.<span class="hljs-title function_">getBoundingClientRect</span>();<br>        <span class="hljs-keyword">const</span> gateRect = gate.<span class="hljs-title function_">getBoundingClientRect</span>();<br><br>        <span class="hljs-keyword">if</span> (!(playerRect.<span class="hljs-property">right</span> &lt; gateRect.<span class="hljs-property">left</span> ||<br>              playerRect.<span class="hljs-property">left</span> &gt; gateRect.<span class="hljs-property">right</span> ||<br>              playerRect.<span class="hljs-property">bottom</span> &lt; gateRect.<span class="hljs-property">top</span> ||<br>              playerRect.<span class="hljs-property">top</span> &gt; gateRect.<span class="hljs-property">bottom</span>)) &#123;<br>          score += <span class="hljs-built_in">parseInt</span>(gate.<span class="hljs-property">dataset</span>.<span class="hljs-property">value</span>);<br>          scoreEl.<span class="hljs-property">innerText</span> = <span class="hljs-string">&quot;分数: &quot;</span> + score;<br>          <span class="hljs-built_in">clearInterval</span>(fall);<br>          gate.<span class="hljs-title function_">remove</span>();<br><br>          <span class="hljs-keyword">if</span> (steps &gt;= maxSteps &amp;&amp; !finishSpawned) <span class="hljs-title function_">spawnFinishLine</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (y &gt; <span class="hljs-number">600</span>) &#123;<br>          <span class="hljs-built_in">clearInterval</span>(fall);<br>          gate.<span class="hljs-title function_">remove</span>();<br>          <span class="hljs-keyword">if</span> (steps &gt;= maxSteps &amp;&amp; !finishSpawned) <span class="hljs-title function_">spawnFinishLine</span>();<br>        &#125;<br>      &#125;, <span class="hljs-number">50</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">spawnFinishLine</span>(<span class="hljs-params"></span>) &#123;<br>      finishSpawned = <span class="hljs-literal">true</span>;<br>      <span class="hljs-keyword">const</span> finish = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>      finish.<span class="hljs-property">className</span> = <span class="hljs-string">&quot;finish-line&quot;</span>;<br>      finish.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&quot;0px&quot;</span>;<br>      game.<span class="hljs-title function_">appendChild</span>(finish);<br><br>      <span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>;<br>      <span class="hljs-keyword">const</span> fall = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        y += <span class="hljs-number">5</span>;<br>        finish.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = y + <span class="hljs-string">&quot;px&quot;</span>;<br><br>        <span class="hljs-keyword">const</span> playerRect = player.<span class="hljs-title function_">getBoundingClientRect</span>();<br>        <span class="hljs-keyword">const</span> finishRect = finish.<span class="hljs-title function_">getBoundingClientRect</span>();<br><br>        <span class="hljs-keyword">if</span> (!(playerRect.<span class="hljs-property">right</span> &lt; finishRect.<span class="hljs-property">left</span> ||<br>              playerRect.<span class="hljs-property">left</span> &gt; finishRect.<span class="hljs-property">right</span> ||<br>              playerRect.<span class="hljs-property">bottom</span> &lt; finishRect.<span class="hljs-property">top</span> ||<br>              playerRect.<span class="hljs-property">top</span> &gt; finishRect.<span class="hljs-property">bottom</span>)) &#123;<br>          <span class="hljs-built_in">clearInterval</span>(fall);<br>          finish.<span class="hljs-title function_">remove</span>();<br>          <span class="hljs-title function_">endLevel</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (y &gt; <span class="hljs-number">600</span>) &#123;<br>          <span class="hljs-built_in">clearInterval</span>(fall);<br>          finish.<span class="hljs-title function_">remove</span>();<br>          <span class="hljs-title function_">endLevel</span>();<br>        &#125;<br>      &#125;, <span class="hljs-number">50</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">endLevel</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">if</span> (gameEnded) <span class="hljs-keyword">return</span>;<br><br>  <span class="hljs-built_in">clearInterval</span>(gateInterval);<br>  gateInterval = <span class="hljs-literal">null</span>;<br><br>  <span class="hljs-keyword">if</span> (score &gt;= targetScores[currentLevel]) &#123;<br>    <span class="hljs-title function_">alert</span>(<span class="hljs-string">`恭喜通过第 <span class="hljs-subst">$&#123;currentLevel + <span class="hljs-number">1</span>&#125;</span> 关！得分: <span class="hljs-subst">$&#123;score&#125;</span>`</span>);<br>    currentLevel++;<br>    <span class="hljs-keyword">if</span> (currentLevel &lt; targetScores.<span class="hljs-property">length</span>) &#123;<br>      <span class="hljs-comment">// 下一关</span><br>      <span class="hljs-title function_">resetLevel</span>(currentLevel);<br>      <span class="hljs-title function_">startGame</span>();<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 全部通关</span><br>      gameEnded = <span class="hljs-literal">true</span>;<br>      <span class="hljs-keyword">const</span> formData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLSearchParams</span>();<br>formData.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;score&quot;</span>, score);<br><br>      <span class="hljs-title function_">fetch</span>(<span class="hljs-string">&quot;/flag.php&quot;</span>, &#123;<br>  <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>  <span class="hljs-attr">headers</span>: &#123;<br>    <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span><br>  &#125;,<br>  <span class="hljs-attr">body</span>: formData.<span class="hljs-title function_">toString</span>()<br>&#125;)<br>.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">text</span>())<br>.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;<br>  <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;服务器返回:\n&quot;</span> + data);<br>&#125;)<br>.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> &#123;<br>  <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;请求失败: &quot;</span> + err);<br>&#125;);<br>    &#125;<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-title function_">alert</span>(<span class="hljs-string">`第 <span class="hljs-subst">$&#123;currentLevel + <span class="hljs-number">1</span>&#125;</span> 关未达成目标分数 (目标: <span class="hljs-subst">$&#123;targetScores[currentLevel]&#125;</span>)，将重新开始本关！`</span>);<br>    <span class="hljs-title function_">resetLevel</span>(currentLevel);<br>    <span class="hljs-title function_">startGame</span>();<br>  &#125;<br>&#125;<br><br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">resetLevel</span>(<span class="hljs-params">levelIndex</span>) &#123;<br>      score = <span class="hljs-number">0</span>;<br>      scoreEl.<span class="hljs-property">innerText</span> = <span class="hljs-string">&quot;分数: &quot;</span> + score;<br>      steps = <span class="hljs-number">0</span>;<br>      finishSpawned = <span class="hljs-literal">false</span>;<br>      levelEl.<span class="hljs-property">innerText</span> = <span class="hljs-string">&quot;关卡: &quot;</span> + (levelIndex + <span class="hljs-number">1</span>);<br>      [...game.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.gate, .finish-line&#x27;</span>)].<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-title function_">remove</span>());<br>    &#125;<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">startGame</span>(<span class="hljs-params"></span>) &#123;<br>      gateInterval = <span class="hljs-built_in">setInterval</span>(spawnGate, <span class="hljs-number">1500</span>);<br>    &#125;<br>    <span class="hljs-title function_">startGame</span>();<br>    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;visibilitychange&quot;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>      <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>.<span class="hljs-property">hidden</span>) &#123;<br>        <span class="hljs-keyword">if</span> (gateInterval) &#123;<br>          <span class="hljs-built_in">clearInterval</span>(gateInterval);<br>          gateInterval = <span class="hljs-literal">null</span>;<br>        &#125;<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">if</span> (!gameEnded &amp;&amp; !gateInterval) &#123;<br>          gateInterval = <span class="hljs-built_in">setInterval</span>(spawnGate, <span class="hljs-number">1500</span>);<br>        &#125;<br>      &#125;<br>    &#125;);<br></code></pre></td></tr></table></figure>
+
+分析代码，我们发现主要是score记录分数，endLevel()结束
+
+那我们可以先手动过第一关
+
+然后第二关时候![8046f41e-d46d-453f-b8d2-a8569621a0b4](/img/newstar2025-week1/8046f41e-d46d-453f-b8d2-a8569621a0b4-20251015093947-y80uu42.png)![154819e2-6d5e-4300-8529-467b8400e1d5](/img/newstar2025-week1/154819e2-6d5e-4300-8529-467b8400e1d5-20251015093950-hgrp814.png)
+
+获得flag
+
+或者利用它向/flag.php发POST请求
+
+![02c331ba-d0eb-4476-be24-73422f9e11af](/img/newstar2025-week1/02c331ba-d0eb-4476-be24-73422f9e11af-20251015094128-w9nsajy.png)
+
+## 黑客小W的故事（1）
+
+第一关抓包有个count我们把值改大发包就过了
+
+![11ef2f44-a718-451f-bae9-56daa8c953c9](/img/newstar2025-week1/11ef2f44-a718-451f-bae9-56daa8c953c9-20251016205937-rx8ak4w.png)
+
+然后是第二关，根据提示
+
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">GET:shipin=mogubaozi<br><span class="hljs-attribute">POST</span><span class="hljs-punctuation">: </span>guding<br></code></pre></td></tr></table></figure>
+
+然后蘑菇先生就让我们干活了
+
+![6732a2c8-446c-4494-86a9-6311d2089047](/img/newstar2025-week1/6732a2c8-446c-4494-86a9-6311d2089047-20251016210150-t93aplh.png)
+
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">DELETE</span> <span class="hljs-string">/talkToMushroom?shipin=mogubaozi</span> <span class="hljs-meta">HTTP/2</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>eci-2zedlhm2pgyz7chpwq8n.cloudeci1.ichunqiu.com:8000<br><span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOYW1lIjoiVHJ1ZSIsImxldmVsIjoyfQ.ZkyNOnNCPlMO55mZygnPyKHJxb1quNG5ebBDRsCTwlk<br><span class="hljs-attribute">Sec-Ch-Ua</span><span class="hljs-punctuation">: </span>&quot;Not;A=Brand&quot;;v=&quot;24&quot;, &quot;Chromium&quot;;v=&quot;128&quot;<br><span class="hljs-attribute">Sec-Ch-Ua-Mobile</span><span class="hljs-punctuation">: </span>?0<br><span class="hljs-attribute">Sec-Ch-Ua-Platform</span><span class="hljs-punctuation">: </span>&quot;Windows&quot;<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.9<br><span class="hljs-attribute">Upgrade-Insecure-Requests</span><span class="hljs-punctuation">: </span>1<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.120 Safari/537.36<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7<br><span class="hljs-attribute">Sec-Fetch-Site</span><span class="hljs-punctuation">: </span>none<br><span class="hljs-attribute">Sec-Fetch-Mode</span><span class="hljs-punctuation">: </span>navigate<br><span class="hljs-attribute">Sec-Fetch-User</span><span class="hljs-punctuation">: </span>?1<br><span class="hljs-attribute">Sec-Fetch-Dest</span><span class="hljs-punctuation">: </span>document<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br><span class="hljs-attribute">Priority</span><span class="hljs-punctuation">: </span>u=0, i<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/x-www-form-urlencoded<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>15<br><br><span class="language-ebnf"><span class="hljs-attribute">chongzi</span></span><br></code></pre></td></tr></table></figure>
+
+然后进入下一关
+
+身份验证，说了是User-Agent
+
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) CycloneSlash/128.0.6613.120 DashSlash/537.36<br></code></pre></td></tr></table></figure>
+
+然后获得flag
+
+‍
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>newstar2025</div>
+      <div>https://xendr1a.github.io/2025/10/15/newstar2025-week1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/23/0xgame2025-week2/" title="0xgame2025">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">0xgame2025</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/14/0xgame2025-week1/" title="0xgame2025">
+                        <span class="hidden-mobile">0xgame2025</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
