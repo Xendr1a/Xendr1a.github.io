@@ -1,6 +1,6 @@
 ---
 
-title: "2025H&NCTF web"
+title: "2025H&amp;NCTF web"
 date: 2025-06-09 23:32:24
 author: Xendr1a
 
