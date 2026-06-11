@@ -19,7 +19,7 @@ tab_title_separator: " - "
 title_visibility: true
 # 是否显示站点副标题
 subtitle_visibility: true
-subtitle: "还要走多久呢"
+subtitle: "还要拐几个弯才能到那呢"
 
 # 强制全局 HTTPS（解决 Mixed Content 警告）
 # 开启后所有 HTTP 资源会被强制升级为 HTTPS
@@ -132,7 +132,7 @@ iconfont: //at.alicdn.com/t/c/font_1736178_k526ubmyhba.css
 #---------------------------
 navbar:
   # 导航栏左侧标题（为空则使用 _config.yml 的 title）
-  blog_title: "Xendr1a"
+  blog_title: "Xendr1a的小窝"
   # 导航栏毛玻璃特效（实验性，可能造成滚动卡顿）
   ground_glass:
     enable: false
@@ -216,7 +216,7 @@ index:
   # 首页标语（副标题）
   slogan:
     enable: true
-    text: "An elegant Material-Design theme for Hexo"  # 为空则用 _config.yml 的 subtitle
+    text: "还要拐几个弯才能到那呢"  # 为空则用 _config.yml 的 subtitle
     # 通过 API 获取动态标语（需要先开启打字机效果）
     api:
       enable: false
