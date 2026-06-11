@@ -1,4 +1,5 @@
 ---
+
 title: "复现 ctfshow 每周大挑战(RCE极限挑战)"
 date: 2025-07-31 00:00:00
 updated: 2025-09-02 00:00:00
@@ -9,9 +10,8 @@ tags:
   - RCE
   - writeup
   - ctfshow
----
 
-{% raw %}
+---
 
 附上官方 wp: https://ctf-show.feishu.cn/docx/ToiJd70SboRn52xhn3WcJsfjnah
 
@@ -34,5 +34,3 @@ if(preg_match("/\"|`~\\\\]/",$ctfshow)){
 ```
 
 过滤的字符集合：`"/[a-zA-Z0-9@#%^&*:{}\-<\?>\"|`~\\\\]/"`，尝试找出没有被过滤的字符。
-
-{% endraw %}
