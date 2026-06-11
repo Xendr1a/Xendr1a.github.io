@@ -1,10 +1,9 @@
 ---
-title: 0xgame2025
+title: 0xgame2025（week1
 date: 2025-10-14T17:17:02Z
-author: Xendr1a
+lastmod: 2025-10-14T19:57:25Z
 ---
 
-{% raw %}
 # 0xgame2025（week1
 
 ## Http的真理，我已解明
@@ -347,4 +346,3 @@ if __name__ == '__main__':
 ```
 
 ‍
-{% endraw %}

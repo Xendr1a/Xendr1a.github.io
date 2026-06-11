@@ -1,5 +1,5 @@
 ---
-title: "复现 ctfshow 每周大挑战
+title: "复现 ctfshow 每周大挑战(RCE极限挑战"
 date: 2025-07-31 00:00:00
 updated: 2025-09-02 00:00:00
 author: Xendria
@@ -9,9 +9,10 @@ tags:
   - RCE
   - writeup
   - ctfshow
+permalink: /ctfshow-weekly-rce-challenge-2025-07-31/
 ---
 
-{% raw %}
+
 发布于2025-07-31 | 更新于2025-09-02  
 浏览量: 2
 
@@ -122,4 +123,3 @@ ctf_show=$%ff=_(%ff/%ff)[%ff];$_=%2b%2b$%ff;$_=_.%2b%2b$%ff.$_;$%ff%2b%2b;$%ff%2
 
 1. 把这篇文章的“代码原文”完整插回到 Hexo 的 markdown（保持原始未 URL 编码 / 已 URL 编码两版），并把这些文件打包为 ZIP；
 2. 或者只替换你 Hexo 包内对应的那篇文章（如果我已经生成过）并移除 `permalink` 字段以避免 Hexo 生成错误。
-{% endraw %}
