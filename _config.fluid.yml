@@ -10,9 +10,9 @@
 # 全局 Global
 #---------------------------
 # 浏览器标签页图标（放在 source/img/ 下）
-favicon: /img/avatar.png
+favicon: /img/my-avatar.png
 # 苹果设备触屏图标
-apple_touch_icon: /img/avatar.png
+apple_touch_icon: /img/my-avatar.png
 # 浏览器标签页标题分隔符，效果：文章名 - 站点名
 tab_title_separator: " - "
 # 是否显示站点标题
@@ -471,7 +471,7 @@ about:
   banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  avatar: /img/avatar.png    # 头像
+  avatar: /img/my-avatar.png    # 头像
   name: "Xendr1a"            # 昵称
   intro: "还要拐几个弯才能到呢"  # 简介
   # 社交图标（更多图标: https://fluid.ist/docs/icon/）
