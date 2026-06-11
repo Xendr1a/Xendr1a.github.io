@@ -2,11 +2,8 @@
 title: 2025H&amp;NCTF web
 date: 2025-06-09 23:32:24
 updated: 2025-09-02 21:31:37
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-  - 比赛
-tags:
   - wp
   - 比赛
 ---
@@ -279,7 +276,7 @@ print(f"最终结果: {flag}")
 
 给的页面没什么东西，题目给了部分源码，那我们看看源码
 
-```python
+```
 from flask import Flask, session, request, render_template_string, render_template
 import json
 import os
@@ -407,7 +404,7 @@ merge(json_data, add)//这个是污染点
 
 我们查看源码/static/app/app.py
 
-```python
+```
 from flask import Flask, session, request, render_template_string, render_template
 import json
 import os

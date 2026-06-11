@@ -1,208 +1,258 @@
 /**
- * 将思源(SiYuan)导出的 WordPress 块格式 Markdown 转换为 Hexo 兼容格式
+ * Convert SiYuan exported articles (v2) to Hexo format
+ * Handles: folder-based articles with assets, standalone .md files
  */
 const fs = require('fs');
 const path = require('path');
 
 const srcDir = path.join(__dirname, 'xendria_hexo_markdown');
-const destDir = path.join(__dirname, 'source', '_posts');
+const postDir = path.join(__dirname, 'source', '_posts');
+const imgDir = path.join(__dirname, 'source', 'img');
 
-if (!fs.existsSync(destDir)) {
-  fs.mkdirSync(destDir, { recursive: true });
-}
+if (!fs.existsSync(postDir)) fs.mkdirSync(postDir, { recursive: true });
+if (!fs.existsSync(imgDir)) fs.mkdirSync(imgDir, { recursive: true });
 
-const files = fs.readdirSync(srcDir).filter(f => f.endsWith('.md'));
+const processed = new Set();
+const items = fs.readdirSync(srcDir);
 
-files.forEach(file => {
-  console.log(`Processing: ${file}`);
-  const raw = fs.readFileSync(path.join(srcDir, file), 'utf-8');
+// Step 1: Process folder-based articles (those with assets)
+for (const item of items) {
+  const itemPath = path.join(srcDir, item);
+  if (!fs.statSync(itemPath).isDirectory()) continue;
+  if (item.startsWith('.') || item.endsWith('.sy')) continue; // skip .siyuan, .sy
 
-  // Split front-matter and body
-  const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!fmMatch) {
-    console.log(`  SKIP: no front-matter`);
-    return;
-  }
+  const content = fs.readdirSync(itemPath);
+  let mdFile = null;
+  let assetDirs = [];
 
-  let fm = fmMatch[1];
-  let body = fmMatch[2];
-
-  // --- Clean front-matter ---
-  // Remove permalink
-  fm = fm.split('\n').filter(line => !line.startsWith('permalink:')).join('\n');
-  // Fix author
-  fm = fm.replace(/author:\s*Xebdria/i, 'author: Xendr1a');
-  // Add tags from categories if not present
-  if (!fm.includes('tags:')) {
-    const catMatch = fm.match(/categories:\s*\n([\s\S]*?)(?=\n\S|$)/);
-    if (catMatch) {
-      const cats = catMatch[1]
-        .split('\n')
-        .map(l => l.trim())
-        .filter(l => l.startsWith('- '))
-        .map(l => l.replace('- ', ''));
-      if (cats.length > 0) {
-        const tagsBlock = '\ntags:\n' + cats.map(c => `  - ${c}`).join('\n');
-        fm = fm + tagsBlock;
+  for (const f of content) {
+    const fp = path.join(itemPath, f);
+    const stat = fs.statSync(fp);
+    if (stat.isFile() && f.endsWith('.md')) {
+      mdFile = { name: f, path: fp };
+    }
+    if (stat.isDirectory() && f === 'assets') {
+      assetDirs.push(fp);
+    }
+    if (stat.isDirectory() && !f.startsWith('.') && f !== 'assets') {
+      const sub = fs.readdirSync(fp);
+      const subMd = sub.find(s => s.endsWith('.md'));
+      const subAssets = sub.find(s => s === 'assets');
+      if (subMd && subAssets) {
+        mdFile = { name: subMd, path: path.join(fp, subMd) };
+        assetDirs.push(path.join(fp, subAssets));
+      } else if (sub.some(s => /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(s))) {
+        assetDirs.push(fp);
+        if (subMd) mdFile = { name: subMd, path: path.join(fp, subMd) };
       }
     }
   }
 
-  // --- Convert body ---
+  if (!mdFile) {
+    console.log(`SKIP (no .md): ${item}`);
+    continue;
+  }
 
-  // 1. wp:code blocks -> markdown fenced code
-  body = body.replace(
-    /<!-- wp:code -->\s*<pre class="wp-block-code"><code>([\s\S]*?)<\/code><\/pre>\s*<!-- \/wp:code -->/g,
-    (_, code) => {
-      code = code
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'");
-      // Detect language from first line like <?php
-      let lang = '';
-      const firstLine = code.trim().split('\n')[0];
-      if (firstLine.includes('<?php')) lang = 'php';
-      else if (firstLine.includes('import ') || firstLine.includes('def ')) lang = 'python';
-      return `\n\`\`\`${lang}\n${code.trim()}\n\`\`\`\n`;
-    }
-  );
+  const slug = makeSlug(item.replace(/\.md$/i, ''));
+  console.log(`Processing: ${item} -> ${slug}`);
 
-  // 2. wp:heading -> markdown headings
-  body = body.replace(
-    /<!-- wp:heading(?:\s*\{[^}]*\})?\s*-->\s*<h([1-6])[^>]*>([\s\S]*?)<\/h\1>\s*<!-- \/wp:heading -->/g,
-    (_, level, content) => {
-      // Remove inner HTML tags but keep text
-      content = stripHtml(content);
-      return '\n' + '#'.repeat(parseInt(level)) + ' ' + content + '\n';
-    }
-  );
+  let raw = fs.readFileSync(mdFile.path, 'utf-8');
+  raw = raw.replace(/^\uFEFF/, '');
+  let { fm, body } = parseFrontMatter(raw);
+  fm = cleanFM(fm, slug);
 
-  // 3. wp:paragraph -> plain text (handle inline HTML)
-  body = body.replace(
-    /<!-- wp:paragraph -->\s*<p>([\s\S]*?)<\/p>\s*<!-- \/wp:paragraph -->/g,
-    (_, content) => {
-      return '\n' + convertInlineHtml(content) + '\n';
-    }
-  );
+  const isWpBlocks = body.includes('<!-- wp:');
+  if (isWpBlocks) body = convertWpBlocks(body);
 
-  // 4. wp:image -> markdown image
-  body = body.replace(
-    /<!-- wp:image\s*(\{[^}]*\})?\s*-->\s*<figure[^>]*>\s*<img[^>]*src="([^"]+)"[^>]*\/?>\s*(?:<figcaption>[^<]*<\/figcaption>\s*)?<\/figure>\s*<!-- \/wp:image -->/g,
-    (_, __, src) => {
-      const alt = '';
-      return `\n![${alt}](${src})\n`;
-    }
-  );
+  if (assetDirs.length > 0) {
+    const targetImgDir = path.join(imgDir, slug);
+    body = copyAndFixImages(body, assetDirs, targetImgDir, slug);
+  }
+  body = body.replace(/\]\(assets\//g, `](/img/${slug}/`);
 
-  // 5. wp:table -> markdown table (simple conversion)
-  body = body.replace(
-    /<!-- wp:table -->\s*<figure[^>]*>\s*<table[^>]*>([\s\S]*?)<\/table>\s*<\/figure>\s*<!-- \/wp:table -->/g,
-    (_, tableContent) => {
-      return '\n' + convertTable(tableContent) + '\n';
-    }
-  );
-
-  // 6. wp:list (unordered) -> markdown list
-  body = body.replace(
-    /<!-- wp:list -->\s*<ul[^>]*>([\s\S]*?)<\/ul>\s*<!-- \/wp:list -->/g,
-    (_, listContent) => {
-      return '\n' + convertList(listContent, '-') + '\n';
-    }
-  );
-
-  // 7. wp:list (ordered) -> markdown list
-  body = body.replace(
-    /<!-- wp:list\s*\{[^}]*"ordered"\s*:\s*true[^}]*\}\s*-->\s*<ol[^>]*>([\s\S]*?)<\/ol>\s*<!-- \/wp:list -->/g,
-    (_, listContent) => {
-      return '\n' + convertList(listContent, '1.') + '\n';
-    }
-  );
-
-  // 8. wp:quote -> markdown blockquote
-  body = body.replace(
-    /<!-- wp:quote -->\s*<blockquote[^>]*>([\s\S]*?)<\/blockquote>\s*<!-- \/wp:quote -->/g,
-    (_, content) => {
-      const lines = stripHtml(content).split('\n').filter(l => l.trim());
-      return '\n' + lines.map(l => '> ' + l.trim()).join('\n') + '\n';
-    }
-  );
-
-  // 9. Remove any remaining wp: comments
-  body = body.replace(/<!-- \/?wp:[a-z-]+[^>]*-->/g, '');
-
-  // 10. Clean up inline HTML remnants
-  body = body
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-
-  // --- Assemble and write ---
-  // Wrap body in {% raw %} to prevent Nunjucks from parsing {{ }} {%% %%} etc.
-  const output = `---\n${fm.trim()}\n---\n\n{% raw %}\n${body}\n{% endraw %}\n`;
-  const outPath = path.join(destDir, file);
-  fs.writeFileSync(outPath, output, 'utf-8');
+  body = `{% raw %}\n${body.trim()}\n{% endraw %}\n`;
+  const outPath = path.join(postDir, `${slug}.md`);
+  fs.writeFileSync(outPath, `---\n${fm}\n---\n\n${body}`);
+  processed.add(item);
   console.log(`  -> ${outPath}`);
-});
+}
 
-console.log(`\nDone! Converted ${files.length} files.`);
+// Step 2: Process standalone .md files
+for (const item of items) {
+  const itemPath = path.join(srcDir, item);
+  const stat = fs.statSync(itemPath);
+  if (!stat.isFile() || !item.endsWith('.md')) continue;
+  const folderName = item.replace(/\.md$/, '');
+  if (processed.has(folderName)) continue;
 
-// --- Helpers ---
+  const slug = makeSlug(folderName);
+  console.log(`Processing standalone: ${item} -> ${slug}`);
 
-function stripHtml(html) {
-  return html
-    .replace(/<[^>]+>/g, '')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
+  let raw = fs.readFileSync(itemPath, 'utf-8');
+  raw = raw.replace(/^\uFEFF/, '');
+  let { fm, body } = parseFrontMatter(raw);
+  fm = cleanFM(fm, slug);
+
+  if (body.includes('<!-- wp:')) body = convertWpBlocks(body);
+  body = `{% raw %}\n${body.trim()}\n{% endraw %}\n`;
+
+  const outPath = path.join(postDir, `${slug}.md`);
+  fs.writeFileSync(outPath, `---\n${fm}\n---\n\n${body}`);
+  processed.add(item);
+  console.log(`  -> ${outPath}`);
+}
+
+// Step 3: Process subdirectories with just .md files
+for (const item of items) {
+  const itemPath = path.join(srcDir, item);
+  if (!fs.statSync(itemPath).isDirectory()) continue;
+  if (processed.has(item)) continue;
+
+  const mdFiles = fs.readdirSync(itemPath).filter(f => f.endsWith('.md') && !f.startsWith('.'));
+  for (const mdf of mdFiles) {
+    const slug = makeSlug(mdf.replace(/\.md$/i, ''));
+    console.log(`Processing subdir: ${item}/${mdf} -> ${slug}`);
+
+    let raw = fs.readFileSync(path.join(itemPath, mdf), 'utf-8');
+    raw = raw.replace(/^\uFEFF/, '');
+    let { fm, body } = parseFrontMatter(raw);
+    fm = cleanFM(fm, slug);
+
+    if (body.includes('<!-- wp:')) body = convertWpBlocks(body);
+    body = `{% raw %}\n${body.trim()}\n{% endraw %}\n`;
+
+    const outPath = path.join(postDir, `${slug}.md`);
+    fs.writeFileSync(outPath, `---\n${fm}\n---\n\n${body}`);
+    console.log(`  -> ${outPath}`);
+  }
+  processed.add(item);
+}
+
+console.log(`\nDone! Processed ${processed.size} items.`);
+
+// ========== Helpers ==========
+
+function makeSlug(name) {
+  return name
+    .replace(/[（(]/g, '-')
+    .replace(/[）)]/g, '')
+    .replace(/[^\w\u4e00-\u9fff\-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
     .trim();
 }
 
-function convertInlineHtml(html) {
-  // Convert <a href="...">text</a>
+function parseFrontMatter(raw) {
+  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) return { fm: 'title: untitled\ndate: 2026-06-11', body: raw };
+  return { fm: match[1], body: match[2] };
+}
+
+function cleanFM(fm, slug) {
+  const lines = fm.split('\n').filter(line => {
+    const key = line.split(':')[0].trim();
+    return !['lastmod', 'permalink', 'cover', 'toc', 'toc_number', 'mathjax', 'katex', 'comments'].includes(key);
+  });
+
+  const keys = lines.map(l => l.split(':')[0].trim());
+  if (!keys.includes('author')) lines.push('author: Xendr1a');
+  if (!keys.includes('date')) lines.push('date: 2026-06-11');
+
+  // Fix tags: ["a","b"] format
+  let tagsLine = lines.find(l => l.startsWith('tags:'));
+  if (tagsLine) {
+    const idx = lines.indexOf(tagsLine);
+    const tagVal = tagsLine.replace('tags:', '').trim();
+    if (tagVal.startsWith('[')) {
+      const tagNames = tagVal.slice(1, -1).split(',').map(t => t.trim().replace(/['"]/g, ''));
+      lines.splice(idx, 1, ...tagNames.map(t => `  - ${t}`));
+      if (!lines.some(l => l.trim() === 'tags:')) {
+        lines.splice(idx, 0, 'tags:');
+      }
+    }
+  }
+
+  // Clean title
+  let titleLine = lines.find(l => l.startsWith('title:'));
+  if (titleLine) {
+    const idx = lines.indexOf(titleLine);
+    let title = titleLine.replace('title:', '').trim();
+    title = title.replace(/[（(][^)）]*$/g, '').trim();
+    lines[idx] = `title: ${title}`;
+  }
+
+  return lines.join('\n');
+}
+
+// ========== WordPress Block Converter ==========
+
+function convertWpBlocks(body) {
+  body = body.replace(
+    /<!-- wp:code -->\s*<pre class="wp-block-code"><code>([\s\S]*?)<\/code><\/pre>\s*<!-- \/wp:code -->/g,
+    (_, code) => {
+      code = code.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      let lang = code.trim().startsWith('<?php') ? 'php' : '';
+      return `\n\`\`\`${lang}\n${code.trim()}\n\`\`\`\n`;
+    }
+  );
+  body = body.replace(
+    /<!-- wp:heading[^>]*-->\s*<h([1-6])[^>]*>([\s\S]*?)<\/h\1>\s*<!-- \/wp:heading -->/g,
+    (_, l, c) => '\n' + '#'.repeat(+l) + ' ' + stripHtml(c) + '\n'
+  );
+  body = body.replace(
+    /<!-- wp:paragraph -->\s*<p>([\s\S]*?)<\/p>\s*<!-- \/wp:paragraph -->/g,
+    (_, c) => '\n' + inlineToMd(c) + '\n'
+  );
+  body = body.replace(
+    /<!-- wp:image[^>]*-->\s*<figure[^>]*>\s*<img[^>]*src="([^"]+)"[^>]*\/?>\s*(?:<figcaption>[^<]*<\/figcaption>\s*)?<\/figure>\s*<!-- \/wp:image -->/g,
+    (_, src) => `\n![](${src})\n`
+  );
+  body = body.replace(
+    /<!-- wp:table -->\s*<figure[^>]*>\s*<table[^>]*>([\s\S]*?)<\/table>\s*<\/figure>\s*<!-- \/wp:table -->/g,
+    (_, tbl) => '\n' + convertTable(tbl) + '\n'
+  );
+  body = body.replace(
+    /<!-- wp:list -->\s*<ul[^>]*>([\s\S]*?)<\/ul>\s*<!-- \/wp:list -->/g,
+    (_, l) => '\n' + convertList(l, '-') + '\n'
+  );
+  body = body.replace(
+    /<!-- wp:list\s*\{[^}]*"ordered"\s*:\s*true[^}]*\}\s*-->\s*<ol[^>]*>([\s\S]*?)<\/ol>\s*<!-- \/wp:list -->/g,
+    (_, l) => '\n' + convertList(l, '1.') + '\n'
+  );
+  body = body.replace(/<!-- \/?wp:[a-z-]+[^>]*-->/g, '');
+  body = body.replace(/<br\s*\/?>/gi, '\n').replace(/\n{3,}/g, '\n\n');
+  return body;
+}
+
+function stripHtml(html) {
+  const ents = { '&lt;': '<', '&gt;': '>', '&amp;': '&', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
+  return html.replace(/<[^>]+>/g, '').replace(/&[a-z#0-9]+;/g, c => ents[c] || c).trim();
+}
+
+function inlineToMd(html) {
   html = html.replace(/<a\s+[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)');
-  // Convert <strong>text</strong> or <b>text</b>
   html = html.replace(/<\/?(?:strong|b)>/gi, '**');
-  // Convert <em>text</em> or <i>text</i>
   html = html.replace(/<\/?(?:em|i)>/gi, '*');
-  // Convert <code>text</code>
   html = html.replace(/<code>([\s\S]*?)<\/code>/gi, '`$1`');
-  // Convert <img ...> to markdown
   html = html.replace(/<img[^>]*src="([^"]+)"[^>]*\/?>/gi, '![]($1)');
-  // Remove remaining HTML tags
-  html = stripHtml(html);
-  return html;
+  return stripHtml(html);
 }
 
 function convertTable(html) {
   const rows = html.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
   if (!rows || rows.length < 2) return stripHtml(html);
-
-  const parsedRows = rows.map(row => {
+  const parsed = rows.map(row => {
     const cells = row.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-    return (cells || []).map(cell => stripHtml(cell.replace(/<\/?t[dh][^>]*>/gi, '')).trim());
+    return (cells || []).map(c => stripHtml(c.replace(/<\/?t[dh][^>]*>/gi, '')).trim());
   });
-
-  if (parsedRows.length === 0) return '';
-
-  const colCount = Math.max(...parsedRows.map(r => r.length));
-  const result = [];
-
-  // Header row
-  result.push('| ' + parsedRows[0].map(c => c || ' ').join(' | ') + ' |');
-  result.push('| ' + Array(colCount).fill('---').join(' | ') + ' |');
-
-  // Data rows
-  for (let i = 1; i < parsedRows.length; i++) {
-    const row = parsedRows[i];
-    while (row.length < colCount) row.push('');
-    result.push('| ' + row.join(' | ') + ' |');
+  if (!parsed.length) return '';
+  const cols = Math.max(...parsed.map(r => r.length));
+  const result = ['| ' + (parsed[0] || []).map(c => c || ' ').join(' | ') + ' |'];
+  result.push('| ' + Array(cols).fill('---').join(' | ') + ' |');
+  for (let i = 1; i < parsed.length; i++) {
+    while (parsed[i].length < cols) parsed[i].push('');
+    result.push('| ' + parsed[i].join(' | ') + ' |');
   }
-
   return result.join('\n');
 }
 
@@ -210,4 +260,28 @@ function convertList(html, prefix) {
   const items = html.match(/<li[^>]*>([\s\S]*?)<\/li>/gi);
   if (!items) return stripHtml(html);
   return items.map(item => `${prefix} ${stripHtml(item.replace(/<\/?li[^>]*>/gi, '')).trim()}`).join('\n');
+}
+
+function copyAndFixImages(body, assetDirs, targetDir, slug) {
+  if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
+
+  const allImages = new Set();
+  for (const assetDir of assetDirs) {
+    if (!fs.existsSync(assetDir)) continue;
+    fs.readdirSync(assetDir).forEach(f => {
+      if (/\.(png|jpg|jpeg|gif|svg|webp)$/i.test(f)) {
+        allImages.add(f);
+        const src = path.join(assetDir, f);
+        const dest = path.join(targetDir, f);
+        if (!fs.existsSync(dest)) fs.copyFileSync(src, dest);
+      }
+    });
+  }
+
+  for (const img of allImages) {
+    const escaped = img.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    body = body.replace(new RegExp(`\\]\\([^)]*${escaped}\\)`, 'g'), `](/img/${slug}/${img})`);
+  }
+
+  return body;
 }

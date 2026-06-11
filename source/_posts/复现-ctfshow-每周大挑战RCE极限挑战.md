@@ -1,12 +1,9 @@
 ---
-title: 复现 ctfshow 每周大挑战(RCE极限挑战
+title: 复现 ctfshow 每周大挑战
 date: 2025-07-31 17:37:15
 updated: 2025-09-02 21:30:20
-author: Xendr1a
+author: Xebdria
 categories:
-  - ctfshow
-  - wp
-tags:
   - ctfshow
   - wp
 ---

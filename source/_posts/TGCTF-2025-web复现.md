@@ -1,12 +1,9 @@
 ---
-title: TGCTF 2025 web(复现
+title: TGCTF 2025 web
 date: 2025-06-01 21:16:23
 updated: 2025-09-02 21:31:44
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-  - 比赛
-tags:
   - wp
   - 比赛
 ---
@@ -477,7 +474,7 @@ hint：有一个由4个小写英文字母组成的路由，去那里看看吧，
 
 上面那个是非预期吧，然后我们接着这个读取继续做，我们读取/app.py
 
-```python
+```
 import os
 import string
 from flask import Flask, request, render_template_string, jsonify, send_from_directory

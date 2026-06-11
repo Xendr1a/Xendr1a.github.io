@@ -1,12 +1,9 @@
 ---
-title: LitCTF2025（公开赛道）（web
+title: LitCTF2025（公开赛道）
 date: 2025-08-30 18:19:31
 updated: 2025-09-02 21:31:20
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-  - 比赛
-tags:
   - wp
   - 比赛
 ---
@@ -190,7 +187,7 @@ const loginBtn = document.getElementById('loginBtn');
 
 通过这个我们可以知道他的密码的生成逻辑，直接叫ai搓一个
 
-```python
+```
 import requests
 import hashlib
 import time

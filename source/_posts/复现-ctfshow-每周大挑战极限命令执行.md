@@ -1,11 +1,9 @@
 ---
-title: 复现 ctfshow 每周大挑战(极限命令执行
+title: 复现 ctfshow 每周大挑战
 date: 2025-09-02 21:27:46
 updated: 2025-09-02 21:27:46
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-tags:
   - wp
 ---
 

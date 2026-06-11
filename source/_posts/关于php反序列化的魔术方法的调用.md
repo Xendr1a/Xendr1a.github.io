@@ -2,11 +2,8 @@
 title: 关于php反序列化的魔术方法的调用
 date: 2025-09-02 21:24:57
 updated: 2025-09-02 21:29:11
-author: Xendr1a
+author: Xebdria
 categories:
-  - php反序列化
-  - 知识
-tags:
   - php反序列化
   - 知识
 ---

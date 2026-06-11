@@ -1,12 +1,9 @@
 ---
-title: BaseCTF2024新生赛（复现部分
+title: BaseCTF2024新生赛
 date: 2025-09-02 21:31:07
 updated: 2025-09-02 21:31:07
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-  - 比赛
-tags:
   - wp
   - 比赛
 ---

@@ -2,11 +2,8 @@
 title: “轩辕杯”云盾砺剑CTF挑战赛（Web)
 date: 2025-05-21 23:13:58
 updated: 2025-09-02 21:31:50
-author: Xendr1a
+author: Xebdria
 categories:
-  - wp
-  - 比赛
-tags:
   - wp
   - 比赛
 ---
@@ -226,7 +223,7 @@ W3lC0E_CtF
 
 现在咱们来说说预期，我们先读取源码
 
-```python
+```
 from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
 import os
 import re
