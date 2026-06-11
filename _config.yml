@@ -6,8 +6,8 @@
 # 站点信息 Site
 #---------------------------
 title: Xendr1a                              # 站点标题
-subtitle: 'An elegant Material-Design theme for Hexo'  # 站点副标题
-description: 'Xendr1a 的个人博客'            # 站点描述（SEO 用）
+subtitle: '还要走多久呢'  # 站点副标题
+description: 'Xendr1a的小窝'            # 站点描述（SEO 用）
 keywords:                                    # 站点关键词（SEO 用）
 author: Xendr1a                              # 作者名
 language: zh-CN                              # 语言（影响主题的多语言显示）

@@ -45,7 +45,7 @@ fun_features:
   # 打字机效果（首页副标题）
   typing:
     enable: true           # 是否开启
-    typeSpeed: 70          # 打字速度，数字越大越慢
+    typeSpeed: 50          # 打字速度，数字越大越慢
     cursorChar: "_"        # 光标字符
     loop: false            # 是否循环播放
     scope: []              # 限定页面: home|post|tag|category|about|links|page|404，不填则全部
