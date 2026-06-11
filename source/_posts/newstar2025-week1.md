@@ -1,10 +1,11 @@
 ---
+
 title: newstar2025
 date: 2025-10-15T09:00:54Z
 author: Xendr1a
+
 ---
 
-{% raw %}
 # newstar2025（week1
 
 ## multi-headach3
@@ -363,4 +364,3 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 然后获得flag
 
 ‍
-{% endraw %}

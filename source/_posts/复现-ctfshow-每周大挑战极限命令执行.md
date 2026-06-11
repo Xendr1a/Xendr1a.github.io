@@ -1,13 +1,14 @@
 ---
+
 title: 复现 ctfshow 每周大挑战
 date: 2025-09-02 21:27:46
 updated: 2025-09-02 21:27:46
 author: Xebdria
 categories:
   - wp
+
 ---
 
-{% raw %}
 ## 一
 
 ```php
@@ -57,4 +58,3 @@ if (isset($_POST['ctf_show'])) {
 那我们构造/getflag就很容易了ctf_show=$'\57\147\145\164\146\154\141\147'
 
 ## 三
-{% endraw %}

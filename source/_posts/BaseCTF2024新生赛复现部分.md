@@ -1,4 +1,5 @@
 ---
+
 title: BaseCTF2024新生赛
 date: 2025-09-02 21:31:07
 updated: 2025-09-02 21:31:07
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - wp
   - 比赛
+
 ---
 
-{% raw %}
 ## 所以你说你懂 MD5?
 
 ```php
@@ -280,5 +281,4 @@ emm，我们看到了过滤了{}，我们可以利用原型污染把这个全局
 
 ![](http://xendria.icu/wp-content/uploads/2025/06/7a714105-739c-4a5f-8d5d-ae8ad014d318-1024x489.png)
 
-然后就能正常ssti了{{config.__class__.__init__.__globals__['os'].popen('cat /flag').read()}}
-{% endraw %}
+然后就能正常ssti了&#123;&#123;config.__class__.__init__.__globals__['os'].popen('cat /flag').read()}}

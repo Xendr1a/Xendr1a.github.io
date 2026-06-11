@@ -1,4 +1,5 @@
 ---
+
 title: CTFshow 菜狗杯 Web 部分题解
 date: 2024-01-20 21:57:13
 tags:
@@ -8,9 +9,9 @@ tags:
   - CTFshow
 categories: [CTF, Writeup]
 author: Xendr1a
+
 ---
 
-{% raw %}
 ## web 签到
 
 套娃（bp 和 hackbar 都行）
@@ -179,4 +180,3 @@ echo serialize($a);
 ![c0d4319a-97b8-4d0e-8097-4d8e5275de85](/img/菜狗杯ctfshow-web-部分/c0d4319a-97b8-4d0e-8097-4d8e5275de85-20250122224938-zrcq9jm.png)​​![13d3107c-516b-4847-8753-b98a0042dee3](/img/菜狗杯ctfshow-web-部分/13d3107c-516b-4847-8753-b98a0042dee3-20250122224713-932k1sm.png)
 
 ‍
-{% endraw %}

@@ -2,10 +2,8 @@
 title: 关于pearcmd.php的利用
 date: 2025-11-23T22:12:23Z
 author: Xendr1a
-date: 2026-06-11
 ---
 
-{% raw %}
 # 关于pearcmd.php的利用
 
 复现lilctf时遇到了，突然发现自己缺了这块的知识，所以写了这篇
@@ -330,5 +328,3 @@ user=O%3A4%3A%22User%22%3A2%3A%7Bs%3A8%3A%22username%22%3BS%3A5%3A%22%5C61dmin%2
 闲来无事突然想起来lilctf没有复现，突然发现这题Your Uns3r还挺有意思的，然后了解到了pearcmd.php，花了好些时间来学习，但不知道为什么复现提交完flag后再回来就复现不了了，也发现了自己挺多的小毛病，这里贴上官方wp地址[https://lil-house.feishu.cn/wiki/N7EIwqpoEiVngqkV8rzcgPB9nPg](https://lil-house.feishu.cn/wiki/N7EIwqpoEiVngqkV8rzcgPB9nPg)，还得继续好好学习，天天向上。
 
 ‍
-{% endraw %}
-

@@ -1,4 +1,5 @@
 ---
+
 title: “轩辕杯”云盾砺剑CTF挑战赛（Web)
 date: 2025-05-21 23:13:58
 updated: 2025-09-02 21:31:50
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - wp
   - 比赛
+
 ---
 
-{% raw %}
 ## 前言
 
 这是我在这里写的第一篇wp，欢迎各位师傅的评价与建议
@@ -19,7 +20,7 @@ categories:
 
 ## ezflask
 
-输入{{7*7}},回显49![](http://xendria.icu/wp-content/uploads/2025/05/edc0fc5c-c854-46a3-bdcb-6586d8b749df.png)ssti，fenjing秒了![](http://xendria.icu/wp-content/uploads/2025/05/e5981aa0-c618-40c0-9f3d-e045baae179d.png)
+输入&#123;&#123;7*7}},回显49![](http://xendria.icu/wp-content/uploads/2025/05/edc0fc5c-c854-46a3-bdcb-6586d8b749df.png)ssti，fenjing秒了![](http://xendria.icu/wp-content/uploads/2025/05/e5981aa0-c618-40c0-9f3d-e045baae179d.png)
 
 ## ezrce
 
@@ -382,4 +383,3 @@ if file:
 ![](http://xendria.icu/wp-content/uploads/2025/05/4f716ce8-bea8-4a38-bb76-b08f7b3b21f5-1024x656.png)
 
 至此，轩辕之旅结束~~~~
-{% endraw %}

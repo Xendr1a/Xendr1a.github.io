@@ -1,4 +1,5 @@
 ---
+
 title: 复现 ctfshow 每周大挑战
 date: 2025-07-31 17:37:15
 updated: 2025-09-02 21:30:20
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - ctfshow
   - wp
+
 ---
 
-{% raw %}
 附上官方wp[https://ctf-show.feishu.cn/docx/ToiJd70SboRn52xhn3WcJsfjnah](https://ctf-show.feishu.cn/docx/ToiJd70SboRn52xhn3WcJsfjnah)
 
 ## 一
@@ -234,4 +235,3 @@ ctf_show=$%ff=_(%ff/%ff)[%ff];$_=%2b%2b$%ff;$_=_.%2b%2b$%ff.$_;$%ff%2b%2b;$%ff%2
 ## 小结
 
 用了两天才磕磕碰碰做完了这五题，让我加深了自增这方面的印象吧（原来到处都可以加上这个pwp），也积累了这种题型，呜，自己还是有点太懒了，要勤奋一些了。
-{% endraw %}

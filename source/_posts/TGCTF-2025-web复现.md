@@ -1,4 +1,5 @@
 ---
+
 title: TGCTF 2025 web
 date: 2025-06-01 21:16:23
 updated: 2025-09-02 21:31:44
@@ -6,9 +7,9 @@ author: Xebdria
 categories:
   - wp
   - 比赛
+
 ---
 
-{% raw %}
 ## 前端GAME
 
 前端game的三个阶段分别对应着三个cve
@@ -172,7 +173,7 @@ $yesterday->study = $today;
 echo serialize($yesterday);
 ?>
 
-O:9:"yesterday":1:{s:5:"study";O:5:"today":1:{s:5:"doing";O:6:"future":0:{}}}
+O:9:"yesterday":1:{s:5:"study";O:5:"today":1:{s:5:"doing";O:6:"future":0:{&#125;&#125;}
 ```
 
 然后看到
@@ -521,10 +522,10 @@ def greet():
 
 '
                 return render_template_string(template)
-            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“{{}}”
+            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“&#123;&#123;&#125;&#125;”
 最后，如果你用了cat，就可以见到齐天大圣了
 "
-            template= template.replace("直面","{{").replace("天命","}}")
+            template= template.replace("直面","&#123;&#123;").replace("天命","&#125;&#125;")
             template = template
     if "cat" in template:
         template2 = '
@@ -567,10 +568,10 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
 ```
 
-看到了这个from a.b.c.d.secret import secret_key可以发现后面会将直面天命变成{{}}
+看到了这个from a.b.c.d.secret import secret_key可以发现后面会将直面天命变成&#123;&#123;}}
 
 ```
-template= template.replace("直面","{{").replace("天命","}}")
+template= template.replace("直面","&#123;&#123;").replace("天命","&#125;&#125;")
 ```
 
 最后我们就可以构造payload了
@@ -606,4 +607,3 @@ name=直面""[request.args.a1][request.args.a2][0][request.args.a3]()[132][reque
 ## 小结
 
 还有几道题后面再补了，有点难，后面再补了...(待续
-{% endraw %}

