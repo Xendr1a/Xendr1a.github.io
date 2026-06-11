@@ -119,6 +119,35 @@
   
   
   <entry>
+    <title>复现 ctfshow 每周大挑战(RCE极限挑战)</title>
+    <link href="/2025/07/31/hexo_with_ctfshow_post/"/>
+    <url>/2025/07/31/hexo_with_ctfshow_post/</url>
+    
+    <content type="html"><![CDATA[附上官方 wp: https://ctf-show.feishu.cn/docx/ToiJd70SboRn52xhn3WcJsfjnah## 一可以看到是过滤了 `(` 和 `.`。那么 `system()` 是不能用了，直接用反引号执行命令的姿势来使用，例如：<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">code=<span class="hljs-keyword">echo</span> `ls /`;<br></code></pre></td></tr></table></figure>## 二<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&quot;/\&quot;|`~\\\\]/&quot;</span>,<span class="hljs-variable">$ctfshow</span>))&#123;<br>    <span class="hljs-keyword">eval</span>(<span class="hljs-variable">$ctfshow</span>);<br>&#125;<span class="hljs-keyword">else</span>&#123;<br>    <span class="hljs-keyword">echo</span>(<span class="hljs-string">&quot;Are you hacking me AGAIN?&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>过滤的字符集合：`"/[a-zA-Z0-9@#%^&*:{}\-<\?>\"|`~\\\\]/"`，尝试找出没有被过滤的字符。]]></content>
+    
+    
+    <categories>
+      
+      <category>ctfshow</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>RCE</tag>
+      
+      <tag>writeup</tag>
+      
+      <tag>ctfshow</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CTFshow 菜狗杯 Web 部分题解</title>
     <link href="/2024/01/20/%E8%8F%9C%E7%8B%97%E6%9D%AFctfshow-web-%E9%83%A8%E5%88%86/"/>
     <url>/2024/01/20/%E8%8F%9C%E7%8B%97%E6%9D%AFctfshow-web-%E9%83%A8%E5%88%86/</url>
