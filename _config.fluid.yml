@@ -10,16 +10,16 @@
 # 全局 Global
 #---------------------------
 # 浏览器标签页图标（放在 source/img/ 下）
-favicon: /img/fluid.png
+favicon: /img/avatar.png
 # 苹果设备触屏图标
-apple_touch_icon: /img/fluid.png
+apple_touch_icon: /img/avatar.png
 # 浏览器标签页标题分隔符，效果：文章名 - 站点名
 tab_title_separator: " - "
 # 是否显示站点标题
 title_visibility: true
 # 是否显示站点副标题
 subtitle_visibility: true
-subtitle: "An elegant Material-Design theme for Hexo"
+subtitle: "还要走多久呢"
 
 # 强制全局 HTTPS（解决 Mixed Content 警告）
 # 开启后所有 HTTP 资源会被强制升级为 HTTPS
