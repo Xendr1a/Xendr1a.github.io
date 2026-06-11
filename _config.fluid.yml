@@ -210,7 +210,7 @@ footer:
 #---------------------------
 index:
   # 首页头图（路径相对于 source/，也可用外链）
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 100      # 头图高度（屏幕百分比 0-100）
   banner_mask_alpha: 0.3      # 头图黑色蒙版透明度（0-1.0，1 完全不透明）
   # 首页标语（副标题）
@@ -243,7 +243,7 @@ index:
 # 文章页 Post Page
 #---------------------------
 post:
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 70
   banner_mask_alpha: 0.3
   # 文章默认封面图（首页显示，front-matter 中 index_img 优先）
@@ -429,7 +429,7 @@ discuss:
 # 归档页 Archive Page
 #---------------------------
 archive:
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -438,7 +438,7 @@ archive:
 #---------------------------
 category:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
   order_by: "-length"         # 排序: length(文章数) | name(名称)，带减号倒序
@@ -451,7 +451,7 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 80
   banner_mask_alpha: 0.3
   # 标签云配置
@@ -468,7 +468,7 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
   avatar: /img/avatar.png    # 头像
@@ -483,7 +483,7 @@ about:
 # 自定义页 Custom Page（hexo new page 创建的页面）
 #---------------------------
 page:
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -492,7 +492,7 @@ page:
 #---------------------------
 page404:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 85
   banner_mask_alpha: 0.3
   redirect_delay: 5000       # 自动跳转首页延迟（毫秒），GitHub Pages 需绑定域名才生效
@@ -502,7 +502,7 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
   # 友链列表
