@@ -1,7 +1,7 @@
 ---
 title: TGCTF 2025 web(复现
-date: 2025-06-01 21:16:23
-author: Xendr1a
+date: 2026-03-31T20:13:50+08:00
+lastmod: 2026-03-31T20:20:54+08:00
 ---
 
 # TGCTF 2025 web(复现
@@ -23,7 +23,7 @@ CVE-2025-32395  [复现与修复指南：Vite再次bypass（CVE-2025-32395）](h
 我们进入首页是一个文件上传的界面，按f12发现提示关键词机器人
 我们直接去看robots.txt
 
-![](/img/TGCTF-2025-web-复现/af2a6c11-30fd-4f88-97f5-44bdf5691f12-20260331201350-9b5xk73.png)
+![](assets/af2a6c11-30fd-4f88-97f5-44bdf5691f12-20260331201350-9b5xk73.png)
 
 我们进入/class.php,
 
@@ -188,13 +188,13 @@ if (file_exists($_GET['filename'])){
 我们得到
 Vm10b2QyUnJOVlpQV0VKVVlXeGFhRll3VlRCa01XUnpZVVYwYUUxWGVGcFpWRXB6VlVkR2NsWlVTbUZXUlRWUFZHMXpNVlpYU1hsaVIzQk9UVlZzTkZZeWRHOWpiVVpXVDBoa1VGSkdjRkJXYTJNMVkwWndSbGw2Vm1oTlYzaGFXVlJLYzFWSFJuSldWRXBoVmtVMVQxUnRjekZXVjBsNVlrZEdVMlZ0ZUROWFZ6QjRZVzFHVms5SVpGQlNSbkJRV1Zjd05XTkdaSFJPVm1ST1VqRktXbFV5TVRSVGJVWjBUMVJPVlUxcVZYZFVNV1JoVjFVeFNGbDZNRDA9aaaa
 
-![](/img/TGCTF-2025-web-复现/613467e2-f4c8-4852-a483-621f459cc67a-1024x449-20260331201350-b59safr.png)
+![](assets/613467e2-f4c8-4852-a483-621f459cc67a-1024x449-20260331201350-b59safr.png)
 
 ## **什么文件上传？（复仇）**
 
 我们直接看到phar，又因为主页有个文件上传点，可以想到文件上传+phar反序列化
 
-![](/img/TGCTF-2025-web-复现/af2a6c11-30fd-4f88-97f5-44bdf5691f12-20260331201350-9b5xk73.png)
+![](assets/af2a6c11-30fd-4f88-97f5-44bdf5691f12-20260331201350-9b5xk73.png)
 
 我们先生成个phar.phar
 
@@ -294,11 +294,11 @@ $phar->stopBuffering();
 
 生成了phar.phar，然后发现phar被过滤了，结合robots.txt的提示，我们爆破出后缀为atg
 
-![](/img/TGCTF-2025-web-复现/b1b0671a-3625-4964-a8f7-b9f20ea79c2a-1024x507-20260331201350-y3nhucw.png)
+![](assets/b1b0671a-3625-4964-a8f7-b9f20ea79c2a-1024x507-20260331201350-y3nhucw.png)
 
 我们读取环境变量，发现flag。
 
-![](/img/TGCTF-2025-web-复现/915cbfd4-e9cb-49b0-b4ce-29d437d1d510-1024x531-20260331201350-cb6x1y5.png)
+![](assets/915cbfd4-e9cb-49b0-b4ce-29d437d1d510-1024x531-20260331201350-cb6x1y5.png)
 
 ## **AAA偷渡阴平**
 
@@ -425,7 +425,7 @@ if (preg_match('/.+?</s', $file_content)) {
 101万左右的任意字符+
 然后name的话，通过传参name来进行目录穿越上传文件也就是../
 
-![](/img/TGCTF-2025-web-复现/f3599502-18a7-46ea-bef6-7c34ffb7f4e7-1024x482-20260331201350-yfm9pll.png)
+![](assets/f3599502-18a7-46ea-bef6-7c34ffb7f4e7-1024x482-20260331201350-yfm9pll.png)
 
 然后访问uploads/1.php，flag在环境变量里面
 
@@ -433,17 +433,17 @@ if (preg_match('/.+?</s', $file_content)) {
 
 看到了hint
 
-![](/img/TGCTF-2025-web-复现/8ecba144-25f1-4830-b514-6d8263c517a6-20260331201350-ci262uc.png)
+![](assets/8ecba144-25f1-4830-b514-6d8263c517a6-20260331201350-ci262uc.png)
 
 hint：
 有一个由4个小写英文字母组成的路由，去那里看看吧，天命人!
 爆破得到/aazz
 
-![](/img/TGCTF-2025-web-复现/08188d73-c6a5-4860-91c2-4d94bf479963-20260331201350-um72pjm.png)
+![](assets/08188d73-c6a5-4860-91c2-4d94bf479963-20260331201350-um72pjm.png)
 
 爆破得到filename，试试有没有文件读取
 
-![](/img/TGCTF-2025-web-复现/01dbe3fa-db8c-4d1b-ab40-0d5b153036c4-1024x522-20260331201350-wx3in5e.png)
+![](assets/01dbe3fa-db8c-4d1b-ab40-0d5b153036c4-1024x522-20260331201350-wx3in5e.png)
 
 抽象了，直接读到了flag
 
@@ -556,17 +556,17 @@ name=直面""[request.args.a1][request.args.a2][0][request.args.a3]()[132][reque
 
 扫到了robots.txt
 
-![](/img/TGCTF-2025-web-复现/8967395a-1af7-4f11-9be8-e09500371833-20260331201350-cfyzanz.png)
+![](assets/8967395a-1af7-4f11-9be8-e09500371833-20260331201350-cfyzanz.png)
 
 我们发现tgshell.php有一个一句话木马，打开蚁剑连一下下
 
-![](/img/TGCTF-2025-web-复现/4037dcf5-7534-443a-a44c-ca1957041800-1024x691-20260331201350-jml9y9y.png)
+![](assets/4037dcf5-7534-443a-a44c-ca1957041800-1024x691-20260331201350-jml9y9y.png)
 
 连上了，里面就是flag
 
 预期解是，tgxff有个ssti在xff那里
 
-![](/img/TGCTF-2025-web-复现/e774ce56-1c15-4f3f-9b39-3510cbda185a-1024x527-20260331201350-volnmgn.png)
+![](assets/e774ce56-1c15-4f3f-9b39-3510cbda185a-1024x527-20260331201350-volnmgn.png)
 
 这题看到好多种非预期了
 

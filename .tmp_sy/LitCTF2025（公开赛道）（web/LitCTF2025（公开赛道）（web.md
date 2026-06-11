@@ -1,7 +1,7 @@
 ---
 title: LitCTF2025（公开赛道）（web
-date: 2025-08-30 18:19:31
-author: Xendr1a
+date: 2026-03-31T20:44:47+08:00
+lastmod: 2026-03-31T20:47:09+08:00
 ---
 
 # LitCTF2025（公开赛道）（web
@@ -13,21 +13,21 @@ author: Xendr1a
 首先是登入界面爆破发现账户密码是base64后的admin和password，进入界面
 看源码也能看到是对其经过处理的
 
-![](/img/LitCTF2025-公开赛道-web/7b6a140b-d641-4c8b-82db-922722fbb1c1-1024x329-20260331204447-q2ofo7b.png)
+![](assets/7b6a140b-d641-4c8b-82db-922722fbb1c1-1024x329-20260331204447-q2ofo7b.png)
 
 来到上传界面上传，经过测试是过滤了<?php,换成短标签<?就可以
 
-![](/img/LitCTF2025-公开赛道-web/ca9f80e1-cd95-4dd2-91a7-345e9c5db6e4-1024x560-20260331204447-oih8d7h.png)
+![](assets/ca9f80e1-cd95-4dd2-91a7-345e9c5db6e4-1024x560-20260331204447-oih8d7h.png)
 
 上传成功，然后就有一个很抽象的点，admin.php下是可以进行file参数任意文件读取的（卡这半天，后面学长出了）后面就是大家都会的步骤了
 
-![](/img/LitCTF2025-公开赛道-web/3a617127-6473-44eb-b07d-9cef8c6b51b1-1024x400-20260331204447-glgzs81.png)
+![](assets/3a617127-6473-44eb-b07d-9cef8c6b51b1-1024x400-20260331204447-glgzs81.png)
 
 ## 星愿信箱
 
 需要包含文字，过滤了{{吧，我们用{%绕过了，没有回显我们就加print这样
 
-![](/img/LitCTF2025-公开赛道-web/b001abb5-197f-4715-a593-f3bcfcafda6a-1024x630-20260331204447-wophb33.png)
+![](assets/b001abb5-197f-4715-a593-f3bcfcafda6a-1024x630-20260331204447-wophb33.png)
 
 然后用的是
 
@@ -36,11 +36,11 @@ author: Xendr1a
 ').read())%}</code>
 ```
 
-![](/img/LitCTF2025-公开赛道-web/9586dfed-f910-48e5-bc1b-61f5275bb79a-1024x718-20260331204447-bfd5sic.png)
+![](assets/9586dfed-f910-48e5-bc1b-61f5275bb79a-1024x718-20260331204447-bfd5sic.png)
 
 ## nest_js
 
-![](/img/LitCTF2025-公开赛道-web/7d4a8fe9-9d98-4ec0-b1e1-fb7b3410f08f-1024x489-20260331204447-0viz76n.png)
+![](assets/7d4a8fe9-9d98-4ec0-b1e1-fb7b3410f08f-1024x489-20260331204447-0viz76n.png)
 
 账户密码admin passwor登入即送flag
 
@@ -48,7 +48,7 @@ author: Xendr1a
 
 先随便创造个用户登入进去进入这个界面
 
-![](/img/LitCTF2025-公开赛道-web/c1fdcbae-6d61-493c-8b14-deb7a2fde108-1-1024x668-20260331204447-adwsnhe.png)
+![](assets/c1fdcbae-6d61-493c-8b14-deb7a2fde108-1-1024x668-20260331204447-adwsnhe.png)
 
 我们看他的源码
 
@@ -92,27 +92,27 @@ author: Xendr1a
 
 说明了需要让isAdmin=ture,我们发送`{ "settings": { "isAdmin": true } }`获得管理员面板
 
-![](/img/LitCTF2025-公开赛道-web/c703c2de-b45a-42ea-8c1c-0f578604ab6d-1024x489-20260331204447-ld3oyk0.png)
+![](assets/c703c2de-b45a-42ea-8c1c-0f578604ab6d-1024x489-20260331204447-ld3oyk0.png)
 
 ## easy_signin
 
 界面是404，我们直接开扫
 
-![](/img/LitCTF2025-公开赛道-web/fbe7b77d-950b-4446-8aa4-0ab29dacb5aa-1-20260331204447-kye8ghy.png)
+![](assets/fbe7b77d-950b-4446-8aa4-0ab29dacb5aa-1-20260331204447-kye8ghy.png)
 
 分别是
 
-![](/img/LitCTF2025-公开赛道-web/e1b29909-7ce5-4faa-8f12-036375cc0349-1024x282-20260331204447-ok86ldh.png)
+![](assets/e1b29909-7ce5-4faa-8f12-036375cc0349-1024x282-20260331204447-ok86ldh.png)
 
-![](/img/LitCTF2025-公开赛道-web/7d6c4692-b12f-49f9-b936-ea5564d6cfec-1024x619-20260331204447-0ut1rds.png)
+![](assets/7d6c4692-b12f-49f9-b936-ea5564d6cfec-1024x619-20260331204447-0ut1rds.png)
 
 源码有个api.js看看
 
-![](/img/LitCTF2025-公开赛道-web/ca58244c-32bb-4261-b147-32c688e191d7-20260331204447-705tjqj.png)
+![](assets/ca58244c-32bb-4261-b147-32c688e191d7-20260331204447-705tjqj.png)
 
 看见url第一反应就是127.0.0.1
 
-![](/img/LitCTF2025-公开赛道-web/c1a3b900-4266-4e29-9179-20e027fefdd7-1024x354-20260331204447-8ptftba.png)
+![](assets/c1a3b900-4266-4e29-9179-20e027fefdd7-1024x354-20260331204447-8ptftba.png)
 
 然后就卡住了，我们回到之前的登入界面看看他的逻辑，他给了
 
@@ -408,23 +408,23 @@ except requests.exceptions.RequestException as e:
     print(f"异常详情: {str(e)}")
 ```
 
-![](/img/LitCTF2025-公开赛道-web/cb89fdd7-d01a-4b76-8c09-4f1b03f45902-1024x671-20260331204447-0fohoua.png)
+![](assets/cb89fdd7-d01a-4b76-8c09-4f1b03f45902-1024x671-20260331204447-0fohoua.png)
 
 我们利用那个url参数打ssrf
 
-![](/img/LitCTF2025-公开赛道-web/35ffd8bc-3253-4a40-b073-acb699bbdee9-1024x725-20260331204447-6kz36ne.png)
+![](assets/35ffd8bc-3253-4a40-b073-acb699bbdee9-1024x725-20260331204447-6kz36ne.png)
 
 这里可以用`ls /var/www/html`来找需要用二次编码（应该是快照和网页的两次解码），我们发现了327a6c4304ad5938eaf0efb6cc3e53dc.php
 
-![](/img/LitCTF2025-公开赛道-web/031ac344-30c3-40ff-ad47-48c1210e15e7-1024x367-20260331204447-wyaeuxv.png)
+![](assets/031ac344-30c3-40ff-ad47-48c1210e15e7-1024x367-20260331204447-wyaeuxv.png)
 
 访问得flag
 
-![](/img/LitCTF2025-公开赛道-web/67c5ba93-4a55-464a-87d6-6eee02a833c5-20260331204447-04ee2w6.png)
+![](assets/67c5ba93-4a55-464a-87d6-6eee02a833c5-20260331204447-04ee2w6.png)
 
 还有一种方法说url参数那是能用php://(php大小写混用绕过即可)或者file://来读取源码或者urlcode.php的内容（没有去特意去看了)
 
-![](/img/LitCTF2025-公开赛道-web/9474fe10-1c68-4fb2-8f09-d6466d0af787-1-1024x654-20260331204447-9zze0bc.png)
+![](assets/9474fe10-1c68-4fb2-8f09-d6466d0af787-1-1024x654-20260331204447-9zze0bc.png)
 
 ## 君の名は
 
@@ -495,7 +495,7 @@ SplObjectStorage::unserialize
 
 那思路应该就是利用原生类来调用匿名函数，找到ReflectionFunction的invoke方法可以调用函数
 
-![](/img/LitCTF2025-公开赛道-web/1a25d29d-ff87-4313-bee2-9ff122f6f997-1024x477-20260331204447-bkjxycq.png)
+![](assets/1a25d29d-ff87-4313-bee2-9ff122f6f997-1024x477-20260331204447-bkjxycq.png)
 
 但是匿名函数怎么弄呢，可以直接用
 

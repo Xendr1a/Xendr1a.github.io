@@ -1,7 +1,7 @@
 ---
 title: “轩辕杯”云盾砺剑CTF挑战赛（Web)
-date: 2025-05-21 23:13:58
-author: Xendr1a
+date: 2026-03-31T20:13:49+08:00
+lastmod: 2026-03-31T20:20:17+08:00
 ---
 
 # “轩辕杯”云盾砺剑CTF挑战赛（Web)
@@ -16,21 +16,21 @@ author: Xendr1a
 
 简单的js，我们在开发者工具中发现main.js
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/939759a9-2d73-4457-a9c1-267c0454c57f-20260331201349-tgtqpky.png)
+![](assets/939759a9-2d73-4457-a9c1-267c0454c57f-20260331201349-tgtqpky.png)
 
 进入/getflag.php，然后POST改score就行
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/c4b8de3a-4f36-45f5-8e46-d5921623ecef-20260331201349-wm323xm.png)
+![](assets/c4b8de3a-4f36-45f5-8e46-d5921623ecef-20260331201349-wm323xm.png)
 
 ## ezflask
 
 输入{{7*7}},回显49
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/edc0fc5c-c854-46a3-bdcb-6586d8b749df-20260331201349-eqhb43c.png)
+![](assets/edc0fc5c-c854-46a3-bdcb-6586d8b749df-20260331201349-eqhb43c.png)
 
 ssti，fenjing秒了
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/e5981aa0-c618-40c0-9f3d-e045baae179d-20260331201350-ecynn29.png)
+![](assets/e5981aa0-c618-40c0-9f3d-e045baae179d-20260331201350-ecynn29.png)
 
 ## ezrce
 
@@ -97,7 +97,7 @@ num的传参我们可以用八进制绕过num=02322
 
 注意到这个是in_array()函数检测，我们可以用" \ "来绕过其的检测
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/ddd8efc6-6ee5-4749-9fc6-71a9947a924f-20260331201350-h35o6k3.png)
+![](assets/ddd8efc6-6ee5-4749-9fc6-71a9947a924f-20260331201350-h35o6k3.png)
 
 后面就能自由命令执行了。
 
@@ -132,7 +132,7 @@ if ($x['host'] === null && $x['scheme'] === 'http') {
 我们观察这个代码，对于输入的参数url进行检测，要求为http头，然后域名为null
 我们就可以构造了
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/005d0933-735e-40d6-9056-64687ffef9d8-20260331201350-i1jeh8t.png)
+![](assets/005d0933-735e-40d6-9056-64687ffef9d8-20260331201350-i1jeh8t.png)
 
 访问此路由即可得flag
 
@@ -201,33 +201,33 @@ nl /*
 
 测试发现只过滤了select和空格，我们可以用双写和/**/绕过
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/e4913759-3eb0-4f3a-92fb-e48972adf91b-1024x422-20260331201350-dwhhgd8.png)
+![](assets/e4913759-3eb0-4f3a-92fb-e48972adf91b-1024x422-20260331201350-dwhhgd8.png)
 
 这借着下去是个假flag
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/bdb15274-5051-4001-8ad9-ebf9cd5f6785-20260331201350-lfdwwoi.png)
+![](assets/bdb15274-5051-4001-8ad9-ebf9cd5f6785-20260331201350-lfdwwoi.png)
 
 我们重新找数据库
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/71f91403-2ca1-408f-8daa-99ecc445c8bc-20260331201350-b81x6jx.png)
+![](assets/71f91403-2ca1-408f-8daa-99ecc445c8bc-20260331201350-b81x6jx.png)
 
 这个才是对的，然后就是接着的一系列套公式操作
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/5f38c1f4-12a4-47db-8cc1-f5ab926e1877-1024x501-20260331201350-xu6zcnq.png)
+![](assets/5f38c1f4-12a4-47db-8cc1-f5ab926e1877-1024x501-20260331201350-xu6zcnq.png)
 
 ## ez_web1
 
 密码九位猜测123456789
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/0d964c71-24da-4cf7-8d94-0abe33e896a4-1024x566-20260331201350-7iepzlw.png)
+![](assets/0d964c71-24da-4cf7-8d94-0abe33e896a4-1024x566-20260331201350-7iepzlw.png)
 
 这三都可以进行非预期
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/720da359-8f6d-47a8-9c36-01ff5d803d06-1024x390-20260331201350-hhyllhc.png)
+![](assets/720da359-8f6d-47a8-9c36-01ff5d803d06-1024x390-20260331201350-hhyllhc.png)
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/6bcb25a4-ac47-40ff-81d1-17313f2a5c33-1024x468-20260331201350-rqgzb4m.png)
+![](assets/6bcb25a4-ac47-40ff-81d1-17313f2a5c33-1024x468-20260331201350-rqgzb4m.png)
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/9641c2a1-2761-449b-8a19-f52dccce1c20-1024x465-20260331201350-dz8hyym.png)
+![](assets/9641c2a1-2761-449b-8a19-f52dccce1c20-1024x465-20260331201350-dz8hyym.png)
 
 |特性|`/proc/self/environ`|`/proc/1/environ`|
 | ----| ------------------------| --------------------------------------|
@@ -398,10 +398,10 @@ token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.EYrwzSGzf
 他是先file.save(file_path) 先保存到磁盘，再进行检测来判断是否删除的，
 所以只要我们上传后去/read访问的够快就行了。
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/8e83faf9-c322-4192-8ebf-0da8d6b38d2c-1024x466-20260331201350-tizo8x8.png)
+![](assets/8e83faf9-c322-4192-8ebf-0da8d6b38d2c-1024x466-20260331201350-tizo8x8.png)
 
 设置一直发包就行了，然后我们可以手动或者再开一个重复访问（我这是是手动访问
 
-![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/4f716ce8-bea8-4a38-bb76-b08f7b3b21f5-1024x656-20260331201350-fxo5r5r.png)
+![](assets/4f716ce8-bea8-4a38-bb76-b08f7b3b21f5-1024x656-20260331201350-fxo5r5r.png)
 
 至此，轩辕之旅结束~~~~
