@@ -1,11 +1,11 @@
 ---
-
-title: 关于pearcmd.php的利用
+title: 关于 pearcmd.php 的利用
 date: 2025-11-23T22:12:23Z
 author: Xendr1a
-
-
-
+categories: [Web安全, Web基础]
+tags: [PHP, 文件包含, pearcmd]
+description: 关于pearcmd.php的利用，题目思路与 payload 记录。
+toc: true
 ---
 
 # 关于pearcmd.php的利用

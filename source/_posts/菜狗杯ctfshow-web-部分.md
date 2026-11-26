@@ -1,17 +1,11 @@
 ---
-
-title: CTFshow 菜狗杯 Web 部分题解
+title: 菜狗杯 ctfshow Web 部分题解
 date: 2024-01-20 21:57:13
-tags:
-  - CTF
-  - Web安全
-  - 题解
-  - CTFshow
-categories: [CTF, Writeup]
 author: Xendr1a
-
-
-
+categories: [CTF题解, ctfshow]
+tags: [ctfshow, 菜狗杯, Writeup]
+description: CTFshow 菜狗杯 Web 部分题解，题目思路与 payload 记录。
+toc: true
 ---
 
 ## web 签到

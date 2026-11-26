@@ -123,18 +123,29 @@ cd .. && git add -A && git commit -m "msg" && git push origin main:source
 
 ## 当前文章
 
-| 文章 | 日期 |
+2026-11-26 重整后共 59 篇，按栏目分组：
+
+| 栏目 | 内容 |
 |------|------|
-| 菜狗杯ctfshow web | 2024-01-20 |
-| 轩辕杯-云盾砺剑CTF挑战赛 | 2025-05-21 |
-| TGCTF 2025 web | 2025-06-01 |
-| 2025H&NCTF web | 2025-06-09 |
-| LitCTF2025 | 2025-08-30 |
-| 0xgame2025 week1~3 | 2025-10 |
-| newstar2025 week1 | 2025-10-15 |
-| ISCTF web | 2025-12-04 |
-| PHP反序列化魔术方法 | 2025-09-02 |
-| pearcmd.php利用 | 2025-11-23 |
+| Web 基础 | SQL 注入、SSTI、PHP 反序列化、文件包含、命令执行、PHP 特性、JWT、Java 反序列化、信息收集、AWD 等 14 篇合并稿 |
+| CTF 题解 | 0xgame、newstar、ISCTF、LitCTF、TGCTF、轩辕杯、H&NCTF、GCTF、NSSCTF、CCB、NEPCTF、PolarisCTF、BUUCTF、ctfshow 系列等 |
+| CVE 复现 | vsftpd、Laravel、Vite、ThinkPHP、Yii |
+| 工具与运维 | 工具手册 5 篇、Volatility 2/3、Docker、Nmap、FTP |
+| 漏洞修复 | 《漏洞修复速查手册》单篇合集（判据 → 修复 → 验收 → 补丁包） |
+
+早期 12 篇保留原链接不删除，仅重整了 front-matter。
+
+---
+
+## 主题维护（柔和低对比度）
+
+| 改什么 | 在哪里 |
+|--------|--------|
+| 主配色 / 字体 | `_config.fluid.yml` → `color`、`font` |
+| 圆角、阴影、行距、标题字体 | `source/css/custom.css` |
+| 代码块底色 / 角标 | `custom.css` 的 `figure.highlight`；角标由 `code.language.enable` 控制 |
+
+当前方案：暖纸白 `#f3f0ea` + 雾灰蓝导航 `#8a949b`，正文 `#555b61`，链接 `#6f8494`，暗色 `#1f2328`。文章标题恢复显示（Fluid 默认仅打印可见），代码块不显示语言角标，避免裸代码块被错误识别。
 
 ---
 

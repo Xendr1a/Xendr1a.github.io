@@ -1,15 +1,11 @@
 ---
-
-title: 关于php反序列化的魔术方法的调用
+title: PHP 反序列化中的魔术方法调用
 date: 2025-09-02 21:24:57
-updated: 2025-09-02 21:29:11
-author: Xebdria
-categories:
-  - php反序列化
-  - 知识
-
-
-
+author: Xendr1a
+categories: [Web安全, Web基础]
+tags: [PHP, 反序列化, 魔术方法]
+description: 关于php反序列化的魔术方法的调用，题目思路与 payload 记录。
+toc: true
 ---
 
 老早就想总结一下魔术方法了，每次单独找还是太吃操作了，所以就有了这个

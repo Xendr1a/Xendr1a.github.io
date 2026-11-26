@@ -25,11 +25,20 @@ subtitle: "还要拐几个弯才能到呢"
 # 开启后所有 HTTP 资源会被强制升级为 HTTPS
 force_https: false
 
+# 字体与排版（低对比度、柔和阅读）
+font:
+  font_size: "16px"
+  font_family: '"Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
+  code_font_size: "86%"
+  letter_spacing: "0.012em"
+
 # 代码高亮
 # lib 可选: highlightjs | prismjs
 code:
   enable: true
   lib: "highlightjs"        # 高亮库
+  language:
+    enable: false           # 不显示语言角标（避免裸代码块被猜成错误语言）
   highlightjs:
     style: "github"         # 亮色主题风格
     style_dark: "github-dark"  # 暗色主题风格
@@ -66,24 +75,44 @@ dark_mode:
 # 主题配色（其他颜色需用自定义 CSS）
 # 配色灵感: https://www.webdesignrankings.com/resources/lolcolors/
 color:
-  body_bg_color: "#eee"              # 页面背景色
-  body_bg_color_dark: "#181c27"      # 暗色模式背景
-  navbar_bg_color: "#2f4154"         # 导航栏背景色
-  navbar_bg_color_dark: "#1f3144"    # 暗色模式导航栏
-  navbar_text_color: "#fff"          # 导航栏文字色
-  navbar_text_color_dark: "#d0d0d0"
-  subtitle_color: "#fff"             # 副标题颜色
-  subtitle_color_dark: "#d0d0d0"
-  text_color: "#3c4858"              # 正文颜色
-  text_color_dark: "#c4c6c9"
-  link_color: "#337ab7"              # 链接颜色
-  link_color_dark: "#4090d6"
-  board_color: "#fff"                # 卡片背景色
-  board_color_dark: "#252d38"
+  body_bg_color: "#f3f0ea"              # 暖纸白页面底色
+  body_bg_color_dark: "#1f2328"         # 暗色模式背景
+  navbar_bg_color: "#8a949b"            # 雾灰蓝导航栏
+  navbar_bg_color_dark: "#262c33"
+  navbar_text_color: "#fbfaf7"          # 导航栏文字
+  navbar_text_color_dark: "#c3c8cd"
+  subtitle_color: "#f8f5ef"
+  subtitle_color_dark: "#b8bec4"
+  text_color: "#555b61"                 # 正文（对纸白约 7:1）
+  text_color_dark: "#b7bdc3"
+  sec_text_color: "#8b9198"             # 次要文字
+  sec_text_color_dark: "#8f969d"
+  post_text_color: "#50565c"
+  post_text_color_dark: "#c0c5ca"
+  post_heading_color: "#3f464d"
+  post_heading_color_dark: "#d2d6da"
+  link_color: "#6f8494"                 # 低饱和蓝灰链接
+  link_color_dark: "#9db4c4"
+  post_link_color: "#6f8494"
+  post_link_color_dark: "#9db4c4"
+  link_hover_color: "#57707f"
+  link_hover_color_dark: "#b6c9d6"
+  link_hover_bg_color: "#ece7df"
+  link_hover_bg_color_dark: "#333c45"
+  line_color: "#e4dfd7"                 # 分隔线
+  line_color_dark: "#333a42"
+  board_color: "#fbf9f5"               # 卡片背景
+  board_color_dark: "#272c33"
+  button_bg_color: "#f0ece5"
+  button_bg_color_dark: "#2e353d"
+  button_hover_bg_color: "#e8e3da"
+  button_hover_bg_color_dark: "#39424b"
+  scrollbar_color: "#cfc8bd"
+  scrollbar_hover_color: "#b9b1a5"
 
 # 自定义 JS 文件（路径相对于 source 目录，如 /js/custom.js 对应 source/js/custom.js）
 custom_js:
-custom_css:
+custom_css: /css/custom.css
 
 # 网页访问统计（百度/Google Analytics/LeanCloud 等）
 web_analytics:
@@ -244,7 +273,7 @@ index:
 #---------------------------
 post:
   banner_img: /img/default.jpg
-  banner_img_height: 70
+  banner_img_height: 60
   banner_mask_alpha: 0.3
   # 文章默认封面图（首页显示，front-matter 中 index_img 优先）
   default_index_img:
@@ -258,7 +287,7 @@ post:
     wordcount:                # 字数统计
       enable: true
     min2read:                 # 阅读时长
-      enable: true
+      enable: false
       awl: 2                  # 平均词长（中文≈2，英文≈5）
       wpm: 60                 # 每分钟阅读字数
     views:                    # 阅读次数

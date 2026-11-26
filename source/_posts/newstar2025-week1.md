@@ -1,11 +1,11 @@
 ---
-
-title: newstar2025
+title: newstar2025 week1
 date: 2025-10-15T09:00:54Z
 author: Xendr1a
-
-
-
+categories: [CTF题解, newstar2025]
+tags: [newstar2025, Writeup]
+description: newstar2025，题目思路与 payload 记录。
+toc: true
 ---
 
 # newstar2025（week1

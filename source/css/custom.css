@@ -1,0 +1,184 @@
+/* 文章标题：Fluid 默认只在打印时显示，这里恢复屏幕显示 */
+@media not print {
+  #seo-header {
+    display: block;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+    font-size: 2rem;
+    line-height: 1.5;
+    border-bottom-width: 1px;
+  }
+}
+
+/* 柔和低对比度主题覆盖：暖纸白 + 雾灰蓝，降低阴影与边框硬度 */
+
+#board {
+  border-radius: 18px;
+  box-shadow: 0 16px 44px rgba(70, 64, 55, 0.09);
+}
+
+.navbar {
+  box-shadow: 0 1px 0 rgba(60, 55, 45, 0.06) !important;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.markdown-body {
+  font-size: 16px;
+  line-height: 1.95;
+  letter-spacing: 0.012em;
+  color: var(--post-text-color);
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--post-heading-color);
+}
+
+.markdown-body h2 {
+  margin-top: 2.4em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid var(--line-color);
+}
+
+.markdown-body h3 {
+  margin-top: 1.8em;
+}
+
+.markdown-body p {
+  margin-bottom: 1.05em;
+}
+
+.markdown-body a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(111, 132, 148, 0.35);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.markdown-body a:hover {
+  border-bottom-color: var(--link-hover-color);
+}
+
+.markdown-body blockquote {
+  background: rgba(125, 115, 100, 0.06);
+  border-left: 3px solid rgba(125, 115, 100, 0.28);
+  border-radius: 0 8px 8px 0;
+  padding: 0.8em 1.1em;
+  color: var(--sec-text-color);
+}
+
+.markdown-body code {
+  background: rgba(125, 115, 100, 0.10);
+  border-radius: 5px;
+  padding: 0.12em 0.38em;
+  font-size: 0.88em;
+}
+
+.markdown-body figure.highlight {
+  background: #f7f5f1 !important;
+  border: 1px solid rgba(125, 115, 100, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(70, 64, 55, 0.05);
+}
+
+.markdown-body figure.highlight table,
+.markdown-body figure.highlight pre,
+.markdown-body figure.highlight code {
+  background: transparent !important;
+}
+
+.markdown-body figure.highlight .gutter {
+  background: rgba(125, 115, 100, 0.04) !important;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line-color);
+}
+
+.markdown-body table th {
+  background: rgba(125, 115, 100, 0.08);
+  font-weight: 600;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background: rgba(125, 115, 100, 0.035);
+}
+
+.markdown-body img {
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(70, 64, 55, 0.10);
+}
+
+.markdown-body hr {
+  border-color: var(--line-color);
+}
+
+.index-header {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+  font-weight: 600;
+}
+
+.index-img img {
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(70, 64, 55, 0.10);
+}
+
+.post-meta,
+.index-btm,
+.index-excerpt {
+  color: var(--sec-text-color);
+}
+
+/* 暗色模式：同样压低对比与阴影 */
+html[data-user-color-scheme="dark"] #board {
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body blockquote {
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: rgba(255, 255, 255, 0.16);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body figure.highlight {
+  background: #22262b !important;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body figure.highlight .gutter {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body table th {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body table tr:nth-child(2n) {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body img {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}

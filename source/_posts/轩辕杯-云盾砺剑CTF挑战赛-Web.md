@@ -1,7 +1,11 @@
 ---
-title: “轩辕杯”云盾砺剑CTF挑战赛（Web)
+title: “轩辕杯”云盾砺剑 CTF 挑战赛 Web
 date: 2025-05-21 23:13:58
 author: Xendr1a
+categories: [CTF题解, 轩辕杯]
+tags: [轩辕杯, Writeup]
+description: “轩辕杯”云盾砺剑CTF挑战赛（Web)，题目思路与 payload 记录。
+toc: true
 ---
 
 # “轩辕杯”云盾砺剑CTF挑战赛（Web)
@@ -24,7 +28,7 @@ author: Xendr1a
 
 ## ezflask
 
-输入{{7*7}},回显49
+输入{% raw %}{{{% endraw %}7*7}},回显49
 
 ![](/img/轩辕杯-云盾砺剑CTF挑战赛-Web/edc0fc5c-c854-46a3-bdcb-6586d8b749df-20260331201349-eqhb43c.png)
 

@@ -1,7 +1,11 @@
 ---
-title: TGCTF 2025 web(复现
+title: TGCTF 2025 Web 复现
 date: 2025-06-01 21:16:23
 author: Xendr1a
+categories: [CTF题解, TGCTF]
+tags: [TGCTF, Writeup]
+description: TGCTF 2025 web(复现，题目思路与 payload 记录。
+toc: true
 ---
 
 # TGCTF 2025 web(复现
@@ -493,8 +497,8 @@ def greet():
             if not (secret_key[:2] in name and secret_key[2:]):
                 template = '连“六根”都凑不齐，谈什么天命不天命的，还是戴上这金箍吧<br><br>再去西行历练历练<br><br>'
                 return render_template_string(template)
-            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“{{}}”<br>最后，如果你用了cat，就可以见到齐天大圣了<br>"
-            template= template.replace("直面","{{").replace("天命","}}")
+            template1 = "“六根”也凑齐了，你已经可以直面天命了！我帮你把“secret_key”替换为了“{% raw %}{{{% endraw %}}}”<br>最后，如果你用了cat，就可以见到齐天大圣了<br>"
+            template= template.replace("直面","{% raw %}{{{% endraw %}").replace("天命","}}")
             template = template
     if "cat" in template:
         template2 = '<br>或许你这只叫天命人的猴子，真的能做到？<br><br>'
@@ -534,10 +538,10 @@ if __name__ == '__main__':
 
 看到了这个
 from a.b.c.d.secret import secret_key
-可以发现后面会将直面天命变成{{}}
+可以发现后面会将直面天命变成{% raw %}{{{% endraw %}}}
 
 ```py
- template= template.replace("直面","{{").replace("天命","}}")
+ template= template.replace("直面","{% raw %}{{{% endraw %}").replace("天命","}}")
 ```
 
 最后我们就可以构造payload了
