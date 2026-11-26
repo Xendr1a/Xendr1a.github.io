@@ -1,22 +1,23 @@
 /* ============================================================
-   阅读版式：暖纸底 + 墨色字 + 暖棕强调
+   阅读版式：淡蓝纸底 + 墨蓝字 + 雾蓝强调
    ============================================================ */
 
 ::selection {
-  background: #e8d5c2;
-  color: #2a211b;
+  background: #cfe4f2;
+  color: #1f3a4a;
 }
 
 /* 卡片与导航 */
 #board {
-  border: 1px solid rgba(120, 100, 75, 0.07);
+  border: 1px solid rgba(70, 110, 140, 0.08);
   border-radius: 20px;
-  box-shadow: 0 18px 50px rgba(78, 64, 48, 0.08);
+  box-shadow: 0 18px 50px rgba(45, 80, 105, 0.08);
 }
 
 .navbar {
+  background-color: rgba(238, 245, 250, 0.94) !important;
   box-shadow: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  border-bottom: 1px solid rgba(60, 95, 120, 0.10);
   backdrop-filter: blur(8px);
 }
 
@@ -28,33 +29,6 @@
 
 .navbar .nav-link {
   font-weight: 500;
-}
-
-/* 文章标题 */
-@media not print {
-  #seo-header {
-    display: block;
-    max-width: 780px;
-    margin: 0.2em auto 0.9em;
-    padding-bottom: 0;
-    border-bottom: none;
-    font-family: "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
-    font-size: 2.15rem;
-    font-weight: 600;
-    line-height: 1.45;
-    letter-spacing: 0.01em;
-    color: var(--post-heading-color);
-  }
-
-  #seo-header::after {
-    content: "";
-    display: block;
-    width: 56px;
-    height: 3px;
-    margin-top: 1rem;
-    border-radius: 2px;
-    background: #b08968;
-  }
 }
 
 /* 正文 */
@@ -105,7 +79,7 @@
 .markdown-body h2 {
   margin: 2.6em 0 1em;
   padding-left: 0.7em;
-  border-left: 4px solid #b08968;
+  border-left: 4px solid #6f9cba;
   border-bottom: none;
   font-size: 1.55rem;
 }
@@ -146,14 +120,14 @@
 }
 
 .markdown-body li::marker {
-  color: #b08968;
+  color: #6f9cba;
 }
 
 /* 链接 */
 .markdown-body a {
   color: var(--post-link-color);
   text-decoration: none;
-  border-bottom: 1px solid rgba(154, 106, 79, 0.28);
+  border-bottom: 1px solid rgba(79, 127, 158, 0.30);
   transition: color 0.18s ease, border-color 0.18s ease;
 }
 
@@ -166,10 +140,10 @@
 .markdown-body blockquote {
   margin: 1.2em 0;
   padding: 0.9em 1.1em;
-  background: #f7f1e7;
-  border-left: 3px solid #b08968;
+  background: #f1f8fc;
+  border-left: 3px solid #6f9cba;
   border-radius: 0 10px 10px 0;
-  color: #5f5a54;
+  color: #56646f;
 }
 
 .markdown-body blockquote p:last-child {
@@ -180,8 +154,8 @@
 .markdown-body code {
   padding: 0.1em 0.35em;
   border-radius: 4px;
-  background: #f2ebe1;
-  color: #8a5a3c;
+  background: #e8f2f9;
+  color: #3f6f8c;
   font-size: 0.86em;
 }
 
@@ -193,9 +167,9 @@
 
 .markdown-body figure.highlight {
   margin: 1.2em 0;
-  border: 1px solid #e9e0d3;
+  border: 1px solid #dbe9f2;
   border-radius: 12px;
-  background: #f8f4ec !important;
+  background: #f6fafd !important;
   box-shadow: none;
   overflow: hidden;
 }
@@ -220,7 +194,7 @@
 .markdown-body table {
   width: 100%;
   margin: 1.2em 0;
-  border: 1px solid #e7dfd2;
+  border: 1px solid #dbe9f2;
   border-radius: 10px;
   border-collapse: separate;
   border-spacing: 0;
@@ -229,15 +203,15 @@
 }
 
 .markdown-body th {
-  background: #f6f0e7;
-  color: #3a332c;
+  background: #f0f7fb;
+  color: #24313a;
   font-weight: 600;
 }
 
 .markdown-body th,
 .markdown-body td {
   padding: 0.55em 0.8em;
-  border-bottom: 1px solid #eee6da;
+  border-bottom: 1px solid #e4eef5;
 }
 
 .markdown-body tr:last-child td {
@@ -245,42 +219,42 @@
 }
 
 .markdown-body tr:nth-child(even) td {
-  background: #fdfaf4;
+  background: #f8fcfe;
 }
 
 /* 图片与分隔线 */
 .markdown-body img {
   margin: 0.4em 0;
   border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(70, 55, 40, 0.08);
+  box-shadow: 0 6px 18px rgba(45, 80, 105, 0.10);
 }
 
 .markdown-body hr {
   height: 1px;
   margin: 2em 0;
   border: none;
-  background: #e5ddd0;
+  background: #dce8f0;
 }
 
 /* 目录 */
 #toc {
   padding-left: 1rem;
-  border-left: 1px solid #e5ddd0;
+  border-left: 1px solid #dce8f0;
   font-size: 0.82rem;
 }
 
 #toc .toc-header {
-  color: #6f665c;
+  color: #657682;
   font-weight: 600;
   letter-spacing: 0.08em;
 }
 
 #toc .toc-link {
-  color: #8a8177;
+  color: #748792;
 }
 
 #toc .is-active-link {
-  color: #9a6a4f;
+  color: #4f7f9e;
   font-weight: 600;
 }
 
@@ -289,17 +263,17 @@
   max-width: 780px;
   margin: 0 auto 1rem;
   padding: 1.35rem 1.5rem;
-  background: #fffdf9;
-  border: 1px solid #ece4d7;
+  background: #ffffff;
+  border: 1px solid #dbe8f1;
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(80, 65, 48, 0.035);
+  box-shadow: 0 2px 10px rgba(45, 80, 105, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .index-card:hover {
   transform: translateY(-2px);
-  border-color: #ddcfbd;
-  box-shadow: 0 10px 26px rgba(80, 65, 48, 0.08);
+  border-color: #c4d9e7;
+  box-shadow: 0 10px 26px rgba(45, 80, 105, 0.09);
 }
 
 .index-header {
@@ -318,26 +292,26 @@
   height: auto;
   max-height: 4.2rem;
   margin: 0.35rem 0 0.55rem;
-  color: #6f767c;
+  color: #6b7c88;
   font-size: 0.95rem;
   line-height: 1.7;
 }
 
 .index-btm {
   font-size: 0.82rem;
-  color: #8b8176;
+  color: #71838f;
 }
 
 .index-btm a {
-  color: #8b8176;
+  color: #71838f;
 }
 
 .post-meta,
 .post-metas {
-  color: #8b8176;
+  color: #71838f;
 }
 
-/* 暗色模式 */
+/* 暗色模式（当前关闭，保留一份冷蓝覆盖） */
 html[data-user-color-scheme="dark"] #board {
   border-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
@@ -346,12 +320,12 @@ html[data-user-color-scheme="dark"] #board {
 html[data-user-color-scheme="dark"] .markdown-body blockquote {
   background: #262b30;
   color: #b9bfc5;
-  border-left-color: #b08968;
+  border-left-color: #6f9cba;
 }
 
 html[data-user-color-scheme="dark"] .markdown-body code {
   background: #2c3238;
-  color: #d8b79c;
+  color: #9cc4de;
 }
 
 html[data-user-color-scheme="dark"] .markdown-body figure.highlight {
