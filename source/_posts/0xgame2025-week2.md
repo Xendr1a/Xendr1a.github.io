@@ -4,10 +4,9 @@ date: 2025-10-23T22:42:18Z
 author: Xendr1a
 categories: [CTF题解, 0xgame2025]
 tags: [0xgame2025, Writeup]
-description: 0xgame2025，题目思路与 payload 记录。
+description: 0xgame2025 week2 Web 题解与 payload 记录。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19380140/0xgame2025-week2-wplbr)
 
 # 0xgame2025（week2

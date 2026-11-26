@@ -1,13 +1,12 @@
 ---
 title: ctfshow 命令执行题解
-date: 2025-12-15 10:00:00
+date: 2025-09-15 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, RCE]
-description: ctfshow 命令执行题解，包含题目思路、payload 与踩坑记录。
+description: ctfshow 命令执行专题：过滤绕过、无字母数字与命令拼接。
 toc: true
 ---
-
 ## 命令执行
 
 ### web40

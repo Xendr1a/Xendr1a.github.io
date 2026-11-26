@@ -1,13 +1,12 @@
 ---
 title: Chain Mirror Platform 题解
-date: 2025-07-01 10:00:00
+date: 2026-04-02 10:00:00
 author: Xendr1a
 categories: [CTF题解, Chain Mirror]
 tags: [Writeup, RCE]
-description: Chain Mirror Platform 题解，包含题目思路、payload 与踩坑记录。
+description: Chain Mirror Platform 靶场 RCE 系列（RCELABS）题解与利用链记录。
 toc: true
 ---
-
 ## RCELABS-11
 
 ```text

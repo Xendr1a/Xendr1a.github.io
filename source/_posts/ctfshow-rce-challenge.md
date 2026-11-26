@@ -1,13 +1,12 @@
 ---
 title: ctfshow 每周大挑战 RCE 极限挑战
-date: 2025-11-20 10:00:00
+date: 2025-11-08 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, RCE]
-description: ctfshow 每周大挑战 RCE 极限挑战，包含题目思路、payload 与踩坑记录。
+description: ctfshow 每周大挑战 RCE 极限挑战五题复现。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803612/reproduce-ctfshow-weekly-challenge-rce-extreme-challenge-auloq)
 
 ## 复现 ctfshow 每周大挑战(RCE极限挑战

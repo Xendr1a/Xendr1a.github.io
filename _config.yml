@@ -53,7 +53,7 @@ relative_link: false                         # 是否使用相对链接
 future: true                                 # 是否显示未来日期的文章
 syntax_highlighter: highlight.js             # 代码高亮引擎（主题配置中会覆盖）
 highlight:
-  line_number: true                          # 显示行号
+  line_number: false                         # 显示行号
   auto_detect: false                         # 自动检测语言
   tab_replace: ''                            # Tab 替换字符
   wrap: true                                 # 代码块是否换行

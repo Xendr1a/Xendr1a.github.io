@@ -1,13 +1,12 @@
 ---
 title: PolarisCTF 招新赛 Web 部分
-date: 2026-04-05 14:25:00
+date: 2026-03-05 10:00:00
 author: Xendr1a
 categories: [CTF题解, PolarisCTF]
 tags: [PolarisCTF, Writeup]
-description: PolarisCTF 招新赛 Web 部分，包含题目思路、payload 与踩坑记录。
+description: PolarisCTF 招新赛 Web 部分：ez_python、SSTI、JWT 等题解。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh)
 
 ## 概述

@@ -1,13 +1,12 @@
 ---
 title: HANDLER 命令：没有 select 时怎么读表
-date: 2025-12-23 14:39:00
+date: 2025-12-15 10:00:00
 author: Xendr1a
 categories: [Web安全, Web基础]
 tags: [MySQL, 堆叠注入, SQL注入]
-description: MySQL/MariaDB 的 HANDLER 语句用法，以及 [GYCTF2020]Blacklist1、ctfshow web225 两道例题。
+description: MySQL HANDLER 在无 select 时读表，附 Blacklist1 与 web225 例题。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19387010/handler-command-2otcdp)
 
 HANDLER 是 MySQL 和 MariaDB 特有的非标准 SQL 语句。它允许直接与存储引擎（InnoDB、MyISAM）交互，绕过 SQL 优化器。
@@ -75,5 +74,5 @@ username=';handler%20ctfshow_flagasa%20open;handler%20ctfshow_flagasa%20read%20f
 
 ## 参考
 
-- 堆叠注入背景见 [SQL 注入](/2026/11/22/web-sql-injection/)；命令执行见 [命令执行与 RCE](/2026/11/22/web-rce/)
+- 堆叠注入背景见 [SQL 注入](/2026/05/01/web-sql-injection/)；命令执行见 [命令执行与 RCE](/2026/06/26/web-rce/)
 - MySQL 官方文档：[HANDLER Statement](https://dev.mysql.com/doc/refman/8.0/en/handler.html)

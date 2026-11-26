@@ -28,9 +28,9 @@ force_https: false
 # 字体与排版（低对比度、柔和阅读）
 font:
   font_size: "16px"
-  font_family: '"Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
-  code_font_size: "86%"
-  letter_spacing: "0.012em"
+  font_family: '"Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif'
+  code_font_size: "88%"
+  letter_spacing: "0.005em"
 
 # 代码高亮
 # lib 可选: highlightjs | prismjs
@@ -75,40 +75,40 @@ dark_mode:
 # 主题配色（其他颜色需用自定义 CSS）
 # 配色灵感: https://www.webdesignrankings.com/resources/lolcolors/
 color:
-  body_bg_color: "#f3f0ea"              # 暖纸白页面底色
-  body_bg_color_dark: "#1f2328"         # 暗色模式背景
-  navbar_bg_color: "#8a949b"            # 雾灰蓝导航栏
-  navbar_bg_color_dark: "#262c33"
-  navbar_text_color: "#fbfaf7"          # 导航栏文字
-  navbar_text_color_dark: "#c3c8cd"
+  body_bg_color: "#f2eee7"              # 暖灰纸底
+  body_bg_color_dark: "#1b1f23"
+  navbar_bg_color: "#414d54"            # 墨蓝灰导航
+  navbar_bg_color_dark: "#20262b"
+  navbar_text_color: "#f6f2ea"
+  navbar_text_color_dark: "#c9ced3"
   subtitle_color: "#f8f5ef"
-  subtitle_color_dark: "#b8bec4"
-  text_color: "#555b61"                 # 正文（对纸白约 7:1）
-  text_color_dark: "#b7bdc3"
-  sec_text_color: "#8b9198"             # 次要文字
-  sec_text_color_dark: "#8f969d"
-  post_text_color: "#50565c"
-  post_text_color_dark: "#c0c5ca"
-  post_heading_color: "#3f464d"
-  post_heading_color_dark: "#d2d6da"
-  link_color: "#6f8494"                 # 低饱和蓝灰链接
-  link_color_dark: "#9db4c4"
-  post_link_color: "#6f8494"
-  post_link_color_dark: "#9db4c4"
-  link_hover_color: "#57707f"
-  link_hover_color_dark: "#b6c9d6"
-  link_hover_bg_color: "#ece7df"
-  link_hover_bg_color_dark: "#333c45"
-  line_color: "#e4dfd7"                 # 分隔线
-  line_color_dark: "#333a42"
-  board_color: "#fbf9f5"               # 卡片背景
-  board_color_dark: "#272c33"
-  button_bg_color: "#f0ece5"
-  button_bg_color_dark: "#2e353d"
-  button_hover_bg_color: "#e8e3da"
-  button_hover_bg_color_dark: "#39424b"
-  scrollbar_color: "#cfc8bd"
-  scrollbar_hover_color: "#b9b1a5"
+  subtitle_color_dark: "#c9ced3"
+  text_color: "#3f454a"
+  text_color_dark: "#c2c7cc"
+  sec_text_color: "#7c8389"
+  sec_text_color_dark: "#8d949b"
+  post_text_color: "#363c41"            # 正文：柔和近黑
+  post_text_color_dark: "#c6cbd0"
+  post_heading_color: "#20262a"
+  post_heading_color_dark: "#e6e9ec"
+  link_color: "#9a6a4f"                 # 暖棕强调色
+  link_color_dark: "#c39a7b"
+  post_link_color: "#9a6a4f"
+  post_link_color_dark: "#c39a7b"
+  link_hover_color: "#7c4f37"
+  link_hover_color_dark: "#d8b79c"
+  link_hover_bg_color: "#efe7db"
+  link_hover_bg_color_dark: "#2f373e"
+  line_color: "#e5ddd0"
+  line_color_dark: "#303840"
+  board_color: "#fffdf9"
+  board_color_dark: "#22272c"
+  button_bg_color: "#f4efe6"
+  button_bg_color_dark: "#2a3138"
+  button_hover_bg_color: "#ece5d9"
+  button_hover_bg_color_dark: "#343d45"
+  scrollbar_color: "#cfc5b5"
+  scrollbar_hover_color: "#b8ac99"
 
 # 自定义 JS 文件（路径相对于 source 目录，如 /js/custom.js 对应 source/js/custom.js）
 custom_js:
@@ -240,8 +240,8 @@ footer:
 index:
   # 首页头图（路径相对于 source/，也可用外链）
   banner_img: /img/default.jpg
-  banner_img_height: 100      # 头图高度（屏幕百分比 0-100）
-  banner_mask_alpha: 0.3      # 头图黑色蒙版透明度（0-1.0，1 完全不透明）
+  banner_img_height: 78
+  banner_mask_alpha: 0.42
   # 首页标语（副标题）
   slogan:
     enable: true
@@ -273,8 +273,8 @@ index:
 #---------------------------
 post:
   banner_img: /img/default.jpg
-  banner_img_height: 60
-  banner_mask_alpha: 0.3
+  banner_img_height: 46
+  banner_mask_alpha: 0.42
   # 文章默认封面图（首页显示，front-matter 中 index_img 优先）
   default_index_img:
   # 文章标题下方元信息
@@ -328,7 +328,7 @@ post:
     enable: true
   # 图片标题
   image_caption:
-    enable: true
+    enable: false
   # 图片 URL 替换（可用于点击放大时替换为原图，如 ['-slim','']）
   img_url_replace: ['', '']
   # 脚注语法

@@ -4,10 +4,9 @@ date: 2025-05-21 23:13:58
 author: Xendr1a
 categories: [CTF题解, 轩辕杯]
 tags: [轩辕杯, Writeup]
-description: “轩辕杯”云盾砺剑CTF挑战赛（Web)，题目思路与 payload 记录。
+description: 轩辕杯云盾砺剑 CTF Web 题解与复现记录。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803666/xuanyuan-cup-cloud-shield-sword-ctf-challenge-web-1tckhy)
 
 # “轩辕杯”云盾砺剑CTF挑战赛（Web)

@@ -4,10 +4,9 @@ date: 2025-12-04T00:15:16Z
 author: Xendr1a
 categories: [CTF题解, ISCTF]
 tags: [ISCTF, Writeup]
-description: ISCTF，题目思路与 payload 记录。
+description: ISCTF 2025 Web 部分题解与复现记录。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19372803)
 
 # ISCTF（web部分

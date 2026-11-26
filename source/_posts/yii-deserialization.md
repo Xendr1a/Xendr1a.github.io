@@ -1,13 +1,12 @@
 ---
 title: Yii 反序列化漏洞复现
-date: 2025-07-10 10:00:00
+date: 2026-02-07 10:00:00
 author: Xendr1a
 categories: [CVE复现]
 tags: [Yii, 反序列化]
-description: Yii 反序列化漏洞复现：环境、复现步骤与修复建议。
+description: Yii 反序列化漏洞复现与利用条件。
 toc: true
 ---
-
 ## Yii反序列化漏洞
 
 ```text

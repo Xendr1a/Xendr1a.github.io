@@ -4,10 +4,9 @@ date: 2025-09-02 21:24:57
 author: Xendr1a
 categories: [Web安全, Web基础]
 tags: [PHP, 反序列化, 魔术方法]
-description: 关于php反序列化的魔术方法的调用，题目思路与 payload 记录。
+description: PHP 反序列化中魔术方法的触发时机与调用顺序。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803607/about-calling-the-magic-method-of-php-deserialization-1vwk9l)
 
 老早就想总结一下魔术方法了，每次单独找还是太吃操作了，所以就有了这个

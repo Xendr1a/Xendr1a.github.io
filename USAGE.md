@@ -123,17 +123,14 @@ cd .. && git add -A && git commit -m "msg" && git push origin main:source
 
 ## 当前文章
 
-2026-11-26 重整后共 60 篇，按栏目分组：
+2026-11-26 重整后共 27 篇，只保留完整题解与 CVE 复现；工具、Web 基础、修复速查等自查笔记不公开。
 
 | 栏目 | 内容 |
 |------|------|
-| Web 基础 | SQL 注入、SSTI、PHP 反序列化、文件包含、命令执行、PHP 特性、JWT、Java 反序列化、信息收集、AWD 等 14 篇合并稿 |
-| CTF 题解 | 0xgame、newstar、ISCTF、LitCTF、TGCTF、轩辕杯、H&NCTF、GCTF、NSSCTF、CCB、NEPCTF、PolarisCTF、BUUCTF、ctfshow 系列等 |
-| CVE 复现 | vsftpd、Laravel、Vite、ThinkPHP、Yii |
-| 工具与运维 | 工具手册 5 篇、Volatility 2/3、Docker、Nmap、FTP |
-| 漏洞修复 | 《漏洞修复速查手册》单篇合集（判据 → 修复 → 验收 → 补丁包） |
+| CTF 题解 | 0xgame、newstar、ISCTF、LitCTF、轩辕杯、GCTF、CCB、PolarisCTF、BUUCTF、Chain Mirror、校内赛、ctfshow 系列、HANDLER |
+| CVE 复现 | Laravel、ThinkPHP、Yii |
 
-早期 12 篇保留原链接不删除，仅重整了 front-matter。
+早期 10 篇保留原链接不删除，仅重整了 front-matter。
 
 ---
 
@@ -145,7 +142,7 @@ cd .. && git add -A && git commit -m "msg" && git push origin main:source
 | 圆角、阴影、行距、标题字体 | `source/css/custom.css` |
 | 代码块底色 / 角标 | `custom.css` 的 `figure.highlight`；角标由 `code.language.enable` 控制 |
 
-当前方案：暖纸白 `#f3f0ea` + 雾灰蓝导航 `#8a949b`，正文 `#555b61`，链接 `#6f8494`，暗色 `#1f2328`。文章标题恢复显示（Fluid 默认仅打印可见），代码块不显示语言角标，避免裸代码块被错误识别。
+当前方案：暖灰纸底 `#f2eee7`、卡片 `#fffdf9`、正文 `#363c41`、链接 `#9a6a4f`、导航 `#414d54`。正文 16px / 1.78 行高，标题用 Noto Serif CJK，二级标题左侧暖棕竖线；代码块去掉行号与语言角标，列表收紧段间距。
 
 ---
 

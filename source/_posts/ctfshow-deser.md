@@ -1,13 +1,12 @@
 ---
 title: ctfshow 反序列化题解
-date: 2025-12-14 10:00:00
+date: 2025-08-20 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, 反序列化]
-description: ctfshow 反序列化题解，包含题目思路、payload 与踩坑记录。
+description: ctfshow 反序列化专题：魔术方法、字符串逃逸与 pop 链构造。
 toc: true
 ---
-
 ## 反序列化
 
 ### web254

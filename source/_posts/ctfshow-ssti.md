@@ -1,13 +1,12 @@
 ---
 title: ctfshow SSTI 与过滤绕过
-date: 2025-12-16 10:00:00
+date: 2025-10-05 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, SSTI]
-description: ctfshow SSTI 与过滤绕过，包含题目思路、payload 与踩坑记录。
+description: ctfshow SSTI 与过滤绕过：关键字、字符与长度限制。
 toc: true
 ---
-
 ## ssti
 
 ### web361

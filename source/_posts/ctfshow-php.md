@@ -1,13 +1,12 @@
 ---
 title: ctfshow PHP 特性题解
-date: 2025-12-12 10:00:00
+date: 2025-07-15 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, PHP]
-description: ctfshow PHP 特性题解，包含题目思路、payload 与踩坑记录。
+description: ctfshow PHP 特性专题：从 web89 起记录弱类型、intval 与正则绕过。
 toc: true
 ---
-
 ## php特性
 
 ### web89

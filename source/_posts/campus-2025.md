@@ -1,13 +1,12 @@
 ---
 title: 校内招新赛 Web 题解
-date: 2025-10-20 10:00:00
+date: 2026-04-15 10:00:00
 author: Xendr1a
 categories: [CTF题解, 校内赛]
 tags: [Writeup, 校内赛]
-description: 校内招新赛 Web 题解，包含题目思路、payload 与踩坑记录。
+description: 校内招新赛 Web 题：55182 猜数字、upload、反序列化与 luffyx 的完整题解。
 toc: true
 ---
-
 ## 55182到底是什么呢，好难猜啊
 
 55182，直接找cve了，查关键词直接复现了

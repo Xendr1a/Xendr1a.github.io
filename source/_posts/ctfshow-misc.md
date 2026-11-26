@@ -1,13 +1,12 @@
 ---
 title: ctfshow 杂项：Node/SSRF/JWT/文件包含
-date: 2025-12-17 10:00:00
+date: 2025-10-18 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, Node.js, SSRF, JWT]
-description: ctfshow 杂项：Node/SSRF/JWT/文件包含，包含题目思路、payload 与踩坑记录。
+description: ctfshow 杂项：Node.js、SSRF、JWT、文件包含与新手杯题解。
 toc: true
 ---
-
 ## node.js
 
 ### web334

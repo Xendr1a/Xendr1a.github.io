@@ -1,13 +1,12 @@
 ---
 title: BUUCTF Web 题解合集
-date: 2025-08-12 10:00:00
+date: 2026-03-20 10:00:00
 author: Xendr1a
 categories: [CTF题解, BUUCTF]
 tags: [BUUCTF, Writeup]
-description: BUUCTF Web 题解合集，包含题目思路、payload 与踩坑记录。
+description: BUUCTF 上做过的 Web 题合集：SQL、XXE、RCE、文件上传与反序列化。
 toc: true
 ---
-
 ## BUU XXE COURSE 1
 
 先随便填什么，发现没啥玩意，然后F12查看一下有什么东西

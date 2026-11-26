@@ -4,10 +4,9 @@ date: 2025-11-23T22:12:23Z
 author: Xendr1a
 categories: [Web安全, Web基础]
 tags: [PHP, 文件包含, pearcmd]
-description: 关于pearcmd.php的利用，题目思路与 payload 记录。
+description: pearcmd.php 在文件包含中的利用方式与写 shell 流程。
 toc: true
 ---
-
 > 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19327023)
 
 # 关于pearcmd.php的利用

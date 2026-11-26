@@ -1,13 +1,12 @@
 ---
 title: Laravel 反序列化漏洞复现
-date: 2025-06-20 10:00:00
+date: 2026-01-10 10:00:00
 author: Xendr1a
 categories: [CVE复现]
 tags: [Laravel, 反序列化]
-description: Laravel 反序列化漏洞复现：环境、复现步骤与修复建议。
+description: Laravel 反序列化漏洞的复现步骤与利用链。
 toc: true
 ---
-
 ## Laravel 反序列化漏洞
 
 ```text

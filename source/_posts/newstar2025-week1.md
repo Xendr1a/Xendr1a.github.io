@@ -4,10 +4,9 @@ date: 2025-10-15T09:00:54Z
 author: Xendr1a
 categories: [CTF题解, newstar2025]
 tags: [newstar2025, Writeup]
-description: newstar2025，题目思路与 payload 记录。
+description: newstar2025 week1 Web 题解与 payload 记录。
 toc: true
 ---
-
 # newstar2025（week1
 
 ## multi-headach3

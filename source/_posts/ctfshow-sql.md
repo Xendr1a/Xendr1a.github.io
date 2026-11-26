@@ -1,13 +1,12 @@
 ---
 title: ctfshow SQL 注入题解
-date: 2025-12-13 10:00:00
+date: 2025-08-05 10:00:00
 author: Xendr1a
 categories: [CTF题解, ctfshow]
 tags: [ctfshow, SQL注入]
-description: ctfshow SQL 注入题解，包含题目思路、payload 与踩坑记录。
+description: ctfshow SQL 注入专题：联合、盲注、堆叠与 sqlmap 的逐题记录。
 toc: true
 ---
-
 ## sql
 
 ### web171

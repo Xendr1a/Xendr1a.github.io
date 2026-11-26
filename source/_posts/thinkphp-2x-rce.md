@@ -1,13 +1,12 @@
 ---
 title: ThinkPHP 2.x RCE 漏洞复现与源码分析
-date: 2025-05-15 10:00:00
+date: 2026-01-24 10:00:00
 author: Xendr1a
 categories: [CVE复现]
 tags: [ThinkPHP, RCE]
-description: ThinkPHP 2.x RCE 漏洞复现与源码分析：环境、复现步骤与修复建议。
+description: ThinkPHP 2.x RCE 的复现过程与源码分析。
 toc: true
 ---
-
 ## 概述
 
 ### 前言
