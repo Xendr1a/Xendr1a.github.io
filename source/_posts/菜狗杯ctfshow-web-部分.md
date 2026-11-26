@@ -44,7 +44,7 @@ session 伪造
 
 没思路，抓个包然后每个按钮按一遍
 
-![b37d12a6-96b6-4b4b-96c4-d4c0729f07b7](/img/菜狗杯ctfshow-web-部分/b37d12a6-96b6-4b4b-96c4-d4c0729f07b7-20250120230512-x7gczz3.png)​​![8e4361d2-c0f0-49b3-80a7-0a18dfbc8f0d](/img/菜狗杯ctfshow-web-部分/8e4361d2-c0f0-49b3-80a7-0a18dfbc8f0d-20250120224013-o2crfg2.png)
+![b37d12a6-96b6-4b4b-96c4-d4c0729f07b7](/img/菜狗杯ctfshow-web-部分/b37d12a6-96b6-4b4b-96c4-d4c0729f07b7-20250120230512-x7gczz3.png)![8e4361d2-c0f0-49b3-80a7-0a18dfbc8f0d](/img/菜狗杯ctfshow-web-部分/8e4361d2-c0f0-49b3-80a7-0a18dfbc8f0d-20250120224013-o2crfg2.png)
 
 session 和/download?file=,有点说法,试试 file=1，看到 app.py,看看能不能搞下来，然后瞎几把试了一堆用 flie=../../app.py(相对路径)弄出来了,得到源码
 
@@ -118,7 +118,7 @@ strlen()<1 每个参数只能占用一个字节
 
 代码审计，cmd 和 param，cmd 控制前三个字符当作命令，param 当作参数,这还有个 evilSource.py,点进去看看
 
-![a05c8a5f-ab6b-466e-a05f-d9409899ee5a](/img/菜狗杯ctfshow-web-部分/a05c8a5f-ab6b-466e-a05f-d9409899ee5a-20250122211814-04yifpv.png)​​![8542a044-34bf-471a-9f54-cc0792a9136c](/img/菜狗杯ctfshow-web-部分/8542a044-34bf-471a-9f54-cc0792a9136c-20250122211929-ki0hmu6.png)
+![a05c8a5f-ab6b-466e-a05f-d9409899ee5a](/img/菜狗杯ctfshow-web-部分/a05c8a5f-ab6b-466e-a05f-d9409899ee5a-20250122211814-04yifpv.png)![8542a044-34bf-471a-9f54-cc0792a9136c](/img/菜狗杯ctfshow-web-部分/8542a044-34bf-471a-9f54-cc0792a9136c-20250122211929-ki0hmu6.png)
 
 发现 flag.txt  payload:cmd=cat&param=flag.txt
 
@@ -173,6 +173,6 @@ echo serialize($a);
 
 然后bp拦截改包
 
-![c0d4319a-97b8-4d0e-8097-4d8e5275de85](/img/菜狗杯ctfshow-web-部分/c0d4319a-97b8-4d0e-8097-4d8e5275de85-20250122224938-zrcq9jm.png)​​![13d3107c-516b-4847-8753-b98a0042dee3](/img/菜狗杯ctfshow-web-部分/13d3107c-516b-4847-8753-b98a0042dee3-20250122224713-932k1sm.png)
+![c0d4319a-97b8-4d0e-8097-4d8e5275de85](/img/菜狗杯ctfshow-web-部分/c0d4319a-97b8-4d0e-8097-4d8e5275de85-20250122224938-zrcq9jm.png)![13d3107c-516b-4847-8753-b98a0042dee3](/img/菜狗杯ctfshow-web-部分/13d3107c-516b-4847-8753-b98a0042dee3-20250122224713-932k1sm.png)
 
-‍
+

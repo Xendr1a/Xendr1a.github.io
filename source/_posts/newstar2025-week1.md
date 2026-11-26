@@ -120,7 +120,7 @@ if (isset($_GET['newstar'])) {
 
 可以取反绕过
 
-​`/portal.php?newstar=~(~2025)`
+`/portal.php?newstar=~(~2025)`
 
 ## 别笑，你也过不了第二关
 
@@ -365,4 +365,4 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 然后获得flag
 
-‍
+

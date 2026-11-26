@@ -53,7 +53,7 @@ if (isset($_SERVER['argv'])) {
 
 ### 利用
 
-当我们文件包含`pearcmd.php`​时，`pearcmd.php`​会读取register\_argc\_argv开启时的全局变量`$_SERVER['argv']`，变成其的命令参数，然后执行pear命令
+当我们文件包含`pearcmd.php`时，`pearcmd.php`会读取register\_argc\_argv开启时的全局变量`$_SERVER['argv']`，变成其的命令参数，然后执行pear命令
 
 pear参数挺多的
 
@@ -231,7 +231,7 @@ if (stripos($ser, 'admin') !== false || stripos($ser, 'Access":') !== false) {
 }
 ```
 
-这里`admin`​我们能用S:+16进制来绕过，`Access":`我们可以用php类名大小写不敏感来绕过
+这里`admin`我们能用S:+16进制来绕过，`Access":`我们可以用php类名大小写不敏感来绕过
 
 然后我们看到了
 
@@ -331,4 +331,4 @@ user=O%3A4%3A%22User%22%3A2%3A%7Bs%3A8%3A%22username%22%3BS%3A5%3A%22%5C61dmin%2
 
 闲来无事突然想起来lilctf没有复现，突然发现这题Your Uns3r还挺有意思的，然后了解到了pearcmd.php，花了好些时间来学习，但不知道为什么复现提交完flag后再回来就复现不了了，也发现了自己挺多的小毛病，这里贴上官方wp地址[https://lil-house.feishu.cn/wiki/N7EIwqpoEiVngqkV8rzcgPB9nPg](https://lil-house.feishu.cn/wiki/N7EIwqpoEiVngqkV8rzcgPB9nPg)，还得继续好好学习，天天向上。
 
-‍
+

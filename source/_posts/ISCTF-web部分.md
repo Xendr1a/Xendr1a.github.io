@@ -726,7 +726,7 @@ class eenndd {
 
 注意到这里有个eval和waf，很明显是终点，这里waf不是很严格，我们可以用base64来绕过，利用readfile来读/flag，
 
-​`readfile(base64_decode('L2ZsYWc='));`
+`readfile(base64_decode('L2ZsYWc='));`
 
 看到`__get`方法，我们找找哪里会触发
 
@@ -1148,7 +1148,7 @@ class RCE:
         print("==> out => ", out)
 ```
 
-这里有个逻辑错误，它是直接先执行了`_set_secret`​，再检查的签名，我们跟进一下这个`_set_secret`
+这里有个逻辑错误，它是直接先执行了`_set_secret`，再检查的签名，我们跟进一下这个`_set_secret`
 
 ```py
     def _set_secret(self, data):
@@ -1232,7 +1232,7 @@ if (method_exists($exec, "__call")) {
 
 ```
 
-这里面有个反序列化入口`@unserialize(`$data, ["allowed_classes" =>$​`allowed]);`，以及提到了run.bin，以及限制了只允许反序列化 Pytools 类
+这里面有个反序列化入口`@unserialize(`$data, ["allowed_classes" =>$`allowed]);`，以及提到了run.bin，以及限制了只允许反序列化 Pytools 类
 
 看到api.php
 
@@ -1518,7 +1518,7 @@ if __name__ == "__main__":
 
 在 Linux 上：os 模块指向的是 posix 模块。序列化时记录的是 posix.system
 
-当把把在 Windows 上生成的 Payload 发给 Linux 服务器时，它会报 **​`ModuleNotFoundError: No module named 'nt'`​** 
+当把把在 Windows 上生成的 Payload 发给 Linux 服务器时，它会报 **`ModuleNotFoundError: No module named 'nt'`** 
 
 有payload了，我们操作就行
 
@@ -1538,4 +1538,4 @@ if __name__ == "__main__":
 
 怎么说呢，就只写了解多的，说实话自己还是有点太依赖ai了，这个习惯得改，狠狠的改，继续加油吧，诶~
 
-‍
+
