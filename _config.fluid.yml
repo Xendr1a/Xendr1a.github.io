@@ -116,7 +116,7 @@ color:
 
 # 自定义 JS 文件（路径相对于 source 目录，如 /js/custom.js 对应 source/js/custom.js）
 custom_js:
-custom_css: /css/custom.css?v=6
+custom_css: /css/custom-blue.css
 
 # 网页访问统计（百度/Google Analytics/LeanCloud 等）
 web_analytics:
