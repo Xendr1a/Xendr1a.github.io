@@ -8,6 +8,8 @@ description: ctfshow 每周大挑战 RCE 极限挑战，包含题目思路、pay
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803612/reproduce-ctfshow-weekly-challenge-rce-extreme-challenge-auloq)
+
 ## 复现 ctfshow 每周大挑战(RCE极限挑战
 
 日期：2025-07-31 17:37:15

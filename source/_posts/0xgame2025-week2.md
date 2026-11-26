@@ -8,6 +8,8 @@ description: 0xgame2025，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19380140/0xgame2025-week2-wplbr)
+
 # 0xgame2025（week2
 
 ## DNS想要玩

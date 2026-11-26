@@ -8,6 +8,8 @@ description: “轩辕杯”云盾砺剑CTF挑战赛（Web)，题目思路与 pa
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803666/xuanyuan-cup-cloud-shield-sword-ctf-challenge-web-1tckhy)
+
 # “轩辕杯”云盾砺剑CTF挑战赛（Web)
 
 日期：2025-05-21 23:13:58

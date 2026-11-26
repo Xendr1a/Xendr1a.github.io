@@ -8,6 +8,8 @@ description: ISCTF，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19372803)
+
 # ISCTF（web部分
 
 ## b@by n0t1ce b0ard

@@ -8,6 +8,8 @@ description: 关于pearcmd.php的利用，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19327023)
+
 # 关于pearcmd.php的利用
 
 复现lilctf时遇到了，突然发现自己缺了这块的知识，所以写了这篇

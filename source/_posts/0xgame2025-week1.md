@@ -8,6 +8,8 @@ description: 0xgame2025，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19380137/0xgame2025-week1-xlugz)
+
 # 0xgame2025（week1
 
 ## Http的真理，我已解明

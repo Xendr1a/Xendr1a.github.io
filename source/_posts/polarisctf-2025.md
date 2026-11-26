@@ -8,6 +8,8 @@ description: PolarisCTF 招新赛 Web 部分，包含题目思路、payload 与�
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh)
+
 ## 概述
 
 ## ez_python

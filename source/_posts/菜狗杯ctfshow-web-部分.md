@@ -8,6 +8,8 @@ description: CTFshow 菜狗杯 Web 部分题解，题目思路与 payload 记录
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19380103/caigou-cup-ctfshow-web-part-vncv9)
+
 ## web 签到
 
 套娃（bp 和 hackbar 都行）

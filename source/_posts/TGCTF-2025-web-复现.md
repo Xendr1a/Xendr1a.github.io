@@ -8,6 +8,8 @@ description: TGCTF 2025 web(复现，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803667/tgctf-2025-web-recurrence-fdjn)
+
 # TGCTF 2025 web(复现
 
 日期：2025-06-01 21:16:23

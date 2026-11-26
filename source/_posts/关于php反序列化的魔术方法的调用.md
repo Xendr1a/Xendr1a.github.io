@@ -8,6 +8,8 @@ description: 关于php反序列化的魔术方法的调用，题目思路与 pay
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803607/about-calling-the-magic-method-of-php-deserialization-1vwk9l)
+
 老早就想总结一下魔术方法了，每次单独找还是太吃操作了，所以就有了这个
 
 ## 魔术方法

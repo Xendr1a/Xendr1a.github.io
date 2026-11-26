@@ -8,6 +8,8 @@ description: LitCTF2025（公开赛道）（web，题目思路与 payload 记录
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803664/litctf2025-open-track-web-1oyyf3)
+
 # LitCTF2025（公开赛道）（web
 
 日期：2025-08-30 18:19:31

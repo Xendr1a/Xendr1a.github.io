@@ -8,6 +8,8 @@ description: 2025H&NCTF web，题目思路与 payload 记录。
 toc: true
 ---
 
+> 本文同时发表于博客园：[原文](https://www.cnblogs.com/Xendria/p/19803613/2025h-dwkl6)
+
 2025H&NCTF web
 
 日期：2025-06-09 23:32:24
