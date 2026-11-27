@@ -1,0 +1,480 @@
+@font-face {
+  font-family: "LXGW WenKai";
+  src: url("/fonts/lxgw-wenkai.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "LXGW WenKai";
+  src: url("/fonts/lxgw-wenkai-medium.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   阅读版式：淡蓝纸底 + 墨蓝字 + 雾蓝强调
+   ============================================================ */
+
+::selection {
+  background: #cfe4f2;
+  color: #1f3a4a;
+}
+
+/* 卡片与导航 */
+#board {
+  border: 1px solid rgba(70, 110, 140, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(45, 80, 105, 0.08);
+}
+
+.navbar {
+  background-color: rgba(238, 245, 250, 0.94) !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(60, 95, 120, 0.10);
+  backdrop-filter: blur(8px);
+}
+
+.navbar .navbar-brand {
+  font-family: "LXGW WenKai", "Sarasa Gothic SC", "Noto Serif CJK SC", "Songti SC", serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+}
+
+/* 正文 */
+.markdown-body {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+  line-height: 1.78;
+  letter-spacing: 0.005em;
+  color: var(--post-text-color);
+}
+
+/* Fluid 用 ::before 做锚点偏移，会在标题里撑出一大段空白 */
+.markdown-body > h1::before,
+.markdown-body h2::before,
+.markdown-body h3::before,
+.markdown-body h4::before,
+.markdown-body h5::before,
+.markdown-body h6::before {
+  display: none !important;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  scroll-margin-top: 6rem;
+}
+
+.markdown-body p {
+  margin: 0 0 0.8em;
+}
+
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-family: "LXGW WenKai", "Sarasa Gothic SC", "Noto Serif CJK SC", "Songti SC", serif;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--post-heading-color);
+}
+
+.markdown-body h2 {
+  margin: 2.6em 0 1em;
+  padding-left: 0.7em;
+  border-left: 4px solid #6f9cba;
+  border-bottom: none;
+  font-size: 1.55rem;
+}
+
+.markdown-body h3 {
+  margin: 2em 0 0.8em;
+  font-size: 1.25rem;
+}
+
+.markdown-body h4 {
+  margin: 1.6em 0 0.6em;
+  font-size: 1.08rem;
+}
+
+.markdown-body h2:first-child {
+  margin-top: 1.2em;
+}
+
+/* 列表：收紧松散的段落间隔 */
+.markdown-body ul,
+.markdown-body ol {
+  margin: 0.6em 0 1em;
+  padding-left: 1.45em;
+}
+
+.markdown-body li {
+  margin: 0.12em 0;
+  padding-left: 0.15em;
+}
+
+.markdown-body li > p {
+  margin: 0.15em 0;
+}
+
+.markdown-body li > ul,
+.markdown-body li > ol {
+  margin: 0.2em 0;
+}
+
+.markdown-body li::marker {
+  color: #6f9cba;
+}
+
+/* 链接 */
+.markdown-body a {
+  color: var(--post-link-color);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(79, 127, 158, 0.30);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.markdown-body a:hover {
+  color: var(--link-hover-color);
+  border-bottom-color: currentColor;
+}
+
+/* 引用 */
+.markdown-body blockquote {
+  margin: 1.2em 0;
+  padding: 0.9em 1.1em;
+  background: #f1f8fc;
+  border-left: 3px solid #6f9cba;
+  border-radius: 0 10px 10px 0;
+  color: #56646f;
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* 行内代码与代码块 */
+.markdown-body code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: #e8f2f9;
+  color: #3f6f8c;
+  font-size: 0.86em;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+.markdown-body figure.highlight {
+  margin: 1.2em 0;
+  border: 1px solid #dbe9f2;
+  border-radius: 12px;
+  background: #f6fafd !important;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.markdown-body figure.highlight table,
+.markdown-body figure.highlight pre,
+.markdown-body figure.highlight code {
+  background: transparent !important;
+}
+
+.markdown-body figure.highlight .gutter {
+  display: none !important;
+}
+
+.markdown-body figure.highlight .code pre {
+  padding: 1em 1.1em;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+/* 表格 */
+.markdown-body table {
+  width: 100%;
+  margin: 1.2em 0;
+  border: 1px solid #dbe9f2;
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 0.94em;
+}
+
+.markdown-body th {
+  background: #f0f7fb;
+  color: #24313a;
+  font-weight: 600;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 0.55em 0.8em;
+  border-bottom: 1px solid #e4eef5;
+}
+
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-body tr:nth-child(even) td {
+  background: #f8fcfe;
+}
+
+/* 图片与分隔线 */
+.markdown-body img {
+  margin: 0.4em 0;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(45, 80, 105, 0.10);
+}
+
+.markdown-body hr {
+  height: 1px;
+  margin: 2em 0;
+  border: none;
+  background: #dce8f0;
+}
+
+/* 目录 */
+#toc {
+  padding-left: 1rem;
+  border-left: 1px solid #dce8f0;
+  font-size: 0.82rem;
+}
+
+#toc .toc-header {
+  color: #657682;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+#toc .toc-link {
+  color: #748792;
+}
+
+#toc .is-active-link {
+  color: #4f7f9e;
+  font-weight: 600;
+}
+
+/* 首页文章卡片 */
+.index-card {
+  max-width: 780px;
+  margin: 0 auto 1rem;
+  padding: 1.35rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid #dbe8f1;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(45, 80, 105, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.index-card:hover {
+  transform: translateY(-2px);
+  border-color: #c4d9e7;
+  box-shadow: 0 10px 26px rgba(45, 80, 105, 0.09);
+}
+
+.index-header {
+  margin-bottom: 0.3rem;
+  font-family: "LXGW WenKai", "Sarasa Gothic SC", "Noto Serif CJK SC", "Songti SC", serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.index-header a {
+  color: var(--post-heading-color);
+  border-bottom: none;
+}
+
+.index-excerpt {
+  height: auto;
+  max-height: 4.2rem;
+  margin: 0.35rem 0 0.55rem;
+  color: #6b7c88;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.index-btm {
+  font-size: 0.82rem;
+  color: #71838f;
+}
+
+.index-btm a {
+  color: #71838f;
+}
+
+.post-meta,
+.post-metas {
+  color: #71838f;
+}
+
+/* 暗色模式（当前关闭，保留一份冷蓝覆盖） */
+html[data-user-color-scheme="dark"] #board {
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body blockquote {
+  background: #262b30;
+  color: #b9bfc5;
+  border-left-color: #6f9cba;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body code {
+  background: #2c3238;
+  color: #9cc4de;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body figure.highlight {
+  background: #20252a !important;
+  border-color: #303840;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body th {
+  background: #2a3036;
+  color: #dfe3e7;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body th,
+html[data-user-color-scheme="dark"] .markdown-body td {
+  border-bottom-color: #303840;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body tr:nth-child(even) td {
+  background: #242a2f;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body img {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .markdown-body hr {
+  background: #303840;
+}
+
+html[data-user-color-scheme="dark"] #toc {
+  border-left-color: #303840;
+}
+
+html[data-user-color-scheme="dark"] .index-card {
+  background: #22272c;
+  border-color: #303840;
+  box-shadow: none;
+}
+
+html[data-user-color-scheme="dark"] .index-card:hover {
+  border-color: #43505a;
+}
+
+/* 壁纸上的文字可读性 */
+.banner-text {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* 壁纸上的标语强制白色，避免旧 HTML 的变量缓存导致深色 */
+.banner-text,
+.banner-text .h2,
+.banner-text #subtitle,
+.banner-text .typed-cursor {
+  color: #fffdf8 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* ===== 小巧思 ===== */
+
+/* 淡蓝背景微光，避免整页死平 */
+body {
+  background-image:
+    radial-gradient(1100px 520px at 8% -6%, rgba(156, 196, 222, 0.30), transparent 62%),
+    radial-gradient(900px 480px at 102% 4%, rgba(255, 255, 255, 0.85), transparent 58%);
+  background-attachment: fixed;
+}
+
+/* 壁纸标语用文楷，稍微拉开字距 */
+.banner-text .h2 {
+  font-family: "LXGW WenKai", "Sarasa Gothic SC", "Noto Serif CJK SC", serif;
+  font-size: 2.15rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 575px) {
+  .banner-text .h2 {
+    font-size: 1.55rem;
+  }
+}
+
+/* 文章首段首字下沉（仅当正文直接以段落开头） */
+@media (min-width: 768px) {
+  .markdown-body > p:first-of-type::first-letter {
+    float: left;
+    margin: 0.06em 0.12em 0 0;
+    color: #4f7f9e;
+    font-family: "LXGW WenKai", "Sarasa Gothic SC", serif;
+    font-size: 3.1em;
+    font-weight: 500;
+    line-height: 0.86;
+  }
+}
+
+/* 二级标题末尾一颗小蓝点 */
+.markdown-body h2::after {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 0.55em;
+  border-radius: 50%;
+  background: #9cc4de;
+  vertical-align: middle;
+}
+
+/* 首页卡片：悬停时浮出小箭头 */
+.index-header a::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.35em;
+  color: #6f9cba;
+  font-family: "Noto Sans CJK SC", sans-serif;
+  font-size: 0.68em;
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.index-card:hover .index-header a::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* 链接悬停时一层很淡的蓝底 */
+.markdown-body a:hover {
+  background: rgba(111, 156, 186, 0.10);
+  border-radius: 3px;
+}
+
+/* 代码用等宽，不用文楷 */
+.markdown-body code,
+.markdown-body pre,
+.markdown-body kbd {
+  font-family: "Sarasa Mono SC", "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+}

