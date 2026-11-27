@@ -12,7 +12,7 @@
 只依赖 Python 3 标准库；`preview` 需要仓库根目录已执行 `npm install`。
 
 ```sh
-# 1. 新建草稿：source/_posts/YYYY-MM-DD-<标题>.md
+# 1. 新建草稿：source/_posts/<标题>.md
 python3 tools/blog.py new "NEPCTF 2026 Web 题解"
 
 # 2. 本地预览 http://localhost:4000/
@@ -41,8 +41,9 @@ toc: true
 ---
 ```
 
-文件名日期前缀用于排序；标题中的空白转成 `-`，非法文件名字符会被删除。同名文件
-已存在时追加 `-2`、`-3`，不会覆盖。`date` 取当前时间（Asia/Shanghai）。
+标题中的空白转成 `-`，非法文件名字符会被删除。同名文件已存在时追加 `-2`、`-3`，
+不会覆盖。`date` 取当前时间（Asia/Shanghai）；文章排序由 front-matter 的 `date`
+决定，文件名不带日期前缀。
 
 `publish` 的行为与边界：
 

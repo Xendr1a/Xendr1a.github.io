@@ -12,10 +12,10 @@
     python3 tools/blog.py --help
 
 ``new``
-    在 ``source/_posts/`` 创建 ``YYYY-MM-DD-<标题>.md``，front-matter 字段与
-    现有文章一致（title/date/author/categories/tags/description/toc），正文给出
-    最小骨架。标题里的空白转成 ``-``，非法文件名字符被删除；同名文件已存在时
-    追加 ``-2``、``-3``，绝不覆盖。
+    在 ``source/_posts/`` 创建 ``<标题>.md``，front-matter 字段与现有文章一致
+    （title/date/author/categories/tags/description/toc），正文给出最小骨架。
+    标题里的空白转成 ``-``，非法文件名字符被删除；同名文件已存在时追加
+    ``-2``、``-3``，绝不覆盖。
 
 ``preview``
     调用本地 ``node_modules/.bin/hexo server`` 起预览；先 ``npm install``。
@@ -42,7 +42,6 @@ ROOT = Path(__file__).resolve().parents[1]
 POSTS_DIR = ROOT / "source" / "_posts"
 PUBLISH_PATHS = ("source/_posts", "source/img")
 HEXO_BIN = ROOT / "node_modules" / ".bin" / "hexo"
-DATE_PREFIX = "%Y-%m-%d"
 
 ILLEGAL_FILENAME = re.compile(r'[\\/:*?"<>|\x00-\x1f\x7f]')
 WHITESPACE = re.compile(r"\s+")
@@ -98,8 +97,8 @@ def slugify(title: str) -> str:
     slug = DASHES.sub("-", slug).strip("-.")
     if not slug or not re.search(r"\w", slug):
         slug = "post"
-    # 留出日期前缀（11 字节）和扩展名（3 字节）的空间，中文按 UTF-8 计。
-    while len(slug.encode("utf-8")) > 180:
+    # 留出扩展名（3 字节）的空间，文件名上限 255 字节，中文按 UTF-8 计。
+    while len(slug.encode("utf-8")) > 240:
         slug = slug[:-1].rstrip("-.")
     return slug or "post"
 
@@ -125,7 +124,7 @@ def cmd_new(args: argparse.Namespace) -> int:
         raise BlogError("标题不能为空")
 
     when = now_local()
-    base = f"{when.strftime(DATE_PREFIX)}-{slugify(title)}"
+    base = slugify(title)
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
     path = POSTS_DIR / f"{base}.md"
     suffix = 2
@@ -316,7 +315,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar="{new,preview,publish}")
     sub.required = True
 
-    p_new = sub.add_parser("new", help="创建带日期前缀的草稿", description="创建带日期前缀的草稿")
+    p_new = sub.add_parser("new", help="创建草稿", description="创建草稿")
     p_new.add_argument("title", nargs="+", metavar="标题", help="文章标题（可含空格）")
     p_new.set_defaults(func=cmd_new)
 
