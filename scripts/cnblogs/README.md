@@ -12,7 +12,7 @@ MetaWeblog 接口。只用 Python 3 标准库（`xmlrpc.client`），不需要 `
 | 文件 | 作用 |
 | --- | --- |
 | `sync.py` | 主程序 |
-| `state.json` | `{slug: {postid, sha256, url}}`，随仓库提交。已冻结 12 条人工核对的历史映射；`sha256` 为空表示首次推送时按需 `editPost` |
+| `state.json` | `{slug: {postid, sha256, url}}`，随仓库提交。已冻结 14 条人工核对的历史映射；`sha256: null` 表示“有 postid 但内容未知，必须同步一次” |
 | `images.json` | `{"/img/...": "博客园 URL"}` 上传缓存，随仓库提交。初始 `{}` |
 | `reconcile-report.md` | `reconcile` 生成的候选对照报告，供人工确认；不自动写入 state |
 
@@ -55,6 +55,7 @@ python3 scripts/cnblogs/sync.py reconcile
 # 4. 联网推送
 python3 scripts/cnblogs/sync.py push --only 0xgame2025-week1 --limit 1
 python3 scripts/cnblogs/sync.py push
+python3 scripts/cnblogs/sync.py push --new-only         # 只新增，不碰已有旧文
 python3 scripts/cnblogs/sync.py push --draft          # 发草稿
 python3 scripts/cnblogs/sync.py push --interval 90    # 放慢限速
 python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 editPost
@@ -66,6 +67,9 @@ python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 edi
 ## 推送行为
 
 - 没有 `postid` → `metaWeblog.newPost`；有 `postid` → `metaWeblog.editPost`。
+  `--new-only` 只处理没有 `postid` 的文章，已有 `postid` 的一律跳过（首次真推只新增）。
+- `sha256: null` 不是“未变更”，而是“有 postid、内容未知、必须同步一次”：
+  `plan` 显示“待更新”，`push` 会走全量 `editPost`，成功后写入真实 hash。
 - `editPost` 是**全量替换**，所以每次都发送完整 struct：
   `title`、`description`、`categories`、`mt_keywords`、`mt_excerpt`、`dateCreated`，
   外加 `publish`（`--draft` 时为 `False`）。
@@ -107,36 +111,39 @@ python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 edi
 博客园已有 14 篇历史文章，且**标题被改写过**，所以不能靠标题自动匹配后直接
 `newPost`，否则会产生重复文章。
 
-`state.json` 已冻结 12 条人工逐篇核对过的映射。这些条目的 `sha256` 为空，表示
-“首次推送时按需更新”：第一次 `push` 会对它们执行一次全量 `editPost`，成功后写入
-真实 hash。其余博客园文章（当前是 `TGCTF 2025 web(复现`、`2025H&NCTF web`）在仓库
-中不存在，`reconcile` 会把它们标成 `orphan`；工具**绝不**对 orphan 执行
-`editPost`/`deletePost`。
+`state.json` 已冻结 14 条人工逐篇核对过的映射，其中 `tgctf-2025`、`2025hnctf-web`
+是后来从博客园搬进仓库的两篇，也已带上原 postid。所有冻结条目的 `sha256` 为
+`null`，含义是“有 postid、内容未知、必须同步一次”：`plan` 显示“待更新”，第一次
+`push` 会对它们执行全量 `editPost`，成功后写入真实 hash。
 
 `reconcile` 会：
 
 1. `metaWeblog.getRecentPosts(blogid, user, token, 1000)` 拉取现有文章；
 2. 对每篇仓库文章计算 `0.55 × 标题归一化相似度 + 0.45 × 正文前 80 字相似度`；
 3. 若仓库正文里已有 `https://www.cnblogs.com/Xendria/p/<postid>` 链接，直接给 1.0；
-4. 输出冻结映射、未映射文章的前 3 个候选、以及 orphan 表，写入
-   `scripts/cnblogs/reconcile-report.md`。
+4. 输出冻结映射、未映射文章的前 3 个候选，以及不在 `state.json` 中的 orphan 表，
+   写入 `scripts/cnblogs/reconcile-report.md`。
+
+当前这 14 篇已全部映射，所以 orphan 应为 0。以后若博客园出现仓库没有、state 也没
+映射的文章，`reconcile` 会标成 `orphan`；工具**绝不**对 orphan 执行
+`editPost`/`deletePost`，也不自动写 state。
 
 它**不会**修改 `state.json`；`state.json` 是唯一授权映射。只有人工确认后才手动追加，
-格式如下（新文章首次同步可以先留空 `sha256`）：
+格式如下：
 
 ```json
 {
   "0xgame2025-week1": {
     "postid": "19380137",
-    "sha256": "",
-    "url": "https://www.cnblogs.com/Xendria/p/19380137"
+    "sha256": null,
+    "url": ""
   }
 }
 ```
 
-`sha256` 留空会让第一次 push 走 `editPost`；填入当前 `push --dry-run` 打印的
+`sha256: null` 会让第一次 push 走 `editPost`；填入当前 `push --dry-run` 打印的
 `content_sha256` 则可直接跳过。没有把握的文章先不要写 state，交给
-`push --only` 单篇试跑。
+`push --only` 单篇试跑。首次真推建议 `push --new-only`，只新增未映射文章。
 
 ## 风险
 

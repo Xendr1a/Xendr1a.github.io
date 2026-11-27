@@ -439,10 +439,10 @@ def cmd_plan(args: argparse.Namespace) -> int:
         entry = state.get(post.slug) or {}
         digest = post.content_sha()
         if not entry.get("postid"):
-            status = "新建"
+            status = "待新建"
             new_count += 1
         elif str(entry.get("sha256") or "") != digest or entry.get("draft"):
-            status = "更新"
+            status = "待更新"
             update_count += 1
         else:
             status = "已同步"
@@ -467,7 +467,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
     print()
     print(
         f"汇总: 共 {len(posts)} 篇 | 已映射 {mapped_count} 篇 | "
-        f"需要新建 {new_count} 篇 | 需更新 {update_count} 篇 | "
+        f"待新建 {new_count} 篇 | 待更新 {update_count} 篇 | "
         f"已同步 {len(changed)} 篇 | 缺失图片 {missing_total} 个"
     )
     if missing_total:
@@ -495,6 +495,8 @@ def selected_posts(posts: Sequence[Post], args: argparse.Namespace) -> list[Post
 def cmd_push_dry_run(args: argparse.Namespace) -> int:
     posts = selected_posts(load_posts(), args)
     state = load_json(STATE_FILE, {})
+    if args.new_only:
+        posts = [p for p in posts if not (state.get(p.slug) or {}).get("postid")]
     images_cache = load_json(IMAGES_FILE, {})
     links = permalink_map(load_posts())
     missing_total = 0
@@ -511,7 +513,17 @@ def cmd_push_dry_run(args: argparse.Namespace) -> int:
         print(f"\n{'=' * 78}")
         print(f"[{index}/{len(posts)}] {post.slug}  ({post.path.relative_to(ROOT)})")
         print(f"content_sha256: {post.content_sha()}")
-        print(f"postid: {(state.get(post.slug) or {}).get('postid') or '(new)'}")
+        entry = state.get(post.slug) or {}
+        if not entry.get("postid"):
+            action = "待新建"
+        elif str(entry.get("sha256") or "") != post.content_sha() or entry.get("draft"):
+            action = "待更新"
+        elif args.force:
+            action = "待更新（--force）"
+        else:
+            action = "已同步（push 将跳过）"
+        print(f"action: {action}")
+        print(f"postid: {entry.get('postid') or '(new)'}")
         print("struct:")
         struct = build_struct(post, body, draft=args.draft)
         preview = dict(struct)
@@ -707,6 +719,9 @@ def cmd_push(args: argparse.Namespace) -> int:
     skipped = 0
     for post in posts:
         entry = state.get(post.slug) or {}
+        if args.new_only and entry.get("postid"):
+            skipped += 1
+            continue
         unchanged = (
             entry.get("postid")
             and str(entry.get("sha256") or "") == post.content_sha()
@@ -1094,6 +1109,11 @@ def build_parser() -> argparse.ArgumentParser:
     push.add_argument("--limit", type=int, metavar="N", help="最多处理 N 篇")
     push.add_argument("--draft", action="store_true", help="以草稿方式发布")
     push.add_argument("--force", action="store_true", help="忽略 hash 跳过逻辑")
+    push.add_argument(
+        "--new-only",
+        action="store_true",
+        help="只 newPost 没有 postid 的文章，已有 postid 的一律跳过",
+    )
     push.add_argument("--interval", type=float, default=60.0, help="篇间隔秒数（默认 60）")
 
     rec = sub.add_parser("reconcile", help="联网对账，生成候选映射报告")
