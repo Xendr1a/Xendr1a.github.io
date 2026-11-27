@@ -1,33 +1,33 @@
 {
   "0xgame2025-week1": {
     "postid": "19380137",
-    "sha256": null,
-    "url": ""
+    "sha256": "43b5aa412f81bfe6de25ceb106601ecaf15d78428fba19fa086166dd3e3ea4e7",
+    "url": "https://www.cnblogs.com/Xendria/p/19380137"
   },
   "0xgame2025-week2": {
     "postid": "19380140",
-    "sha256": null,
-    "url": ""
+    "sha256": "fb1e29f601699b00e2c9508a770124f90c3f09ff88a6eb186a83d4369f993905",
+    "url": "https://www.cnblogs.com/Xendria/p/19380140"
   },
   "0xgame2025-week3": {
     "postid": "19380141",
-    "sha256": null,
-    "url": ""
+    "sha256": "6109c92ab293fdd0fc432f3e618229a790fb72f6ec2615526297cb3b1822fadb",
+    "url": "https://www.cnblogs.com/Xendria/p/19380141"
   },
   "2025hnctf-web": {
     "postid": "19803613",
-    "sha256": null,
-    "url": ""
+    "sha256": "d3245fea7a0319b0e42c70a66fda2f3edd915928516f34999adb01853a707809",
+    "url": "https://www.cnblogs.com/Xendria/p/19803613"
   },
   "ISCTF-web部分": {
     "postid": "19372803",
-    "sha256": null,
-    "url": ""
+    "sha256": "9c99cca92c27f4151b5dbd169672717a09ae757a5a40b8cbc71e1a8c08855f9e",
+    "url": "https://www.cnblogs.com/Xendria/p/19372803"
   },
   "LitCTF2025-公开赛道-web": {
     "postid": "19803664",
-    "sha256": null,
-    "url": ""
+    "sha256": "b0a6eafa98dbebb139578704a797e4ba1f0cf0d4b48b4f551b08eaef4904d23b",
+    "url": "https://www.cnblogs.com/Xendria/p/19803664"
   },
   "buu": {
     "postid": "23804354",
@@ -66,8 +66,8 @@
   },
   "ctfshow-rce-challenge": {
     "postid": "19803612",
-    "sha256": null,
-    "url": ""
+    "sha256": "8487ec94b1ed654d1fb5bf7244b493f62dee4dcd731e5af0d3472fa22cec08d2",
+    "url": "https://www.cnblogs.com/Xendria/p/19803612"
   },
   "ctfshow-sql": {
     "postid": "23804482",
@@ -101,13 +101,13 @@
   },
   "polarisctf-2025": {
     "postid": "19824429",
-    "sha256": null,
-    "url": ""
+    "sha256": "18aa59ec906a74391107ff0e6ef1ab66ded9ee359f9b56e478544ff5d02ec9a9",
+    "url": "https://www.cnblogs.com/Xendria/p/19824429"
   },
   "tgctf-2025": {
     "postid": "19803667",
-    "sha256": null,
-    "url": ""
+    "sha256": "71430b62518564141c915e4e81699885bc62dda38b2873151df3b7ce3df01f82",
+    "url": "https://www.cnblogs.com/Xendria/p/19803667"
   },
   "thinkphp-2x-rce": {
     "postid": "23807057",
@@ -116,22 +116,22 @@
   },
   "关于pearcmd-php的利用": {
     "postid": "19327023",
-    "sha256": null,
-    "url": ""
+    "sha256": "61dce9c39e2c38ea784e9a65b258735148c8827192d7325b21ef75207665e903",
+    "url": "https://www.cnblogs.com/Xendria/p/19327023"
   },
   "关于php反序列化的魔术方法的调用": {
     "postid": "19803607",
-    "sha256": null,
-    "url": ""
+    "sha256": "482390ea987b3f956b08d0f10b939b89bb1df6e8a791aa92f93ff9cc50bc7f1c",
+    "url": "https://www.cnblogs.com/Xendria/p/19803607"
   },
   "菜狗杯ctfshow-web-部分": {
     "postid": "19380103",
-    "sha256": null,
-    "url": ""
+    "sha256": "8c720a14c9083f199f19d18c434dd53e520477fe5cba2c5433061f3142f8be81",
+    "url": "https://www.cnblogs.com/Xendria/p/19380103"
   },
   "轩辕杯-云盾砺剑CTF挑战赛-Web": {
     "postid": "19803666",
-    "sha256": null,
-    "url": ""
+    "sha256": "a5ede5895b0acd9e6b62e4d68cdf55f9287b60c57c70b3b7d18f2f697964b7be",
+    "url": "https://www.cnblogs.com/Xendria/p/19803666"
   }
 }
