@@ -341,7 +341,7 @@ if(isset($_GET['url'])){
 }
 ```
 
-一样能用 `?url=127.0.0.1/1;cat fl0g.php &gt; 1.txt`
+一样能用 `?url=127.0.0.1/1;cat fl0g.php > 1.txt`
 
 ### web398
 

@@ -84,7 +84,7 @@ deldot()函数从后向前检测，当检测到末尾的第一个点时会继续
 
 **十**
 
-`$file_name = str_ireplace($deny_ext,&quot;&quot;, $file_name);`
+`$file_name = str_ireplace($deny_ext,"", $file_name);`
 
 `str_ireplace` 函数，它的功能是替换字符串中的子串，并且不区分大小写。
 

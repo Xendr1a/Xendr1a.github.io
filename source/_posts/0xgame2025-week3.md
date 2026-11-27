@@ -503,7 +503,7 @@ sudo没用我们看看ps -aux,发现start.sh有root权限,我们看看是啥玩�
 
 那我们
 
-[N1CTF junior 2025 Web wp - Infernity&apos;s Blog](https://infernity.top/2025/02/12/N1CTF2025/#backup)
+[N1CTF junior 2025 Web wp - Infernity's Blog](https://infernity.top/2025/02/12/N1CTF2025/#backup)
 
 ```bash
 cd primary
