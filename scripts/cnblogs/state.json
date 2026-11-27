@@ -1,1 +1,62 @@
-{}
+{
+  "ISCTF-web部分": {
+    "postid": "19372803",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19372803"
+  },
+  "LitCTF2025-公开赛道-web": {
+    "postid": "19803664",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19803664"
+  },
+  "ctfshow-rce-challenge": {
+    "postid": "19803612",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19803612"
+  },
+  "handler-command": {
+    "postid": "19387010",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19387010"
+  },
+  "polarisctf-2025": {
+    "postid": "19824429",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19824429"
+  },
+  "0xgame2025-week1": {
+    "postid": "19380137",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19380137"
+  },
+  "0xgame2025-week2": {
+    "postid": "19380140",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19380140"
+  },
+  "0xgame2025-week3": {
+    "postid": "19380141",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19380141"
+  },
+  "关于pearcmd-php的利用": {
+    "postid": "19327023",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19327023"
+  },
+  "关于php反序列化的魔术方法的调用": {
+    "postid": "19803607",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19803607"
+  },
+  "菜狗杯ctfshow-web-部分": {
+    "postid": "19380103",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19380103"
+  },
+  "轩辕杯-云盾砺剑CTF挑战赛-Web": {
+    "postid": "19803666",
+    "sha256": "",
+    "url": "https://www.cnblogs.com/Xendria/p/19803666"
+  }
+}

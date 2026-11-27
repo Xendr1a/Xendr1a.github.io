@@ -48,7 +48,8 @@ REPORT_FILE = Path(__file__).resolve().parent / "reconcile-report.md"
 
 RPC_URL = "https://rpc.cnblogs.com/metaweblog/Xendria"
 USERNAME = "Xendr1a"
-BLOGID = ""
+BLOGID = "853206"
+TOKEN_FILE = Path.home() / ".config" / "cnblogs" / "token"
 MARKDOWN_CATEGORY = "[Markdown]"
 BLOG_BASE = "https://www.cnblogs.com/Xendria"
 
@@ -421,6 +422,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
     posts = load_posts()
     state = load_json(STATE_FILE, {})
     new_count = update_count = 0
+    mapped_count = 0
     missing_total = 0
     changed: list[str] = []
 
@@ -447,6 +449,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
             changed.append(post.slug)
         if entry.get("postid"):
             status += f" #{entry['postid']}"
+            mapped_count += 1
         cat_text = ", ".join(post.target_categories)
         print(
             pad(post.slug, 33)
@@ -463,8 +466,9 @@ def cmd_plan(args: argparse.Namespace) -> int:
 
     print()
     print(
-        f"汇总: 共 {len(posts)} 篇 | 需要新建 {new_count} 篇 | "
-        f"需更新 {update_count} 篇 | 已同步 {len(changed)} 篇 | 缺失图片 {missing_total} 个"
+        f"汇总: 共 {len(posts)} 篇 | 已映射 {mapped_count} 篇 | "
+        f"需要新建 {new_count} 篇 | 需更新 {update_count} 篇 | "
+        f"已同步 {len(changed)} 篇 | 缺失图片 {missing_total} 个"
     )
     if missing_total:
         eprint(f"错误: {missing_total} 个图片引用不存在于 source/img/，先修复再推送。")
@@ -554,10 +558,15 @@ def cmd_push_dry_run(args: argparse.Namespace) -> int:
 
 def require_token() -> str:
     token = os.environ.get("CNBLOGS_TOKEN", "").strip()
+    if not token and TOKEN_FILE.is_file():
+        try:
+            token = TOKEN_FILE.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            raise SyncError(f"无法读取令牌文件 {TOKEN_FILE}: {exc}") from exc
     if not token:
         raise SyncError(
-            "缺少访问令牌。请从博客园后台获取 MetaWeblog 访问令牌并导出到环境变量；"
-            "不要写入仓库。"
+            "缺少访问令牌。优先使用环境变量，否则写入 "
+            f"{TOKEN_FILE}（chmod 600）；不要写进仓库。"
         )
     return token
 
@@ -572,7 +581,7 @@ def rpc(
     *args: Any,
     retry_transport: bool = True,
 ) -> Any:
-    fn = proxy[method]
+    fn = getattr(proxy, method)
     attempt = 0
     while True:
         try:
@@ -858,6 +867,11 @@ def evaluate_candidates(
     local_links = {
         str(m.group(1)) for m in CNBLOGS_POST_URL_RE.finditer(post.body)
     }
+    owner_by_postid = {
+        str(entry.get("postid")): slug
+        for slug, entry in cache.items()
+        if isinstance(entry, dict) and entry.get("postid")
+    }
     candidates: list[dict[str, Any]] = []
     for item in recent:
         postid = str(item.get("postid") or "")
@@ -867,6 +881,9 @@ def evaluate_candidates(
         body_score = body_similarity(post.body, remote_body)
         score = 0.55 * title_score + 0.45 * body_score
         reasons: list[str] = []
+        occupied_by = owner_by_postid.get(postid)
+        if occupied_by and occupied_by != post.slug:
+            reasons.append(f"已被 {occupied_by} 的冻结映射占用")
         if postid and postid in local_links:
             score = 1.0
             reasons.append("正文含该 postid 的博客园链接")
@@ -887,6 +904,7 @@ def evaluate_candidates(
                 "score": score,
                 "title_score": title_score,
                 "body_score": body_score,
+                "occupied_by": occupied_by if occupied_by != post.slug else "",
                 "reasons": reasons,
             }
         )
@@ -898,6 +916,11 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     token = require_token()
     posts = load_posts()
     state = load_json(STATE_FILE, {})
+    mapped_postids = {
+        str((state.get(post.slug) or {}).get("postid"))
+        for post in posts
+        if (state.get(post.slug) or {}).get("postid")
+    }
     proxy = make_proxy()
     print("拉取 getRecentPosts(1000) ...")
     recent = rpc(proxy, "metaWeblog.getRecentPosts", BLOGID, USERNAME, token, 1000)
@@ -907,15 +930,28 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     evaluated: list[tuple[Post, list[dict[str, Any]]]] = []
     for post in posts:
         evaluated.append((post, evaluate_candidates(post, recent, state)))
+    mapped_here = sum(
+        1 for post in posts if (state.get(post.slug) or {}).get("postid")
+    )
+    orphans = [
+        item
+        for item in recent
+        if str(item.get("postid") or "") not in mapped_postids
+    ]
 
     lines: list[str] = []
     lines.append("# 博客园对账报告")
     lines.append("")
     lines.append(f"- 仓库文章: {len(posts)} 篇")
     lines.append(f"- 博客园文章: {len(recent)} 篇")
+    lines.append(
+        f"- 冻结映射: {mapped_here} 篇；仓库未映射: {len(posts) - mapped_here} 篇；"
+        f"orphan: {len(orphans)} 篇"
+    )
     lines.append("- 评分: 0.55 × 标题归一化相似度 + 0.45 × 正文前 80 字相似度；")
     lines.append("  正文中出现 `cnblogs.com/Xendria/p/<postid>` 链接时直接视为 1.0。")
-    lines.append("- 本报告**不会**写入 state.json，请人工核对后手动维护映射。")
+    lines.append("- `state.json` 中的映射是人工核对的**冻结映射**，本报告不会修改它。")
+    lines.append("- 不在 `state.json` 中的博客园文章标记为 `orphan`，工具绝不 editPost/deletePost。")
     lines.append("")
     lines.append("## 建议映射")
     lines.append("")
@@ -924,19 +960,28 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     proposals: list[tuple[Post, dict[str, Any] | None, str]] = []
     for post, candidates in evaluated:
         best = candidates[0] if candidates else None
-        verdict = "无候选"
-        if best:
-            if best["score"] >= 0.85:
-                verdict = "高置信"
-            elif best["score"] >= 0.45:
-                verdict = "待确认"
-                if len(candidates) > 1 and best["score"] - candidates[1]["score"] < 0.05:
-                    verdict = "歧义"
-            else:
-                verdict = "无可靠候选"
-        current = (state.get(post.slug) or {}).get("postid") or "—"
+        current = str((state.get(post.slug) or {}).get("postid") or "—")
+        if current != "—":
+            verdict = "冻结映射"
+            suggested = current
+        else:
+            verdict = "无候选"
+            if best:
+                occupied = bool(best.get("occupied_by"))
+                if best["score"] >= 0.85 and not occupied:
+                    verdict = "高置信"
+                elif best["score"] >= 0.45:
+                    verdict = "已占用" if occupied else "待确认"
+                    if not occupied and len(candidates) > 1 and best["score"] - candidates[1]["score"] < 0.05:
+                        verdict = "歧义"
+                else:
+                    verdict = "无可靠候选"
+            suggested = (
+                best["postid"]
+                if best and best["score"] >= 0.45 and not best.get("occupied_by")
+                else "—"
+            )
         proposals.append((post, best, verdict))
-        suggested = best["postid"] if best and best["score"] >= 0.45 else "—"
         lines.append(
             "| {slug} | {title} | {pid} | {rtitle} | {score} | {verdict} | {state} |".format(
                 slug=post.slug,
@@ -974,28 +1019,23 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
                 )
             )
 
-    matched_ids = {
-        best["postid"]
-        for _, best, verdict in proposals
-        if best and verdict in {"高置信"}
-    }
     lines.append("")
-    lines.append("## 未匹配的博客园文章")
+    lines.append("## 博客园 orphan 文章（state.json 中不存在，工具绝不修改）")
     lines.append("")
-    lines.append("| postid | 标题 | 链接 |")
-    lines.append("| --- | --- | --- |")
-    for item in sorted(recent, key=lambda x: str(x.get("postid") or "")):
+    lines.append("| 状态 | postid | 标题 | 链接 |")
+    lines.append("| --- | --- | --- | --- |")
+    for item in sorted(orphans, key=lambda x: str(x.get("postid") or "")):
         postid = str(item.get("postid") or "")
-        if postid in matched_ids:
-            continue
         title = str(item.get("title") or "").replace("|", "\\|")
         link = str(item.get("link") or f"{BLOG_BASE}/p/{postid}")
-        lines.append(f"| {postid} | {title} | {link} |")
+        lines.append(f"| orphan | {postid} | {title} | {link} |")
+    if not orphans:
+        lines.append("| — | — | 无 | — |")
 
     lines.append("")
     lines.append("## 人工确认后的下一步")
     lines.append("")
-    lines.append("1. 把确认好的映射写入 `state.json`：`{slug: {postid, sha256, url}}`。")
+    lines.append("1. `state.json` 当前是人工核对的冻结映射；只有确认新文章后才手动追加。")
     lines.append("2. 运行 `python3 scripts/cnblogs/sync.py push --dry-run` 复核。")
     lines.append("3. 先 `--only <slug> --limit 1` 小流量试跑。")
     lines.append("")
@@ -1006,7 +1046,11 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     print(pad("slug", 34) + pad("建议 postid", 14) + pad("分数", 8) + pad("判定", 10) + "博客园标题")
     print("-" * 110)
     for post, best, verdict in proposals:
-        suggested = best["postid"] if best and best["score"] >= 0.45 else "—"
+        suggested = (
+            best["postid"]
+            if best and best["score"] >= 0.45 and not best.get("occupied_by")
+            else "—"
+        )
         print(
             pad(post.slug, 34)
             + pad(suggested, 14)
@@ -1020,6 +1064,11 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     except ValueError:
         report_path = REPORT_FILE
     print(f"报告已写入: {report_path}")
+    print(f"orphan: {len(orphans)} 篇（不会 editPost/deletePost，详见报告）")
+    for item in sorted(orphans, key=lambda x: str(x.get("postid") or "")):
+        postid = str(item.get("postid") or "")
+        title = str(item.get("title") or "")
+        print(f"  orphan #{postid}  {title}")
     print("未自动修改 state.json。")
     return 0
 

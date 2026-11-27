@@ -12,7 +12,7 @@ MetaWeblog 接口。只用 Python 3 标准库（`xmlrpc.client`），不需要 `
 | 文件 | 作用 |
 | --- | --- |
 | `sync.py` | 主程序 |
-| `state.json` | `{slug: {postid, sha256, url}}`，随仓库提交。初始 `{}` |
+| `state.json` | `{slug: {postid, sha256, url}}`，随仓库提交。已冻结 12 条人工核对的历史映射；`sha256` 为空表示首次推送时按需 `editPost` |
 | `images.json` | `{"/img/...": "博客园 URL"}` 上传缓存，随仓库提交。初始 `{}` |
 | `reconcile-report.md` | `reconcile` 生成的候选对照报告，供人工确认；不自动写入 state |
 
@@ -20,17 +20,23 @@ MetaWeblog 接口。只用 Python 3 标准库（`xmlrpc.client`），不需要 `
 
 1. 登录博客园，打开管理后台 <https://i.cnblogs.com/settings>，找到
    **MetaWeblog 访问令牌**（通常在“设置 / 其他设置”里；界面改版时搜索 “MetaWeblog”）。
-2. 只放在环境变量里，绝不写进代码、shell 历史或仓库：
+2. 优先使用环境变量；也可以放在 `~/.config/cnblogs/token`（目录 700、文件 600）。
+   两者都不进仓库、不进 shell 历史、不贴进 issue：
 
    ```sh
    export CNBLOGS_TOKEN='...'
+   # 或
+   install -d -m 700 ~/.config/cnblogs
+   printf '%s' '...' > ~/.config/cnblogs/token
+   chmod 600 ~/.config/cnblogs/token
    ```
 
+   读取顺序：环境变量优先，其次令牌文件。
 3. 未配置令牌时，联网命令会直接报错；令牌错误时接口返回 `Fault 401`。
    令牌泄露后立即在博客园后台重置。
 
 接口常量（已核实）：`https://rpc.cnblogs.com/metaweblog/Xendria`，
-`username = Xendr1a`，`blogid = ""`。
+`username = Xendr1a`，`blogid = 853206`。
 
 ## 用法
 
@@ -101,28 +107,36 @@ python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 edi
 博客园已有 14 篇历史文章，且**标题被改写过**，所以不能靠标题自动匹配后直接
 `newPost`，否则会产生重复文章。
 
+`state.json` 已冻结 12 条人工逐篇核对过的映射。这些条目的 `sha256` 为空，表示
+“首次推送时按需更新”：第一次 `push` 会对它们执行一次全量 `editPost`，成功后写入
+真实 hash。其余博客园文章（当前是 `TGCTF 2025 web(复现`、`2025H&NCTF web`）在仓库
+中不存在，`reconcile` 会把它们标成 `orphan`；工具**绝不**对 orphan 执行
+`editPost`/`deletePost`。
+
 `reconcile` 会：
 
 1. `metaWeblog.getRecentPosts(blogid, user, token, 1000)` 拉取现有文章；
 2. 对每篇仓库文章计算 `0.55 × 标题归一化相似度 + 0.45 × 正文前 80 字相似度`；
 3. 若仓库正文里已有 `https://www.cnblogs.com/Xendria/p/<postid>` 链接，直接给 1.0；
-4. 输出建议映射、每篇前 3 个候选、未匹配的博客园文章，写入
+4. 输出冻结映射、未映射文章的前 3 个候选、以及 orphan 表，写入
    `scripts/cnblogs/reconcile-report.md`。
 
-它**不会**修改 `state.json`。人工确认后，把映射写成：
+它**不会**修改 `state.json`；`state.json` 是唯一授权映射。只有人工确认后才手动追加，
+格式如下（新文章首次同步可以先留空 `sha256`）：
 
 ```json
 {
   "0xgame2025-week1": {
     "postid": "19380137",
-    "sha256": "<当前 `push --dry-run` 打印的 content_sha256>",
+    "sha256": "",
     "url": "https://www.cnblogs.com/Xendria/p/19380137"
   }
 }
 ```
 
-`sha256` 必须是当前本地内容的值，否则第一次 push 会走 `editPost`（通常可接受，但
-先用 dry-run 核对）。没有把握的文章先不要写 state，交给 `push --only` 单篇试跑。
+`sha256` 留空会让第一次 push 走 `editPost`；填入当前 `push --dry-run` 打印的
+`content_sha256` 则可直接跳过。没有把握的文章先不要写 state，交给
+`push --only` 单篇试跑。
 
 ## 风险
 
@@ -136,7 +150,8 @@ python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 edi
 - **图片**：上传后 URL 被缓存；如果博客园删除图片，本地缓存仍指向失效 URL，需要
   手动从 `images.json` 删掉对应条目重传。超过 10MB 的图片会中止。
 - **限速**：默认 60 秒/篇是保守值；调小可能触发博客园限流或封禁。
-- **令牌**：只从 `CNBLOGS_TOKEN` 读取。不要把它写进 `.env` 并提交、不要贴进 issue。
+- **令牌**：优先从 `CNBLOGS_TOKEN` 读取，其次 `~/.config/cnblogs/token`。不要把令牌
+  写进 `.env` 并提交、不要贴进 issue；令牌文件保持 600 权限。
 - **分类**：博客园分类是平铺的，父子关系只体现在本工具的分类名顺序里；重名分类
   以博客园为准，不会自动改名。
 - **站内链接**：只有 state 里已有 URL 的文章才会被替换；顺序推送时，先推的文章
