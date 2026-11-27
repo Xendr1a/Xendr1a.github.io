@@ -85,7 +85,7 @@ color:
   navbar_bg_color_dark: "#20262b"
   navbar_text_color: "#2f3a42"
   navbar_text_color_dark: "#c9ced3"
-  subtitle_color: "#2f3a42"
+  subtitle_color: "#f8f6f0"
   subtitle_color_dark: "#c9ced3"
   text_color: "#35414a"
   text_color_dark: "#c2c7cc"
@@ -116,7 +116,7 @@ color:
 
 # 自定义 JS 文件（路径相对于 source 目录，如 /js/custom.js 对应 source/js/custom.js）
 custom_js:
-custom_css: /css/custom-blue.css
+custom_css: /css/custom-blue-v2.css
 
 # 网页访问统计（百度/Google Analytics/LeanCloud 等）
 web_analytics:
@@ -243,9 +243,9 @@ footer:
 #---------------------------
 index:
   # 首页头图（路径相对于 source/，也可用外链）
-  banner_img: /img/banner-soft.svg
-  banner_img_height: 34
-  banner_mask_alpha: 0.06
+  banner_img: /img/default.jpg
+  banner_img_height: 82
+  banner_mask_alpha: 0.30
   # 首页标语（副标题）
   slogan:
     enable: true
@@ -276,9 +276,9 @@ index:
 # 文章页 Post Page
 #---------------------------
 post:
-  banner_img: /img/banner-soft.svg
-  banner_img_height: 26
-  banner_mask_alpha: 0.06
+  banner_img: /img/default.jpg
+  banner_img_height: 55
+  banner_mask_alpha: 0.30
   # 文章默认封面图（首页显示，front-matter 中 index_img 优先）
   default_index_img:
   # 文章标题下方元信息
@@ -462,18 +462,18 @@ discuss:
 # 归档页 Archive Page
 #---------------------------
 archive:
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 42
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
 
 #---------------------------
 # 分类页 Category Page
 #---------------------------
 category:
   enable: true
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 42
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
   order_by: "-length"         # 排序: length(文章数) | name(名称)，带减号倒序
   collapse_depth: 0           # 折叠深度
   post_order_by: "-date"      # 文章排序
@@ -484,9 +484,9 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 80
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
   # 标签云配置
   tagcloud:
     min_font: 15              # 最小字号
@@ -501,9 +501,9 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 42
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
   avatar: /img/my-avatar.png    # 头像
   name: "Xendr1a"            # 昵称
   intro: "还要拐几个弯才能到呢"  # 简介
@@ -516,18 +516,18 @@ about:
 # 自定义页 Custom Page（hexo new page 创建的页面）
 #---------------------------
 page:
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 42
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
 
 #---------------------------
 # 404 页
 #---------------------------
 page404:
   enable: true
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 85
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
   redirect_delay: 5000       # 自动跳转首页延迟（毫秒），GitHub Pages 需绑定域名才生效
 
 #---------------------------
@@ -535,9 +535,9 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /img/banner-soft.svg
+  banner_img: /img/default.jpg
   banner_img_height: 42
-  banner_mask_alpha: 0.06
+  banner_mask_alpha: 0.30
   # 友链列表
   items:
     - title: "Fluid"

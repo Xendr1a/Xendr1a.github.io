@@ -368,3 +368,8 @@ html[data-user-color-scheme="dark"] .index-card {
 html[data-user-color-scheme="dark"] .index-card:hover {
   border-color: #43505a;
 }
+
+/* 壁纸上的文字可读性 */
+.banner-text {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}

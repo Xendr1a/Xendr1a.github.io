@@ -142,7 +142,7 @@ cd .. && git add -A && git commit -m "msg" && git push origin main:source
 | 圆角、阴影、行距、标题字体 | `source/css/custom.css` |
 | 代码块底色 / 角标 | `custom.css` 的 `figure.highlight`；角标由 `code.language.enable` 控制 |
 
-当前方案：淡蓝纸底 `#eef5fa`、白色卡片 `#ffffff`、正文 `#2f3a42`、链接 `#4f7f9e`、浅色导航。正文 16px / 1.78 行高，标题用 Noto Serif CJK，二级标题左侧雾蓝竖线；代码块去掉行号与语言角标，列表收紧段间距；头图是淡蓝渐变 SVG，固定亮色，不再夜间自动变灰。
+当前方案：淡蓝纸底 `#eef5fa`、白色卡片 `#ffffff`、正文 `#2f3a42`、链接 `#4f7f9e`、浅色导航。正文 16px / 1.78 行高，标题用 Noto Serif CJK，二级标题左侧雾蓝竖线；代码块去掉行号与语言角标，列表收紧段间距；头图使用 `source/img/default.jpg`，固定亮色，不再夜间自动变灰。
 
 ---
 
