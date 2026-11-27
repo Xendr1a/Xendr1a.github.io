@@ -29,20 +29,75 @@
     "sha256": null,
     "url": ""
   },
+  "buu": {
+    "postid": "23804354",
+    "sha256": "4ccf7f1b354c2651117aeccb4ccdc48ef6a132e4074f00baed6feaa577fb8246",
+    "url": "https://www.cnblogs.com/Xendria/p/23804354"
+  },
   "campus-2025": {
     "postid": "23804296",
     "sha256": "47884e225cca73fd68f672ddf696e63677423099adb4dbeaf6f8f6785feaa379",
     "url": "https://www.cnblogs.com/Xendria/p/23804296"
+  },
+  "chain-mirror": {
+    "postid": "23804374",
+    "sha256": "e7d1a359299304da76b8c8e4152407111720b19cc52489cf485cfc32269f342d",
+    "url": "https://www.cnblogs.com/Xendria/p/23804374"
+  },
+  "ctfshow-deser": {
+    "postid": "23804392",
+    "sha256": "45f81093a27928d823685cd92c93588696740e92125d511b9c82aa7637e639d0",
+    "url": "https://www.cnblogs.com/Xendria/p/23804392"
+  },
+  "ctfshow-misc": {
+    "postid": "23804419",
+    "sha256": "390d8639fe02994d11ecc37946ea28ebdd5535510de459ff5e6d747bd1cab251",
+    "url": "https://www.cnblogs.com/Xendria/p/23804419"
+  },
+  "ctfshow-php": {
+    "postid": "23804437",
+    "sha256": "543f19853832cbc0a954bd831676c0d705a3aff1691bd5ea7dc32a31e7232c30",
+    "url": "https://www.cnblogs.com/Xendria/p/23804437"
+  },
+  "ctfshow-rce": {
+    "postid": "23804467",
+    "sha256": "07e1782123260dd1f0dfd0c7eef3d7c650c8215df2146f0850d769dc3ae19dab",
+    "url": "https://www.cnblogs.com/Xendria/p/23804467"
   },
   "ctfshow-rce-challenge": {
     "postid": "19803612",
     "sha256": null,
     "url": ""
   },
+  "ctfshow-sql": {
+    "postid": "23804482",
+    "sha256": "5c45906139127e8b957883249586b25e7ba1ffaab62e3a7523be716987bb34d8",
+    "url": "https://www.cnblogs.com/Xendria/p/23804482"
+  },
+  "ctfshow-ssti": {
+    "postid": "23804495",
+    "sha256": "93bbf265840b61ba545b075062eb5e03523bce0ee3424a098fdbfca2617b8cfb",
+    "url": "https://www.cnblogs.com/Xendria/p/23804495"
+  },
+  "gctf-2025": {
+    "postid": "23807059",
+    "sha256": "71a6ee7780c2f843a5beef9b3a7263cfdd3d8ab4338149dc8947578f2b80ea76",
+    "url": "https://www.cnblogs.com/Xendria/p/23807059"
+  },
   "handler-command": {
     "postid": "19387010",
     "sha256": null,
     "url": ""
+  },
+  "nepctf2026": {
+    "postid": "23807067",
+    "sha256": "4f1f83056c4108b536d37f127f9b8c87b8e14b51a43b2983e5a7c63a4cf3cd0a",
+    "url": "https://www.cnblogs.com/Xendria/p/23807067"
+  },
+  "newstar2025-week1": {
+    "postid": "23807054",
+    "sha256": "298d16ed78f819ab98644a1ecfb5fff0495a1eea7ceae997756cb0ff76401382",
+    "url": "https://www.cnblogs.com/Xendria/p/23807054"
   },
   "polarisctf-2025": {
     "postid": "19824429",
@@ -53,6 +108,11 @@
     "postid": "19803667",
     "sha256": null,
     "url": ""
+  },
+  "thinkphp-2x-rce": {
+    "postid": "23807057",
+    "sha256": "44e5ba898ae9376d231a0848f9a85551aab67473d922063cc6b8316d65a7d66c",
+    "url": "https://www.cnblogs.com/Xendria/p/23807057"
   },
   "关于pearcmd-php的利用": {
     "postid": "19327023",
