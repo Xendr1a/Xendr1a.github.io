@@ -28,9 +28,9 @@ force_https: false
 # 字体与排版（低对比度、柔和阅读）
 font:
   font_size: "16px"
-  font_family: '"Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif'
-  code_font_size: "88%"
-  letter_spacing: "0.005em"
+  font_family: '"LXGW WenKai", "Sarasa Gothic SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+  code_font_size: "90%"
+  letter_spacing: "0.01em"
 
 # 代码高亮
 # lib 可选: highlightjs | prismjs
@@ -116,7 +116,7 @@ color:
 
 # 自定义 JS 文件（路径相对于 source 目录，如 /js/custom.js 对应 source/js/custom.js）
 custom_js:
-custom_css: /css/custom-blue-v3.css
+custom_css: /css/custom-soft.css
 
 # 网页访问统计（百度/Google Analytics/LeanCloud 等）
 web_analytics:
