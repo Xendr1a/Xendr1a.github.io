@@ -1075,7 +1075,7 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     lines.append("## 人工确认后的下一步")
     lines.append("")
     lines.append("1. `state.json` 当前是人工核对的冻结映射；只有确认新文章后才手动追加。")
-    lines.append("2. 运行 `python3 scripts/cnblogs/sync.py push --dry-run` 复核。")
+    lines.append("2. 运行 `python3 tools/cnblogs/sync.py push --dry-run` 复核。")
     lines.append("3. 先 `--only <slug> --limit 1` 小流量试跑。")
     lines.append("")
 

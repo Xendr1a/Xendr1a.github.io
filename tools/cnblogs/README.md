@@ -42,23 +42,23 @@ MetaWeblog 接口。只用 Python 3 标准库（`xmlrpc.client`），不需要 `
 
 ```sh
 # 1. 离线盘点，不需要令牌
-python3 scripts/cnblogs/sync.py plan
+python3 tools/cnblogs/sync.py plan
 
 # 2. 离线演练：打印每篇将发送的完整 struct（正文截断 200 字，附真实长度/sha256）
-python3 scripts/cnblogs/sync.py push --dry-run
-python3 scripts/cnblogs/sync.py push --dry-run --only ctfshow-ssti
+python3 tools/cnblogs/sync.py push --dry-run
+python3 tools/cnblogs/sync.py push --dry-run --only ctfshow-ssti
 
 # 3. 联网对账：仓库 slug <-> 博客园 postid 候选，写 reconcile-report.md
 export CNBLOGS_TOKEN='...'
-python3 scripts/cnblogs/sync.py reconcile
+python3 tools/cnblogs/sync.py reconcile
 
 # 4. 联网推送
-python3 scripts/cnblogs/sync.py push --only 0xgame2025-week1 --limit 1
-python3 scripts/cnblogs/sync.py push
-python3 scripts/cnblogs/sync.py push --new-only         # 只新增，不碰已有旧文
-python3 scripts/cnblogs/sync.py push --draft          # 发草稿
-python3 scripts/cnblogs/sync.py push --interval 90    # 放慢限速
-python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 editPost
+python3 tools/cnblogs/sync.py push --only 0xgame2025-week1 --limit 1
+python3 tools/cnblogs/sync.py push
+python3 tools/cnblogs/sync.py push --new-only         # 只新增，不碰已有旧文
+python3 tools/cnblogs/sync.py push --draft          # 发草稿
+python3 tools/cnblogs/sync.py push --interval 90    # 放慢限速
+python3 tools/cnblogs/sync.py push --force          # 忽略 hash，强制 editPost
 ```
 
 `plan` 在存在缺失图片时列出全部缺失项并以非 0 退出；`push` 在真实推送前也会做同样
@@ -122,7 +122,7 @@ python3 scripts/cnblogs/sync.py push --force          # 忽略 hash，强制 edi
 2. 对每篇仓库文章计算 `0.55 × 标题归一化相似度 + 0.45 × 正文前 80 字相似度`；
 3. 若仓库正文里已有 `https://www.cnblogs.com/Xendria/p/<postid>` 链接，直接给 1.0；
 4. 输出冻结映射、未映射文章的前 3 个候选，以及不在 `state.json` 中的 orphan 表，
-   写入 `scripts/cnblogs/reconcile-report.md`。
+   写入 `tools/cnblogs/reconcile-report.md`。
 
 当前这 14 篇已全部映射，所以 orphan 应为 0。以后若博客园出现仓库没有、state 也没
 映射的文章，`reconcile` 会标成 `orphan`；工具**绝不**对 orphan 执行

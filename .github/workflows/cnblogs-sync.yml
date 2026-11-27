@@ -29,13 +29,13 @@ jobs:
       - name: Sync
         env:
           CNBLOGS_TOKEN: ${{ secrets.CNBLOGS_TOKEN }}
-        run: python3 scripts/cnblogs/sync.py push --new-only
+        run: python3 tools/cnblogs/sync.py push --new-only
       - name: Persist state
         if: always()
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add scripts/cnblogs/state.json scripts/cnblogs/images.json
+          git add tools/cnblogs/state.json tools/cnblogs/images.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'chore(cnblogs): update sync state'
           git push
