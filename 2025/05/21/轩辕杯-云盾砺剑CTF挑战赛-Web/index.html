@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://xendr1a.github.io/img/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/8e83faf9-c322-4192-8ebf-0da8d6b38d2c-1024x466-20260331201350-tizo8x8.png">
 <meta property="og:image" content="https://xendr1a.github.io/img/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/4f716ce8-bea8-4a38-bb76-b08f7b3b21f5-1024x656-20260331201350-fxo5r5r.png">
 <meta property="article:published_time" content="2025-05-21T15:13:58.000Z">
-<meta property="article:modified_time" content="2026-11-27T07:41:34.987Z">
+<meta property="article:modified_time" content="2026-11-27T07:56:30.478Z">
 <meta property="article:author" content="Xendr1a">
 <meta property="article:tag" content="Writeup">
 <meta property="article:tag" content="轩辕杯">
@@ -401,7 +401,14 @@
 <p>我们观察这个代码，对于输入的参数url进行检测，要求为http头，然后域名为null<br>我们就可以构造了</p>
 <p><img src="/img/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/005d0933-735e-40d6-9056-64687ffef9d8-20260331201350-i1jeh8t.png"></p>
 <p>访问此路由即可得flag</p>
-<h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p><strong>第一关</strong><br>GET ?a&#x3D;welcome POST b&#x3D;new Cookie star&#x3D;admin<br><strong>第二关</strong><br>if (is_string($password) &amp;&amp; preg_match(‘&#x2F;^\d+$&#x2F;‘, $password)) { echo “纯数字是不行的哦！”; exit; }<br>password&#x3D;2025!<br><strong>第三关</strong></p>
+<h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p><strong>第一关</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">GET ?a=welcome<br>POST b=new<br>Cookie star=admin<br></code></pre></td></tr></table></figure>
+
+<p><strong>第二关</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">is_string</span>(<span class="hljs-variable">$password</span>) &amp;&amp; <span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/^\d+$/&#x27;</span>, <span class="hljs-variable">$password</span>)) &#123;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;纯数字是不行的哦！&quot;</span>;<br>    <span class="hljs-keyword">exit</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>password=2025!</code></p>
+<p><strong>第三关</strong></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/levelThree.php</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>27.25.151.26:30379<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.9<br><span class="hljs-attribute">Upgrade-Insecure-Requests</span><span class="hljs-punctuation">: </span>1<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.120 Safari/537.36<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br>Referer:secretcode<br><span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>star=user; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZseTIzMyJ9.inCoyLUdTLkcp-ZHLvIyBEa27Glfu-jHBpWdh_DpWrA<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>keep-alive<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/x-www-form-urlencoded<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>11<br><br><span class="language-abnf"><span class="hljs-attribute">key</span><span class="hljs-operator">=</span>ctfpass</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>第四关</strong></p>
@@ -410,7 +417,8 @@
 <p><strong>第五关</strong></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-keyword">var</span> a = [<span class="hljs-string">&#x27;E&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;W&#x27;</span>, <span class="hljs-string">&#x27;_&#x27;</span>, <span class="hljs-string">&#x27;F&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>];<br>    <span class="hljs-keyword">var</span> order = [<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">8</span>, <span class="hljs-number">7</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">9</span>, <span class="hljs-number">6</span>, <span class="hljs-number">4</span>];<br>    <span class="hljs-keyword">var</span> code = <span class="hljs-string">&#x27;&#x27;</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; order.<span class="hljs-property">length</span>; i++) &#123;<br>        code += a[order[i]];<br>    &#125;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Your hidden key is:&quot;</span>, code);<br>&#125;)();<br>&lt;/script&gt;<br><br>W3lC0E_CtF<br></code></pre></td></tr></table></figure>
 
-<p><strong>第六关</strong><br>nl &#x2F;*</p>
+<p><strong>第六关</strong></p>
+<p><code>nl /*</code></p>
 <h2 id="ezsql1-0"><a href="#ezsql1-0" class="headerlink" title="ezsql1.0"></a>ezsql1.0</h2><p>测试发现只过滤了select和空格，我们可以用双写和&#x2F;**&#x2F;绕过</p>
 <p><img src="/img/%E8%BD%A9%E8%BE%95%E6%9D%AF-%E4%BA%91%E7%9B%BE%E7%A0%BA%E5%89%91CTF%E6%8C%91%E6%88%98%E8%B5%9B-Web/e4913759-3eb0-4f3a-92fb-e48972adf91b-1024x422-20260331201350-dwhhgd8.png"></p>
 <p>这借着下去是个假flag</p>
@@ -580,7 +588,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/04/05/gctf-2025/" title="GCTF 2025 题解">
+                      <a href="/2025/02/26/gctf-2025/" title="GCTF 2025 题解">
                         <span class="hidden-mobile">GCTF 2025 题解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
