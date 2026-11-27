@@ -76,6 +76,11 @@ INTERNAL_LINK_RE = re.compile(r"\]\((/20\d{2}/\d{2}/\d{2}/[^)\s]+)\)")
 CNBLOGS_POST_URL_RE = re.compile(
     r"https?://(?:www\.)?cnblogs\.com/Xendria/p/(\d+)", re.IGNORECASE
 )
+SITE_BASE = "https://xendr1a.github.io"
+LOCAL_IMG_REF_RE = re.compile(r"""(?<![\w:/.%-])(/img/[^\s)"'<>]+)""")
+IMAGE_EXT_RE = re.compile(
+    r"\.(?:png|jpe?g|gif|webp|svg|bmp|ico)(?:[?#].*)?$", re.IGNORECASE
+)
 
 
 # --------------------------------------------------------------------------
@@ -388,9 +393,28 @@ def substitute_internal_links(body: str, mapping: Mapping[str, str]) -> tuple[st
     return INTERNAL_LINK_RE.sub(repl, body), unresolved
 
 
+def absolutize_non_image_assets(body: str) -> str:
+    """Turn leftover local ``/img/...`` non-image links into absolute site URLs.
+
+    Image embeds are normally replaced by ``newMediaObject`` URLs before this
+    runs. Anything else (PDF, archives, ...) has no upload path and must not be
+    left as a site-relative URL on cnblogs. Existing percent-encoding is kept.
+    """
+
+    def repl(match: re.Match[str]) -> str:
+        path = match.group(1)
+        without_fragment = path.split("#", 1)[0].split("?", 1)[0]
+        if IMAGE_EXT_RE.search(without_fragment):
+            return path
+        return SITE_BASE + path
+
+    return LOCAL_IMG_REF_RE.sub(repl, body)
+
+
 def build_body(post: Post, urls: Mapping[str, str], links: Mapping[str, str]) -> tuple[str, list[str]]:
     body = substitute_images(post.body, urls)
-    return substitute_internal_links(body, links)
+    body, unresolved = substitute_internal_links(body, links)
+    return absolutize_non_image_assets(body), unresolved
 
 
 def build_struct(
