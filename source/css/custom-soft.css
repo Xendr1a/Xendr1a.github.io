@@ -423,16 +423,17 @@ body {
   }
 }
 
-/* 文章首段首字下沉（仅当正文直接以段落开头） */
+/* 文章首段前两字下沉（由 /js/dropcap.js 包 span） */
 @media (min-width: 768px) {
-  .markdown-body > p:first-of-type::first-letter {
+  .markdown-body .dropcap {
     float: left;
-    margin: 0.06em 0.12em 0 0;
+    margin: 0.04em 0.14em 0 0;
     color: #4f7f9e;
     font-family: "LXGW WenKai", "Sarasa Gothic SC", serif;
-    font-size: 3.1em;
+    font-size: 2.4em;
     font-weight: 500;
-    line-height: 0.86;
+    line-height: 1;
+    letter-spacing: 0;
   }
 }
 
