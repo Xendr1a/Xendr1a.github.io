@@ -145,7 +145,7 @@ static public function dispatch()
 /index.php?s=/index/index/name/${@phpinfo()}
 ```
 
-在\ThinkPHP\Common\convention.php里面`'VAR_PATHINFO'   =&gt; 's'`，也就是说s 参数会被当成 PATHINFO来处理。对应代码在 `Dispatcher::getPathInfo()：`
+在\ThinkPHP\Common\convention.php里面`'VAR_PATHINFO'   => 's'`，也就是说s 参数会被当成 PATHINFO来处理。对应代码在 `Dispatcher::getPathInfo()：`
 
 ```text
 public static function getPathInfo()

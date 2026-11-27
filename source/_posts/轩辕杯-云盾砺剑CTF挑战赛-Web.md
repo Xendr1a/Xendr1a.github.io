@@ -144,10 +144,24 @@ if ($x['host'] === null && $x['scheme'] === 'http') {
 ## 签到
 
 **第一关**
-GET ?a=welcome POST b=new Cookie star=admin
+
+```http
+GET ?a=welcome
+POST b=new
+Cookie star=admin
+```
+
 **第二关**
-if (is_string($password) &amp;&amp; preg_match('/^\d+$/', $password)) { echo "纯数字是不行的哦！"; exit; }
-password=2025!
+
+```php
+if (is_string($password) && preg_match('/^\d+$/', $password)) {
+    echo "纯数字是不行的哦！";
+    exit;
+}
+```
+
+`password=2025!`
+
 **第三关**
 
 ```http
@@ -200,7 +214,8 @@ W3lC0E_CtF
 ```
 
 **第六关**
-nl /*
+
+`nl /*`
 
 ## ezsql1.0
 

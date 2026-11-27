@@ -121,7 +121,7 @@ strlen()<1 每个参数只能占用一个字节
 
 ![a05c8a5f-ab6b-466e-a05f-d9409899ee5a](/img/菜狗杯ctfshow-web-部分/a05c8a5f-ab6b-466e-a05f-d9409899ee5a-20250122211814-04yifpv.png)![8542a044-34bf-471a-9f54-cc0792a9136c](/img/菜狗杯ctfshow-web-部分/8542a044-34bf-471a-9f54-cc0792a9136c-20250122211929-ki0hmu6.png)
 
-发现 flag.txt  payload:cmd=cat&param=flag.txt
+发现 flag.txt  payload:cmd=cat¶m=flag.txt
 
 ## 遍地飘零
 

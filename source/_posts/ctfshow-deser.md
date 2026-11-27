@@ -104,7 +104,7 @@ echo urlencode(serialize($a));
     }
 ```
 
-然后给$code=`'system(&quot;tac f*&quot;);'`
+然后给$code=`'system("tac f*");'`
 
 那我们就可以得到
 
@@ -474,7 +474,7 @@ O:7:"Ctfshow":2:{s:8:"username";s:6:"xxxxxx";s:8:"password";s:6:"xxxxxx";}
 
 ### web267
 
-Yii反序列化漏洞
+**Yii 反序列化漏洞**
 
 ```text
 <?php

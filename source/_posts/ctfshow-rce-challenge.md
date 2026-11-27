@@ -59,8 +59,7 @@ if (isset($_POST['ctf_show'])) {
 ?>
 ```
 
-首先，我们可以看到过滤了很多东西  "/[a-zA-Z0-9@#%^&*:{}\-\"|`~\\]/"    
-我们可以看看有什么没有过滤掉的
+首先，我们可以看到过滤了很多东西 ``"/[a-zA-Z0-9@#%^&*:{}\-\"|`~\\]/"``，我们可以看看有什么没有过滤掉的
 
 ```php
 <?php
@@ -128,7 +127,7 @@ if (isset($_POST['ctf_show'])) {
 ?>
 ```
 
-细心的朋友发现了，这题加了一个if判断if (is_string($ctfshow) &amp;&amp; strlen($ctfshow) <= 105)，说明我们需要瘦身一下了。    
+细心的朋友发现了，这题加了一个if判断if (is_string($ctfshow) && strlen($ctfshow) <= 105)，说明我们需要瘦身一下了。    
 与上题还有什么区别呢，过滤的变了一点点
 
 ![c63f02a5-ee17-451f-80c2-d4bb778a215b-1024x263-20260331201350-ogrwj83](/img/ctfshow-rce-challenge/img-02.png)
