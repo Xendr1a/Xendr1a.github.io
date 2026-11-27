@@ -26,7 +26,7 @@ class ctfShowUser{
         return $this->isVip;
     }
     public function login($u,$p){
-        if($this->username**=$u&&$this->password**=$p){
+        if($this->username===$u&&$this->password===$p){
             $this->isVip=true;
         }
         return $this->isVip;
@@ -120,7 +120,7 @@ class ctfShowUser{
         $this->class=new backDoor();
     }
     public function login($u,$p){
-        return $this->username**=$u&&$this->password**=$p;
+        return $this->username===$u&&$this->password===$p;
     }
     public function __destruct(){
         $this->class->getInfo();
@@ -160,7 +160,7 @@ class ctfShowUser{
         $this->class=new backDoor();  //将class设置为backDoor类的对象
     }
     public function login($u,$p){
-        return $this->username**=$u&&$this->password**=$p;
+        return $this->username===$u&&$this->password===$p;
     }
     public function __destruct(){
         $this->class->getInfo();  //这里调用的就是backDoor类的getInfo()方法了

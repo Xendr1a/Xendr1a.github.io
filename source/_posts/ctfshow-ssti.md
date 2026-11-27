@@ -670,7 +670,7 @@ error_reporting(0);
 include('flag.php');
 $b=$_GET['b'];
 if(filter_var ($b,FILTER_VALIDATE_BOOLEAN)){
-    if($b**'true' || intval($b)>0 ||$b**'on' || $b=='ON'){
+    if($b=='true' || intval($b)>0 ||$b=='on' || $b=='ON'){
         die('FLAG NOT HERE');
     }else{
         echo $flag;

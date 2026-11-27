@@ -334,10 +334,10 @@ type SessionRole = 'guest' | 'maintainer';
 FLAG_VALUE最后一次出现是在这里/api/release/claim
 
 ```text
- if (req.method **= 'POST' && pathname **= '/api/release/claim') {
+ if (req.method === 'POST' && pathname === '/api/release/claim') {
     const claims = requireSession(req);  //这里是校验token
     const effectiveCap = await getEffectiveCapability(claims.sid);
-    assertReleaseCapability(effectiveCap);//这里是判断if (cap.role !** 'maintainer' || cap.lane !** 'release')，不满足就报错了
+    assertReleaseCapability(effectiveCap);//这里是判断if (cap.role !== 'maintainer' || cap.lane !== 'release')，不满足就报错了
 
     if (claims.role !== 'guest') {
       throw new Error('release claim requires guest-origin session');
@@ -406,7 +406,7 @@ COALESCE()会返回参数列表中第一个非 NULL 的值，如果数据库里�
 那我们怎么把他变成NULL呢，我们继续看
 
 ```text
- if (req.method **= 'POST' && pathname **= '/api/caps/sync') {
+ if (req.method === 'POST' && pathname === '/api/caps/sync') {
     const claims = requireSession(req);
     assertGuest(claims);
 
@@ -503,7 +503,7 @@ const keepRole = input.keepRole !== false;
 我们一开始关注的是`/api/release/claim`，但是proof 校验我们不知道key过不去，我又想起了一开头ban的东西，然后跟进一下来到了这边
 
 ```text
-if (req.method **= 'POST' && pathname **= '/api/release/execute') {
+if (req.method === 'POST' && pathname === '/api/release/execute') {
     const claims = requireSession(req);
     const effectiveCap = await getEffectiveCapability(claims.sid);
     assertReleaseCapability(effectiveCap);

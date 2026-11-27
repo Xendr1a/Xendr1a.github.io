@@ -38,15 +38,15 @@ payload：
 
 ## Upload-Labs-Linux
 
-一和二
+**一和二**
 
 抓包修改后缀，后蚁剑连接
 
-三
+**三**
 
 改.php2  .php3
 
-四
+**四**
 
 用.htaccess文件
 
@@ -56,33 +56,33 @@ payload：
 
 大佬的理解：不让带熟食进去吃，就带原料进去做好了再吃
 
-五
+**五**
 
 后缀大小写绕过
 
-六
+**六**
 
 空格绕过 ，文件名前加空格
 
-七
+**七**
 
 所有可以解析的后缀都被限制了，只能构造特殊后缀，可以看到空格也被过滤了，但是用了strrchr函数查找点号最后一次出现，所以可以构造.php.为后缀，进行绕过（win系统会自动去除点号，liunx则不会，但点号最后为非法
 
-八
+**八**
 
-和上一题对比少了**::$DATA**
+和上一题对比少了 `::$DATA`
 
 **在windows环境下，不光会自动去除文件末尾的点和空格，同时(::$DATA)这个字符串，windows也会认为是非法字符，默认去除掉**
 
-.php**::$DATA**
+.php `::$DATA`
 
-九
+**九**
 
 deldot()函数从后向前检测，当检测到末尾的第一个点时会继续它的检测，但是遇到空格会停下来
 
-##### .php. .
+`.php. .`
 
-十
+**十**
 
 `$file_name = str_ireplace($deny_ext,&quot;&quot;, $file_name);`
 
@@ -90,9 +90,9 @@ deldot()函数从后向前检测，当检测到末尾的第一个点时会继续
 
 简单来说这个代码就是把黑名单的东西匹配为空字符，可以试试双写绕过
 
-##### .pphphp
+`.pphphp`
 
-十一
+**十一**
 
 嘶，根本弄不进去，看wp是get00截断，（但是我还是弄不进去。
 
@@ -117,7 +117,7 @@ Woofers和Meowers，我们可以考虑伪协议
 
 				if(isset($file))
 				{
-					if( strpos( $file, "woofers" ) !**  false || strpos( $file, "meowers" ) !**  false || strpos( $file, "index")){
+					if( strpos( $file, "woofers" ) !==  false || strpos( $file, "meowers" ) !==  false || strpos( $file, "index")){
 						include ($file . '.php');
 					}
 					else{
@@ -148,37 +148,33 @@ X-Forwarded-For：{7*7}      发现id：49
 
 ## [GYCTF2020]Blacklist1
 
-- # [GYCTF2020]Blacklist1
+查1'发现显示
 
-  查1'发现显示
+过滤了好多东西，看了大佬的wp可以使用堆叠注入
 
-  过滤了好多东西，看了大佬的wp可以使用堆叠注入
+试试show tables和show databases，发现FlagHere,(查数据库是一个伏笔
 
-  试试show tables和show databases，发现FlagHere,(查数据库是一个伏笔
+slelect因为被过滤了，所以使用handler命令
 
-  slelect因为被过滤了，所以使用handler命令
+挨个用库试试,最后试到supersqli，下面就是语句了
 
-  挨个用库试试,最后试到supersqli，下面就是语句了
+```
+?inject=1';                   -- 闭合原查询并结束语句
+use supersqli;                -- 切换到数据库 `supersqli`
+HANDLER FlagHere OPEN;        -- 打开表 `FlagHere` 的句柄
+HANDLER FlagHere READ FIRST;  -- 读取表的第一行数据
+HANDLER FlagHere CLOSE;       -- 关闭句柄
+```
 
-  ```
-  ?inject=1';                   -- 闭合原查询并结束语句
-  use supersqli;                -- 切换到数据库 `supersqli`
-  HANDLER FlagHere OPEN;        -- 打开表 `FlagHere` 的句柄
-  HANDLER FlagHere READ FIRST;  -- 读取表的第一行数据
-  HANDLER FlagHere CLOSE;       -- 关闭句柄
-  ```
+**完整拼接后的SQL**（假设原查询为`SELECT * FROM table WHERE id='用户输入'`）：
 
-  - **完整拼接后的SQL**（假设原查询为`SELECT * FROM table WHERE id='用户输入'`）：  
-sql  
-复制
-
-    ```
-    SELECT * FROM table WHERE id='1';
-    USE supersqli;
-    HANDLER FlagHere OPEN;
-    HANDLER FlagHere READ FIRST;
-    HANDLER FlagHere CLOSE;
-    ```
+```text
+SELECT * FROM table WHERE id='1';
+USE supersqli;
+HANDLER FlagHere OPEN;
+HANDLER FlagHere READ FIRST;
+HANDLER FlagHere CLOSE;
+```
 
 ## [RoarCTF 2019]Easy Calc
 
@@ -221,9 +217,7 @@ if(!isset($_GET['num'])){
 ? num=var_dump(readfile(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103))) //查看得到flag
 ```
 
-## [SUCTF 2019]EasySQL（sql_mode的利用
-
-### 
+## [SUCTF 2019] EasySQL（sql_mode 的利用）
 
 利用了sql_mode：
 
@@ -234,7 +228,7 @@ sql_mode是一组语法校验规则，个人理解是它可以设定一些sql的
 | ONLY_FULL_GROUP_BY | 对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么这个SQL是不合法的，因为列不在GROUP BY从句中 |
 | NO_ZERO_DATE | mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告 |
 | ERROR_FOR_DIVISION_BY_ZERO | 在insert或update过程中，如果数据被零除，则产生错误而非警告。如果未给出该模式，那么数据被零除时Mysql返回NULL |
-| PIPES_AS_CONCAT | 将 \\|\\| 视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样是，也和字符串的拼接函数concat相类似 |
+| PIPES_AS_CONCAT | 将 `||` 视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样是，也和字符串的拼接函数concat相类似 |
 | ANSI_QUOTES | 不能用双引号来引用字符串，因为它被解释为识别符 |
 
 那么我们将sql_mode的值设为PIPES_AS_CONCAT时，后端查询语句就相当于：

@@ -444,7 +444,7 @@ if(isset($_GET['v1']) && isset($_GET['v2'])){
 ?>
 ```
 
-代码看的懂但不会做，就是说使用正则表达式函数 `preg_match()` 来检查变量 `$v1` 和 `$v2` 是否包含至少一个字母。如果两者都满足条件，则执行 `eval()` 函数，将 `$v2()` 执行的结果作为参数创建一个新的 `$v1` 类对象，并通过 `echo` 输出**。**
+代码看的懂但不会做，就是说使用正则表达式函数 `preg_match()` 来检查变量 `$v1` 和 `$v2` 是否包含至少一个字母。如果两者都满足条件，则执行 `eval()` 函数，将 `$v2()` 执行的结果作为参数创建一个新的 `$v1` 类对象，并通过 `echo` 输出。
 
 看看wp吧，要使用内置类,还有个知识点，`php中只要是变量后面紧跟着()，就会对这个变量进行函数调用`
 
@@ -489,7 +489,7 @@ if(isset($_GET['v1']) && isset($_GET['v2'])){
 
 payload:?v1=FilesystemIterator&v2=getcwd
 
-解释：在PHP中，`FilesystemIterator` 类是 `IteratorIterator` 类的一个子类，它用于遍历目录结构中的文件和目录。`FilesystemIterator` 类提供了对文件系统中的文件和目录进行迭代的能力，这使得开发者可以轻松地遍历文件夹及其子文件夹中的内容。**`getcwd()`****的主要功能是获取当前工作目录的绝对路径。**
+解释：在PHP中，`FilesystemIterator` 类是 `IteratorIterator` 类的一个子类，它用于遍历目录结构中的文件和目录。`FilesystemIterator` 类提供了对文件系统中的文件和目录进行迭代的能力，这使得开发者可以轻松地遍历文件夹及其子文件夹中的内容。**`getcwd()` 的主要功能是获取当前工作目录的绝对路径。**
 
 类`FilesystemIterator`可以用来遍历目录，需要一个路径参数
 
@@ -678,7 +678,7 @@ function filter($num){
     return $num;
 }
 $num=$_GET['num'];
-if(is_numeric($num) and $num!**'36' and trim($num)!**'36' and filter($num)=='36'){
+if(is_numeric($num) and $num!=='36' and trim($num)!=='36' and filter($num)=='36'){
     if($num=='36'){
         echo $flag;
     }else{
@@ -979,12 +979,13 @@ print(ret)
 include("flag.php");
 highlight_file(__FILE__);
 
+
 if(isset($_GET['username']) && isset($_GET['password']) && isset($_GET['code'])){
     $username = (String)$_GET['username'];
     $password = (String)$_GET['password'];
     $code = (String)$_GET['code'];
 
-    if($code **= mt_rand(1,0x36D) && $password **= $flag || $username ==="admin"){
+    if($code === mt_rand(1,0x36D) && $password === $flag || $username ==="admin"){
         
         if($code == 'admin'){
             echo $flag;
@@ -997,7 +998,7 @@ if(isset($_GET['username']) && isset($_GET['password']) && isset($_GET['code']))
 第一眼看代码感觉有点不可思议的，既然$code是随机数那怎么搞，再仔细一看&&的优先级是比||高的，那我们就可以明白了
 
 ```text
-要么$code **= mt_rand(1,0x36D) && $password **= $flag这个成立
+要么$code === mt_rand(1,0x36D) && $password === $flag这个成立
 或者$username ==="admin"这个成立
 我们只需要让username==admin就能过这个判断了，password可以随便传
 ```
@@ -1061,7 +1062,7 @@ if(isset($_GET['key1']) || isset($_GET['key2']) || isset($_POST['key1']) || isse
 }
 @parse_str($_SERVER['QUERY_STRING']);
 extract($_POST);
-if($key1 ** '36d' && $key2 ** '36d') {
+if($key1 == '36d' && $key2 == '36d') {
     die(file_get_contents('flag.php'));
 }
 ```
@@ -1241,7 +1242,7 @@ if(isset($_POST['f1']) && isset($_POST['f2'])){
 
 f1与f2都只能是数字，然后进行的是一个函数调用的返回值`return f1(f2());`
 
-我们要让`intval($code) ** 'ctfshow'`成立，众所周知，弱比较字母可以恒比为0，`intval($code) ** 0`
+我们要让`intval($code) == 'ctfshow'`成立，众所周知，弱比较字母可以恒比为0，`intval($code) == 0`
 
 ```text
 f1=system&f2=phpinfo   #这个有反应，找半天发现flag在源码

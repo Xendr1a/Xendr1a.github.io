@@ -19,7 +19,7 @@ cookie->post->get->requst
 
 requst 没固定什么传参，但是试了一下好像 get 不行？(不知道是不是自己的问题；
 
-## web2 c0me\_t0\_s1gn
+## web2 c0me_t0_s1gn
 
 F12 获得第一部份
 
@@ -109,7 +109,7 @@ strlen()<1 每个参数只能占用一个字节
 
 ?0=传啥都行
 
-## 无一幸免\_FIXED
+## 无一幸免_FIXED
 
 数组整型溢出判断为真 int 范围可知：32 位最大是 2<sup>31</sup>-1，64 位是 2<sup>63</sup>-1
 

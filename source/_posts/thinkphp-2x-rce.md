@@ -63,7 +63,7 @@ static public function dispatch()
         if($urlMode == URL_REWRITE ) {
             //当前项目地址
             $url    =   dirname(_PHP_FILE_);
-            if($url ** '/' || $url ** '\\')
+            if($url == '/' || $url == '\\')
                 $url    =   '';
             define('PHP_FILE',$url);
         }elseif($urlMode == URL_COMPAT){

