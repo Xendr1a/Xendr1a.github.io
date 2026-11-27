@@ -1,4 +1,19 @@
 {
+  "0xgame2025-week1": {
+    "postid": "19380137",
+    "sha256": null,
+    "url": ""
+  },
+  "0xgame2025-week2": {
+    "postid": "19380140",
+    "sha256": null,
+    "url": ""
+  },
+  "0xgame2025-week3": {
+    "postid": "19380141",
+    "sha256": null,
+    "url": ""
+  },
   "2025hnctf-web": {
     "postid": "19803613",
     "sha256": null,
@@ -13,6 +28,11 @@
     "postid": "19803664",
     "sha256": null,
     "url": ""
+  },
+  "campus-2025": {
+    "postid": "23804296",
+    "sha256": "47884e225cca73fd68f672ddf696e63677423099adb4dbeaf6f8f6785feaa379",
+    "url": "https://www.cnblogs.com/Xendria/p/23804296"
   },
   "ctfshow-rce-challenge": {
     "postid": "19803612",
@@ -31,21 +51,6 @@
   },
   "tgctf-2025": {
     "postid": "19803667",
-    "sha256": null,
-    "url": ""
-  },
-  "0xgame2025-week1": {
-    "postid": "19380137",
-    "sha256": null,
-    "url": ""
-  },
-  "0xgame2025-week2": {
-    "postid": "19380140",
-    "sha256": null,
-    "url": ""
-  },
-  "0xgame2025-week3": {
-    "postid": "19380141",
     "sha256": null,
     "url": ""
   },

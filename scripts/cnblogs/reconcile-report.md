@@ -1,8 +1,8 @@
 # 博客园对账报告
 
-- 仓库文章: 26 篇
-- 博客园文章: 14 篇
-- 冻结映射: 14 篇；仓库未映射: 12 篇；orphan: 0 篇
+- 仓库文章: 27 篇
+- 博客园文章: 15 篇
+- 冻结映射: 15 篇；仓库未映射: 12 篇；orphan: 0 篇
 - 评分: 0.55 × 标题归一化相似度 + 0.45 × 正文前 80 字相似度；
   正文中出现 `cnblogs.com/Xendria/p/<postid>` 链接时直接视为 1.0。
 - `state.json` 中的映射是人工核对的**冻结映射**，本报告不会修改它。
@@ -19,7 +19,7 @@
 | ISCTF-web部分 | ISCTF 2025 Web 部分 | 19372803 | ISCTF2025（web部分 | 1.000 | 冻结映射 | 19372803 |
 | LitCTF2025-公开赛道-web | LitCTF 2025 公开赛道 Web | 19803664 | LitCTF2025（公开赛道）（web | 1.000 | 冻结映射 | 19803664 |
 | buu | BUUCTF Web 题解合集 | — | 2025H&NCTF web | 0.309 | 无可靠候选 | — |
-| campus-2025 | 校内招新赛 Web 题解 | — | polarisctf招新赛（web部分 | 0.286 | 无可靠候选 | — |
+| campus-2025 | 校内招新赛 Web 题解 | 23804296 | 校内招新赛 Web 题解 | 1.000 | 冻结映射 | 23804296 |
 | chain-mirror | Chain Mirror Platform 题解 | — | polarisctf招新赛（web部分 | 0.231 | 无可靠候选 | — |
 | ctfshow-deser | ctfshow 反序列化题解 | — | 菜狗杯ctfshow web(部分 | 0.337 | 无可靠候选 | — |
 | ctfshow-misc | ctfshow 杂项：Node/SSRF/JWT/文件包含 | — | 菜狗杯ctfshow web(部分 | 0.299 | 无可靠候选 | — |
@@ -30,6 +30,7 @@
 | ctfshow-ssti | ctfshow SSTI 与过滤绕过 | — | 菜狗杯ctfshow web(部分 | 0.316 | 无可靠候选 | — |
 | gctf-2025 | GCTF 2025 题解 | — | TGCTF 2025 web(复现 | 0.423 | 无可靠候选 | — |
 | handler-command | HANDLER 命令：没有 select 时怎么读表 | 19387010 | HANDLER命令 | 1.000 | 冻结映射 | 19387010 |
+| nepctf2026 | NEPCTF 2026 挂钩都在干什么呢？ | — | ISCTF2025（web部分 | 0.251 | 无可靠候选 | — |
 | newstar2025-week1 | newstar2025 week1 | — | 0xgame2025（week1 | 0.450 | 已占用 | — |
 | polarisctf-2025 | PolarisCTF 招新赛 Web 部分 | 19824429 | polarisctf招新赛（web部分 | 1.000 | 冻结映射 | 19824429 |
 | tgctf-2025 | TGCTF 2025 web 复现 | 19803667 | TGCTF 2025 web(复现 | 1.000 | 冻结映射 | 19803667 |
@@ -95,15 +96,15 @@
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 19803613 | 2025H&NCTF web | 0.309 | 0.48 | 0.10 | https://www.cnblogs.com/Xendria/p/19803613/2025h-dwkl6 | 已被 2025hnctf-web 的冻结映射占用 |
 | 2 | 19380103 | 菜狗杯ctfshow web(部分 | 0.309 | 0.43 | 0.16 | https://www.cnblogs.com/Xendria/p/19380103/caigou-cup-ctfshow-web-part-vncv9 | 已被 菜狗杯ctfshow-web-部分 的冻结映射占用 |
-| 3 | 19372803 | ISCTF2025（web部分 | 0.295 | 0.44 | 0.11 | https://www.cnblogs.com/Xendria/p/19372803 | 已被 ISCTF-web部分 的冻结映射占用 |
+| 3 | 23804296 | 校内招新赛 Web 题解 | 0.295 | 0.43 | 0.12 | https://www.cnblogs.com/Xendria/p/23804296 | 已被 campus-2025 的冻结映射占用 |
 
 ### campus-2025 — 校内招新赛 Web 题解
 
 | # | postid | 博客园标题 | 总分 | 标题 | 正文 | 链接 | 依据 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 19824429 | polarisctf招新赛（web部分 | 0.286 | 0.43 | 0.11 | https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh | 已被 polarisctf-2025 的冻结映射占用 |
-| 2 | 19803613 | 2025H&NCTF web | 0.240 | 0.27 | 0.20 | https://www.cnblogs.com/Xendria/p/19803613/2025h-dwkl6 | 已被 2025hnctf-web 的冻结映射占用 |
-| 3 | 19372803 | ISCTF2025（web部分 | 0.239 | 0.25 | 0.23 | https://www.cnblogs.com/Xendria/p/19372803 | 已被 ISCTF-web部分 的冻结映射占用 |
+| 1 | 23804296 | 校内招新赛 Web 题解 | 1.000 | 1.00 | 1.00 | https://www.cnblogs.com/Xendria/p/23804296 | 标题归一化后相同；标题相似 1.00；正文前80字相似 1.00；state.json 已映射 |
+| 2 | 19824429 | polarisctf招新赛（web部分 | 0.286 | 0.43 | 0.11 | https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh | 已被 polarisctf-2025 的冻结映射占用 |
+| 3 | 19803613 | 2025H&NCTF web | 0.240 | 0.27 | 0.20 | https://www.cnblogs.com/Xendria/p/19803613/2025h-dwkl6 | 已被 2025hnctf-web 的冻结映射占用 |
 
 ### chain-mirror — Chain Mirror Platform 题解
 
@@ -184,6 +185,14 @@
 | 1 | 19387010 | HANDLER命令 | 1.000 | 0.85 | 0.84 | https://www.cnblogs.com/Xendria/p/19387010/handler-command-2otcdp | 正文含该 postid 的博客园链接；标题相似 0.85；正文前80字相似 0.84；state.json 已映射 |
 | 2 | 19824429 | polarisctf招新赛（web部分 | 0.188 | 0.25 | 0.11 | https://www.cnblogs.com/Xendria/p/19824429/polarisctf-recruitment-competition-web-part-1spljh | 已被 polarisctf-2025 的冻结映射占用 |
 | 3 | 19380140 | 0xgame2025（week2 | 0.181 | 0.22 | 0.14 | https://www.cnblogs.com/Xendria/p/19380140/0xgame2025-week2-wplbr | 已被 0xgame2025-week2 的冻结映射占用 |
+
+### nepctf2026 — NEPCTF 2026 挂钩都在干什么呢？
+
+| # | postid | 博客园标题 | 总分 | 标题 | 正文 | 链接 | 依据 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 19372803 | ISCTF2025（web部分 | 0.251 | 0.38 | 0.10 | https://www.cnblogs.com/Xendria/p/19372803 | 已被 ISCTF-web部分 的冻结映射占用 |
+| 2 | 19803667 | TGCTF 2025 web(复现 | 0.229 | 0.38 | 0.05 | https://www.cnblogs.com/Xendria/p/19803667/tgctf-2025-web-recurrence-fdjn | 已被 tgctf-2025 的冻结映射占用 |
+| 3 | 19803664 | LitCTF2025（公开赛道）（web | 0.222 | 0.34 | 0.07 | https://www.cnblogs.com/Xendria/p/19803664/litctf2025-open-track-web-1oyyf3 | 已被 LitCTF2025-公开赛道-web 的冻结映射占用 |
 
 ### newstar2025-week1 — newstar2025 week1
 
