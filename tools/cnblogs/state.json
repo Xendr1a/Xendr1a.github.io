@@ -104,6 +104,21 @@
     "sha256": "18aa59ec906a74391107ff0e6ef1ab66ded9ee359f9b56e478544ff5d02ec9a9",
     "url": "https://www.cnblogs.com/Xendria/p/19824429"
   },
+  "range-v1-r2-ssti": {
+    "postid": "23810943",
+    "sha256": "986dab76edf65cb7297054e56273ccc3618c88056e16c63cd048a505b8029813",
+    "url": "https://www.cnblogs.com/Xendria/p/23810943"
+  },
+  "range-v1-r3-upload-bypass": {
+    "postid": "23810956",
+    "sha256": "a6959db437ef97246e2705598848f51f412639e29204d9db7571aaf72db90c92",
+    "url": "https://www.cnblogs.com/Xendria/p/23810956"
+  },
+  "range-v1-r5-fmt-rce": {
+    "postid": "23810962",
+    "sha256": "fea6190b15ffb7e0034a9bb255ff1ee40d8f81e6069e42977dd0cbc6079d0aa1",
+    "url": "https://www.cnblogs.com/Xendria/p/23810962"
+  },
   "tgctf-2025": {
     "postid": "19803667",
     "sha256": "71430b62518564141c915e4e81699885bc62dda38b2873151df3b7ce3df01f82",
