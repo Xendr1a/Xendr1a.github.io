@@ -4,7 +4,7 @@
 
 | 工具 | 作用 |
 | --- | --- |
-| `blog.py` | 写作流水线：`new` 建草稿、`preview` 本地预览、`publish` 提交并推送 |
+| `blog.py` | 写作流水线：`idea` 记灵感、`new` 建草稿、`preview` 本地预览、`publish` 提交并推送 |
 | `cnblogs/` | 博客园单向同步（GitHub Actions 使用，见 `cnblogs/README.md`） |
 
 ## 写作流水线 `blog.py`
@@ -12,7 +12,11 @@
 只依赖 Python 3 标准库；`preview` 需要仓库根目录已执行 `npm install`。
 
 ```sh
+# 0. 随手记一条灵感：source/_ideas.md
+python3 tools/blog.py idea "某道题可以写"
+
 # 1. 新建草稿：source/_posts/<标题>.md
+python3 tools/blog.py new                    # 列出灵感，按编号选一条后建草稿
 python3 tools/blog.py new "NEPCTF 2026 Web 题解"
 
 # 2. 本地预览 http://localhost:4000/
@@ -44,6 +48,10 @@ toc: true
 标题中的空白转成 `-`，非法文件名字符会被删除。同名文件已存在时追加 `-2`、`-3`，
 不会覆盖。`date` 取当前时间（Asia/Shanghai）；文章排序由 front-matter 的 `date`
 决定，文件名不带日期前缀。
+
+`idea` 把内容按 `YYYY-MM-DD 内容` 一行写入 `source/_ideas.md`，文件名以下划线开头，
+Hexo 不会渲染成页面。`new` 不带标题时列出该文件的全部条目，输入编号选择；选中后
+按该句生成草稿，并把这一条从 `_ideas.md` 删除。直接回车则取消，不改动任何文件。
 
 `publish` 的行为与边界：
 

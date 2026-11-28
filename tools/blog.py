@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
-"""Hexo 写作流水线：new / preview / publish。
+"""Hexo 写作流水线：idea / new / preview / publish。
 
 真源是 ``source`` 分支的 ``source/_posts/*.md``。博客园由 GitHub Actions
 单向同步（push 到 source 触发），本工具不直接调用博客园接口。
 
 用法::
 
-    python3 tools/blog.py new "文章标题"
+    python3 tools/blog.py idea "一句话灵感"
+    python3 tools/blog.py new ["文章标题"]
     python3 tools/blog.py preview [--port 4000] [-- <hexo server 参数>]
     python3 tools/blog.py publish [-m "提交说明"] [--branch source] [--dry-run]
     python3 tools/blog.py --help
+
+``idea``
+    把一条灵感按 ``YYYY-MM-DD 内容`` 追加到 ``source/_ideas.md``。文件名以下划线
+    开头，Hexo 不会把它渲染成页面。
 
 ``new``
     在 ``source/_posts/`` 创建 ``<标题>.md``，front-matter 字段与现有文章一致
     （title/date/author/categories/tags/description/toc），正文给出最小骨架。
     标题里的空白转成 ``-``，非法文件名字符被删除；同名文件已存在时追加
-    ``-2``、``-3``，绝不覆盖。
+    ``-2``、``-3``，绝不覆盖。省略标题时列出 ``source/_ideas.md`` 的条目供选择，
+    选中后建草稿并把该条从清单移除。
 
 ``preview``
     调用本地 ``node_modules/.bin/hexo server`` 起预览；先 ``npm install``。
@@ -40,10 +46,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 POSTS_DIR = ROOT / "source" / "_posts"
+IDEAS_FILE = ROOT / "source" / "_ideas.md"
 PUBLISH_PATHS = ("source/_posts", "source/img")
 HEXO_BIN = ROOT / "node_modules" / ".bin" / "hexo"
 
 ILLEGAL_FILENAME = re.compile(r'[\\/:*?"<>|\x00-\x1f\x7f]')
+IDEA_LINE = re.compile(r"^(\d{4}-\d{2}-\d{2})\s+(\S.*)$")
 WHITESPACE = re.compile(r"\s+")
 DASHES = re.compile(r"-+")
 YAML_SPECIAL = re.compile(r"""[:#\[\]{}&*!|>'"%@`]""")
@@ -118,11 +126,69 @@ def render_post(title: str, when: dt.datetime) -> str:
     )
 
 
-def cmd_new(args: argparse.Namespace) -> int:
-    title = " ".join(args.title).strip()
-    if not title:
-        raise BlogError("标题不能为空")
+def cmd_idea(args: argparse.Namespace) -> int:
+    text = WHITESPACE.sub(" ", " ".join(args.text)).strip()
+    if not text:
+        raise BlogError("灵感内容不能为空")
+    IDEAS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    prefix = ""
+    if IDEAS_FILE.exists() and IDEAS_FILE.stat().st_size:
+        with IDEAS_FILE.open("rb") as fh:
+            fh.seek(-1, os.SEEK_END)
+            if fh.read(1) != b"\n":
+                prefix = "\n"
+    line = f"{now_local().strftime('%Y-%m-%d')} {text}"
+    with IDEAS_FILE.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(f"{prefix}{line}\n")
+    print(f"已记录灵感：{line}")
+    return 0
 
+
+def idea_entries() -> list[tuple[int, str, str]]:
+    """返回 (行号, 原始行, 内容)，只认 ``YYYY-MM-DD 内容`` 格式的行。"""
+    if not IDEAS_FILE.exists():
+        return []
+    entries: list[tuple[int, str, str]] = []
+    for index, line in enumerate(IDEAS_FILE.read_text(encoding="utf-8").splitlines()):
+        match = IDEA_LINE.match(line.strip())
+        if match:
+            entries.append((index, line, match.group(2)))
+    return entries
+
+
+def select_idea() -> tuple[int, str] | None:
+    """列出灵感并让用户按编号选择；直接回车返回 None。"""
+    entries = idea_entries()
+    if not entries:
+        raise BlogError(
+            f"{IDEAS_FILE.relative_to(ROOT)} 里没有可用灵感；"
+            '先用 python3 tools/blog.py idea "一句话" 记一条'
+        )
+    print(f"灵感清单（{IDEAS_FILE.relative_to(ROOT)}）：")
+    for number, (_, line, _) in enumerate(entries, 1):
+        print(f"  {number}. {line.strip()}")
+    try:
+        choice = input(f"选择 1-{len(entries)}（回车取消）：").strip()
+    except EOFError as exc:
+        raise BlogError("没有读到编号，已取消") from exc
+    if not choice:
+        return None
+    if not (choice.isascii() and choice.isdigit()) or not 1 <= int(choice) <= len(entries):
+        raise BlogError(f"无效的编号：{choice}")
+    index, _, title = entries[int(choice) - 1]
+    return index, title
+
+
+def remove_idea_line(index: int) -> None:
+    lines = IDEAS_FILE.read_text(encoding="utf-8").splitlines(keepends=True)
+    if not 0 <= index < len(lines):
+        raise BlogError("灵感清单在创建草稿后发生变化，请检查 source/_ideas.md")
+    del lines[index]
+    with IDEAS_FILE.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write("".join(lines))
+
+
+def create_post(title: str) -> Path:
     when = now_local()
     base = slugify(title)
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -142,6 +208,25 @@ def cmd_new(args: argparse.Namespace) -> int:
     rel = path.relative_to(ROOT)
     print(f"已创建 {rel}")
     print(f"下一步：python3 tools/blog.py preview")
+    return path
+
+
+def cmd_new(args: argparse.Namespace) -> int:
+    if not args.title:
+        selected = select_idea()
+        if selected is None:
+            print("已取消，未创建草稿")
+            return 0
+        index, title = selected
+        create_post(title)
+        remove_idea_line(index)
+        print("已从灵感清单移除该条")
+        return 0
+
+    title = " ".join(args.title).strip()
+    if not title:
+        raise BlogError("标题不能为空")
+    create_post(title)
     return 0
 
 
@@ -303,20 +388,30 @@ def cmd_publish(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="blog.py",
-        description="Hexo 写作流水线：new / preview / publish",
+        description="Hexo 写作流水线：idea / new / preview / publish",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "示例：\n"
+            '  python3 tools/blog.py idea "某道题可以写"\n'
+            "  python3 tools/blog.py new\n"
             '  python3 tools/blog.py new "NEPCTF 2026 Web 题解"\n'
             "  python3 tools/blog.py preview --port 4000\n"
             '  python3 tools/blog.py publish -m "post: NEPCTF 2026"\n'
         ),
     )
-    sub = parser.add_subparsers(dest="command", metavar="{new,preview,publish}")
+    sub = parser.add_subparsers(dest="command", metavar="{idea,new,preview,publish}")
     sub.required = True
 
-    p_new = sub.add_parser("new", help="创建草稿", description="创建草稿")
-    p_new.add_argument("title", nargs="+", metavar="标题", help="文章标题（可含空格）")
+    p_idea = sub.add_parser("idea", help="记录一条灵感", description="记录一条灵感到 source/_ideas.md")
+    p_idea.add_argument("text", nargs="*", metavar="内容", help="灵感内容（可含空格）")
+    p_idea.set_defaults(func=cmd_idea)
+
+    p_new = sub.add_parser(
+        "new",
+        help="创建草稿",
+        description="创建草稿；省略标题时从 source/_ideas.md 选一条",
+    )
+    p_new.add_argument("title", nargs="*", metavar="标题", help="文章标题（可含空格）；省略则从灵感清单选择")
     p_new.set_defaults(func=cmd_new)
 
     p_preview = sub.add_parser("preview", help="启动 Hexo 本地预览", description="启动 Hexo 本地预览")
